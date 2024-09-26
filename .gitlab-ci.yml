@@ -10,6 +10,11 @@ cache:
   paths:
     - node_modules/
 
+stages:
+  - install
+  - lint
+  - test
+
 # Etapa de Instalação de Dependências
 install_dependencies:
   stage: install
