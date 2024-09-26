@@ -1,6 +1,6 @@
-import Link from 'next/link';
 import ButtonOperation from '../../components/buttons/operation/ButtonOperation';
 import CardOperation from '../../components/cards/operation/CardOperation';
+import ButtonStock from '@/src/components/buttons/stock/button-stock';
 
 export default function Home() {
   return (
@@ -25,20 +25,16 @@ export default function Home() {
       <div className="flex flex-col gap-y-6">
         <h2 className="text-3xl">Estoques</h2>
         <div className="flex gap-x-8">
-          <Link
-            href="/raw-material/create"
-            className="border-[#F56932] border-2 rounded-lg w-[240px] h-auto flex flex-col items-start p-4 gap-y-3"
-          >
-            <img src="/fruits.svg" alt="" />
-            <h3 className="text-base">Estoque de Matéria Prima</h3>
-          </Link>
-          <Link
-            href="/raw-material/create"
-            className="border-[#F56932] border-2 rounded-lg w-[240px] h-auto flex flex-col items-start p-4 gap-y-3"
-          >
-            <img className="w-[247px]" src="/honeycomb.svg" alt="" />
-            <h3 className="text-base whitespace-nowrap">Estoque de Produtos Finais</h3>
-          </Link>
+          <ButtonStock
+            description="Estoque de Matéria Prima"
+            image="/fruits.svg"
+            href="/raw-material/stock"
+          />
+          <ButtonStock
+            description="Estoque de Produtos Finais"
+            image="/honeycomb.svg"
+            href="/final-product/stock"
+          />
         </div>
       </div>
       <div className="flex space-x-6 justify-center mx-9">
