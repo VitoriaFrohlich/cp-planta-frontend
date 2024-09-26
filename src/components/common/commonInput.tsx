@@ -1,0 +1,30 @@
+interface InputProps {
+  label: string;
+  placeholder: string;
+  disable?: boolean;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const commonInput: React.FC<InputProps> = ({
+  label,
+  placeholder,
+  disable,
+  value,
+  onChange
+}) => {
+  return (
+    <div className="mb-4">
+      <label className="block text-black mb-1">{label}</label>
+      <input
+        placeholder={placeholder}
+        className="w-full mt-1 border border-greenHortti rounded-lg p-2"
+        disabled={disable === undefined ? false : disable}
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  );
+};
+
+export default commonInput;

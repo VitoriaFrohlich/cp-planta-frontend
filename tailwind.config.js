@@ -14,6 +14,12 @@ const config = {
   ],
   theme: {
     extend: {
+      colors: {
+        greenHortti: '#006F48',
+        greenHorttiBg: '#EBFFEE',
+        grayHortti: '#2E2E2E',
+        orangeHortti: '#F56932'
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
