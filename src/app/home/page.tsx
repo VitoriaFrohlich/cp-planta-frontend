@@ -1,6 +1,6 @@
+import InventorySection from '@/src/components/sections/inventory/inventory-section';
 import ButtonOperation from '../../components/buttons/operation/ButtonOperation';
 import CardOperation from '../../components/cards/operation/CardOperation';
-import ButtonStock from '@/src/components/buttons/stock/button-stock';
 
 export default function Home() {
   return (
@@ -22,21 +22,7 @@ export default function Home() {
           href="/final-product/create"
         />
       </div>
-      <div className="flex flex-col gap-y-6">
-        <h2 className="text-3xl">Estoques</h2>
-        <div className="flex gap-x-8">
-          <ButtonStock
-            description="Estoque de Matéria Prima"
-            image="/fruits.svg"
-            href="/raw-material/stock"
-          />
-          <ButtonStock
-            description="Estoque de Produtos Finais"
-            image="/honeycomb.svg"
-            href="/final-product/stock"
-          />
-        </div>
-      </div>
+      <InventorySection />
       <div className="flex space-x-6 justify-center mx-9">
         <CardOperation title="Operacao batata" type="inProgress" />
         <CardOperation title="Operacao banana" type="finished" />
