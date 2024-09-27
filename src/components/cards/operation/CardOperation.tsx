@@ -1,5 +1,6 @@
 import TrendingIcon from '../../icons/trending-icon.svg';
 import FinishedIcon from '../../icons/finished-icon.svg';
+import Image from 'next/image';
 
 type Props = {
   title: string;
@@ -26,7 +27,7 @@ export default function CardOperationInProgress({ title, type }: Props) {
 
   return (
     <div className={style}>
-      <img className="w-6" src={iconSrc} alt="Icon" />
+      <Image src={iconSrc} alt="" width={30} height={0} />
       <div className="flex flex-col text-start gap-y-1">
         <h3 className="text-xl font-bold text-[#1c4060]">{title}</h3>
         <p className="text-[#757575] text-sm uppercase">{description}</p>
