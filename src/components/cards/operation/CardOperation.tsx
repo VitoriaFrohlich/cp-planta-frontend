@@ -13,13 +13,13 @@ export default function CardOperationInProgress({ title, type }: Props) {
       description: 'Em andamento',
       iconSrc: TrendingIcon.src,
       style:
-        'border-[#c25327] border-2 rounded-lg flex w-auto h-auto items-start p-6 gap-x-4 bg-[#fcf3ea]'
+        'border-[#c25327] border-2 rounded-lg flex items-start p-6 gap-x-4 bg-[#fcf3ea] w-[348px] h-[107px]'
     },
     finished: {
       description: 'Finalizado',
       iconSrc: FinishedIcon.src,
       style:
-        'border-[#58a587] border-2 rounded-lg flex w-auto h-auto items-start p-6 gap-x-4 bg-[#ebffee]'
+        'border-[#58a587] border-2 rounded-lg flex items-start p-6 gap-x-4 bg-[#ebffee] w-[348px] h-[107px]'
     }
   };
 
