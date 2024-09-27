@@ -1,4 +1,4 @@
-interface SelectProps {
+interface SelectInputProps {
   label: string;
   placeholder: string;
   options: string[];
@@ -6,7 +6,7 @@ interface SelectProps {
   value?: string;
 }
 
-const commonSelect: React.FC<SelectProps> = ({
+const selectInput: React.FC<SelectInputProps> = ({
   label,
   placeholder,
   options,
@@ -17,13 +17,17 @@ const commonSelect: React.FC<SelectProps> = ({
     <div className="mb-4">
       <label className="block text-black mb-1">{label}</label>
       <select
-        className="w-full mt-1 border border-greenHortti rounded-lg p-2"
+        className="w-full text-black mt-1 border border-greenHortti rounded-lg p-2"
         onChange={onChange}
         value={value}
       >
-        {placeholder && <option value="">{placeholder}</option>}
+        {placeholder && (
+          <option className="text-[#1e1e1e]" value="">
+            {placeholder}
+          </option>
+        )}
         {options.map((option, index) => (
-          <option key={index} value={option}>
+          <option className="text-[#1e1e1e]" key={index} value={option}>
             {option}
           </option>
         ))}
@@ -32,4 +36,4 @@ const commonSelect: React.FC<SelectProps> = ({
   );
 };
 
-export default commonSelect;
+export default selectInput;

@@ -1,24 +1,25 @@
-interface InputProps {
+interface NumericInputProps {
   label: string;
   placeholder: string;
   disable?: boolean;
-  value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: number;
 }
 
-const commonInput: React.FC<InputProps> = ({
+const numericInput: React.FC<NumericInputProps> = ({
   label,
   placeholder,
   disable,
-  value,
-  onChange
+  onChange,
+  value
 }) => {
   return (
     <div className="mb-4">
       <label className="block text-black mb-1">{label}</label>
       <input
+        type="number"
         placeholder={placeholder}
-        className="w-full mt-1 border border-greenHortti rounded-lg p-2"
+        className="w-full text-[#1e1e1e] mt-1 border border-greenHortti rounded-lg p-2"
         disabled={disable === undefined ? false : disable}
         value={value}
         onChange={onChange}
@@ -27,4 +28,4 @@ const commonInput: React.FC<InputProps> = ({
   );
 };
 
-export default commonInput;
+export default numericInput;

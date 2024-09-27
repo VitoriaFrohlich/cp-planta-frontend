@@ -1,6 +1,9 @@
 'use client';
-import CommonSelect from '@/src/components/common/commonSelect';
-import NumericInput from '@/src/components/common/numericInput';
+import SelectInput from '@/src/components/common/inputs/SelectInput';
+import NumericInput from '@/src/components/common/inputs/NumericInput';
+import AcceptButton from '@/src/components/buttons/operation/AcceptButton';
+import CancelButton from '@/src/components/buttons/operation/CancelButton';
+import Header from '@/src/components/common/header';
 import { Button } from '@headlessui/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -34,7 +37,7 @@ export default function OperationCreate() {
 
   return (
     <main>
-      <div className="w-full h-20">header</div>
+      <Header />
       <div className="min-h-screen bg-white">
         <button
           className=" text-greenHortti pt-10 pl-10"
@@ -52,14 +55,14 @@ export default function OperationCreate() {
                 </h2>
                 <div className="border border-greenHortti border-10 p-5 rounded-md">
                   {/* Inputs do formulário */}
-                  <CommonSelect
+                  <SelectInput
                     label="Matéria Prima"
                     options={['Batata Inglesa Média', 'Cenoura', 'Tomate']}
                     value={materiaPrima}
                     onChange={e => setMateriaPrima(e.target.value)}
                     placeholder="Selecione o tipo"
                   />
-                  <CommonSelect
+                  <SelectInput
                     label="Lote"
                     options={['120DED2', '1900DSC', '09OPP2D']}
                     placeholder="Selecione o lote"
@@ -98,10 +101,12 @@ export default function OperationCreate() {
                       key={index}
                       className="grid grid-cols-3 gap-4 items-center mb-4"
                     >
-                      <div>{item.name}</div>
-                      <div>{item.lote}</div>
-                      <div className="flex justify-between">
-                        <span>{item.quantity + ' Kg'}</span>
+                      <div className="text-black">{item.name}</div>
+                      <div className="text-black">{item.lote}</div>
+                      <div className="flex justify-between text-black">
+                        <span className="text-black">
+                          {item.quantity + ' Kg'}
+                        </span>
                         <button
                           className="text-red-600 font-semibold border border-red-600 rounded-full py-1 px-2"
                           onClick={() => handleRemoveItem(index)}
@@ -128,22 +133,24 @@ export default function OperationCreate() {
                 </div>
                 <div className="border border-greenHortti border-10 p-5 rounded-md mb-4">
                   {/* Etapas da receita */}
-                  <CommonSelect
+                  <SelectInput
                     label="Linha selecionada"
                     placeholder="Selecione a Linha de Produção"
                     options={['1', '2']}
                   />
-                  <CommonSelect
+                  <SelectInput
                     label="Produto Final"
                     placeholder="Selecione o Tipo"
                     options={[]}
-                  ></CommonSelect>
+                  ></SelectInput>
                   <NumericInput
                     label="Quantidade esperada"
                     placeholder="0"
                   ></NumericInput>
                   <h2 className="text-black ">Receita Utilizada</h2>
-                  <div className="text-lg my-4 text-center">ETAPAS</div>
+                  <div className="text-black text-lg my-4 text-center">
+                    ETAPAS
+                  </div>
                 </div>
                 <h2 className="text-xl font-semibold text-black mb-6">
                   Nome operação
@@ -158,12 +165,16 @@ export default function OperationCreate() {
                 </div>
                 <div className=" flex justify-end space-x-4 mt-6">
                   {/* Botões */}
-                  <button className="w-full bg-greenHortti text-white py-2 px-4 rounded-lg hover:bg-green-700">
-                    Finalizar
-                  </button>
-                  <button className="w-full bg-grayHortti text-white py-2 px-4 rounded-lg hover:bg-gray-700">
-                    Cancelar
-                  </button>
+                  <AcceptButton
+                    title="Finalizar"
+                    image="/check-icon.svg"
+                    href="/desired-path"
+                  />
+                  <CancelButton
+                    title="Cancelar"
+                    image="/trash-icon.svg"
+                    href="/desired-path"
+                  />
                 </div>
               </div>
             </div>
