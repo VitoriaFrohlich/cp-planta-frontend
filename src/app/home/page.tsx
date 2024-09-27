@@ -19,6 +19,11 @@ export default function Home() {
           description="Cadastro de Produtos Finais"
           href="/final-product/create"
         />
+        <ButtonOperation
+          title="Cadastrar Produto Final"
+          description="Cadastro de Produtos Finais"
+          href="/final-product/create"
+        />
       </div>
     </main>
   );
