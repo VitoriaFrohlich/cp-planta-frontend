@@ -1,10 +1,11 @@
+import InventorySection from '@/src/components/sections/inventory/InventorySection';
 import ButtonOperation from '../../components/buttons/operation/ButtonOperation';
 import CardOperation from '../../components/cards/operation/CardOperation';
 
 export default function Home() {
   return (
     <main>
-      <div className="flex space-x-6 justify-center mx-9">
+      <div className="flex gap-6 justify-center mx-9">
         <ButtonOperation
           title="Criar Operação"
           description="Selecione Etapas para a Produção"
@@ -21,6 +22,7 @@ export default function Home() {
           href="/final-product/create"
         />
       </div>
+      <InventorySection />
       <div className="flex space-x-6 justify-center mx-9">
         <CardOperation title="Operacao batata" type="inProgress" />
         <CardOperation title="Operacao banana" type="finished" />

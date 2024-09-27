@@ -19,7 +19,7 @@ stages:
 install_dependencies:
   stage: install
   script:
-    - npm install  # Substitua por 'yarn install' se estiver usando yarn
+    - npm install # Substitua por 'yarn install' se estiver usando yarn
   artifacts:
     paths:
       - node_modules/
@@ -32,8 +32,8 @@ lint:
   script:
     - npm run lint
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'  # Execute apenas em MRs
-  allow_failure: true  # Não falhar se o lint não passar (opcional)
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # Execute apenas em MRs
+  allow_failure: true # Não falhar se o lint não passar (opcional)
 
 # Etapa de Testes
 test:
@@ -43,6 +43,6 @@ test:
   artifacts:
     when: always
     reports:
-      junit: report.xml  # Gerar relatório de testes
+      junit: report.xml # Gerar relatório de testes
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
