@@ -1,4 +1,5 @@
-import ButtonOperation from '../../components/buttons/operation/button-operation';
+import ButtonOperation from '../../components/buttons/operation/ButtonOperation';
+import CardOperation from '../../components/cards/operation/CardOperation';
 
 export default function Home() {
   return (
@@ -19,6 +20,10 @@ export default function Home() {
           description="Cadastro de Produtos Finais"
           href="/final-product/create"
         />
+      </div>
+      <div className="flex space-x-6 justify-center mx-9">
+        <CardOperation title="Operacao batata" type="inProgress" />
+        <CardOperation title="Operacao banana" type="finished" />
       </div>
     </main>
   );
