@@ -1,10 +1,12 @@
 import InventorySection from '@/src/components/sections/inventory/InventorySection';
 import ButtonOperation from '../../components/buttons/operation/ButtonOperation';
 import CardOperation from '../../components/cards/operation/CardOperation';
+import Header from '../../components/common/Header';
 
 export default function Home() {
   return (
     <main>
+      <Header />
       <div className="flex gap-6 justify-center mx-9">
         <ButtonOperation
           title="Criar Operação"
