@@ -3,78 +3,51 @@ stages:
   - commit-msg-check
   - lint
   - test
-  - build
-  - push
 
-variables:
-  DOCKER_IMAGE_FRONTEND: norohim/cp-planta-frontend:latest
-
-# Default settings for all jobs
-default:
-  image: node:22.5.0  # Using Node.js 22.5.0 image for Node-related tasks
-  before_script:
-    - npm install  # Install dependencies using npm
-
-# Job for simulating the pre-commit check
+# Job para simular o pre-commit
 pre-commit-check:
   stage: pre-commit-check
+  image: node:18 
+  before_script:
+    - npm ci  # Instala as dependências
   script:
-    - bash ci/pre-commit-check.sh  # Executes the pre-commit script
+    - ./ci/pre-commit-check.sh  # Executa o script de pre-commit
   only:
     - merge_requests
     - branches
 
-# Job for simulating the commit-msg check
+# Job para simular o commit-msg
 commit-msg-check:
   stage: commit-msg-check
+  image: node:18  
+  before_script:
+    - npm ci  # Instala as dependências
   script:
-    - bash ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"  # Passes the commit message for validation
+    - ./ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"  # Passa a mensagem de commit para validação
   only:
     - merge_requests
     - branches
 
-# Job for checking the lint
+# Job para verificar o lint
 lint:
   stage: lint
+  image: node:18  
+  before_script:
+    - npm ci  # Instala as dependências
   script:
-    - npm run lint  # Command to check lint
+    - npm run lint  # Comando para verificar o lint, ajuste conforme necessário
   only:
     - merge_requests
     - branches
 
-# Job for running the tests
+# Job para executar os testes
 test:
   stage: test
+  image: node:18  
+  before_script:
+    - npm ci  # Instala as dependências
   script:
-    - npm run test  # Command to run tests
+    - npm run test  # Comando para executar os testes, ajuste conforme necessário
   only:
     - merge_requests
     - branches
-
-# Job to build the Docker image for the frontend
-build-frontend:
-  stage: build
-  image: docker:latest  # Use Docker image for building
-  services:
-    - docker:dind  # Docker in Docker service
-  before_script:
-    - docker info  # Ensure Docker is running
-  script:
-    - docker build -f Dockerfile -t $DOCKER_IMAGE_FRONTEND .
-  only:
-    - main
-
-# Job to push the Docker image for the frontend
-push-frontend:
-  stage: push
-  image: docker:latest  # Use Docker image for pushing
-  services:
-    - docker:dind  # Docker in Docker service
-  before_script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
-  script:
-    - docker push $DOCKER_IMAGE_FRONTEND
-  only:
-    - main
-  dependencies:
-    - build-frontend
