@@ -16,7 +16,7 @@ export default function ButtonOperation({ title, description, href }: Props) {
     >
       <Image src={AddIcon.src} alt="Add Icon" width={24} height={24} />
       <div className="flex flex-col text-start gap-y-1">
-        <h3 className="text-2xl font-bold">{title}</h3>
+        <h3 className="text-[#1c4060] text-2xl font-bold">{title}</h3>
         <p className="text-[#757575] text-sm">{description}</p>
       </div>
     </Link>

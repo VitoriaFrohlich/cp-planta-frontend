@@ -1,9 +1,9 @@
-import ButtonStock from '../../buttons/stock/button-stock';
+import ButtonStock from '../../buttons/stock/ButtonStock';
 
 export default function InventorySection() {
   return (
     <div className="flex flex-col gap-y-6">
-      <h2 className="text-3xl">Estoques</h2>
+      <h2 className="text-3xl text-[#757575]">Estoques</h2>
       <div className="flex gap-x-8">
         <ButtonStock
           description="Estoque de Matéria Prima"
@@ -12,7 +12,7 @@ export default function InventorySection() {
         />
         <ButtonStock
           description="Estoque de Produtos Finais"
-          image="/honeycomb.svg"
+          image="/honey-comb.svg"
           href="/final-product/stock"
         />
       </div>

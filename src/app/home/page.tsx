@@ -1,4 +1,4 @@
-import InventorySection from '@/src/components/sections/inventory/inventory-section';
+import InventorySection from '@/src/components/sections/inventory/InventorySection';
 import ButtonOperation from '../../components/buttons/operation/ButtonOperation';
 import CardOperation from '../../components/cards/operation/CardOperation';
 
