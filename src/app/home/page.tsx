@@ -14,7 +14,7 @@ export default function Home() {
           <ButtonOperation
             title="Criar Ordem"
             description="Selecione Etapas para a Produção"
-            href="/operation/create"
+            href="/order/create"
           />
           <ButtonOperation
             title="Cadastrar Lote"
