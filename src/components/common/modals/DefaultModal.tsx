@@ -29,7 +29,7 @@ const DefaultModal: React.FC<DefaultModalProps> = ({
         {title && <h2 className="text-xl font-semibold mb-4">{title}</h2>}
 
         {/* Conteúdo do Modal */}
-        <div className="mb-4 h-72 overflow-y-auto">{children}</div>
+        <div className="mb-4 max-h-72 overflow-y-auto">{children}</div>
 
         {/* Botão de Fechar Modal */}
         <div className="flex justify-center">

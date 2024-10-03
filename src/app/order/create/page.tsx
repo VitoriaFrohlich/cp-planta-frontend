@@ -1,7 +1,6 @@
 'use client';
 import SelectInput from '@/src/components/common/inputs/SelectInput';
 import NumericInput from '@/src/components/common/inputs/NumericInput';
-import AcceptButton from '@/src/components/buttons/operation/AcceptButton';
 import CancelButton from '@/src/components/buttons/operation/CancelButton';
 import Header from '@/src/components/common/header';
 import { Button } from '@headlessui/react';
@@ -10,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
 import DefaultModal from '@/src/components/common/modals/DefaultModal';
 import React from 'react';
+import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
 
 export default function OrderCreate() {
   const router = useRouter();
@@ -22,12 +22,12 @@ export default function OrderCreate() {
     { name: 'Batata Inglesa Média', lote: '60205', quantity: 10 },
     { name: 'Batata Inglesa Média', lote: '47856', quantity: 10 }
   ]);
+  const [tax, setTax] = useState<number | null>(null);
+  const [line, setLine] = useState('');
 
   const handleRemoveItem = (indexToRemove: number) => {
     setItems(items.filter((_, index) => index !== indexToRemove));
   };
-
-  const [tax, setTax] = useState<number | null>(null);
 
   const sumQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -35,16 +35,34 @@ export default function OrderCreate() {
     return tax == null ? null : sumQuantity * (tax / 100) + sumQuantity;
   };
 
-  const etapas = ['Etapa 1', 'Etapa 2', 'Etapa 3', 'Etapa 1'];
+  const etapas = [
+    'Etapa 1',
+    'Etapa 2',
+    'Etapa 3',
+    'Etapa 1',
+    'Etapa 2',
+    'Etapa 3',
+    'Etapa 1'
+  ];
 
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isStepsModalOpen, setIsStepsModalOpen] = React.useState(false);
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openStepsModal = () => {
+    setIsStepsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeStepsModal = () => {
+    setIsStepsModalOpen(false);
+  };
+
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = React.useState(false);
+
+  const openSuccessModal = () => {
+    setIsSuccessModalOpen(true);
+  };
+
+  const closeSuccessModal = () => {
+    setIsSuccessModalOpen(false);
   };
 
   const handleAddItem = (
@@ -57,6 +75,10 @@ export default function OrderCreate() {
       { name: materiaPrima, lote: lote, quantity: quantidade }
     ]);
   }; //TODO: alterar para interfaces quando back tiver pronto
+
+  const isFormValidAdd = materiaPrima && lote && quantidade > 0; //Veirificacao botao adicionar
+  const isFormValidCreate =
+    items.length > 0 && tax != null && !Number.isNaN(tax) && line.length > 0; //Verificacao botao finalizar
 
   return (
     <main>
@@ -96,6 +118,13 @@ export default function OrderCreate() {
                     onChange={e => setMateriaPrima(e.target.value)}
                     placeholder="Selecione o tipo"
                   />
+                  <SelectInput
+                    label="Lote"
+                    options={['120DED2', '1900DSC', '09OPP2D']}
+                    placeholder="Selecione o lote"
+                    value={lote}
+                    onChange={e => setLote(e.target.value)}
+                  />
                   <NumericInput
                     label="Quantidade de Entrada de Materia Prima"
                     placeholder="0 KG"
@@ -105,15 +134,13 @@ export default function OrderCreate() {
                       setQuantidade(value >= 0 ? value : 0);
                     }}
                   />
-                  <SelectInput
-                    label="Lote"
-                    options={['120DED2', '1900DSC', '09OPP2D']}
-                    placeholder="Selecione o lote"
-                    value={lote}
-                    onChange={e => setLote(e.target.value)}
-                  />
                   <Button
-                    className="border rounded-lg w-full p-2 mt-2 mb-4 text-white bg-greenHortti"
+                    className={`border rounded-lg w-full p-2 mt-2 mb-4 ${
+                      isFormValidAdd
+                        ? 'bg-greenHortti text-white'
+                        : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'
+                    }`}
+                    disabled={!isFormValidAdd}
                     onClick={() =>
                       handleAddItem(materiaPrima, lote, quantidade)
                     }
@@ -172,6 +199,8 @@ export default function OrderCreate() {
                     label={'Linha selecionada'}
                     placeholder={'Selecione a Linha de Produção'}
                     options={['1', '2']}
+                    onChange={e => setLine(e.target.value)}
+                    value={line}
                   />
 
                   <NumericInput
@@ -193,11 +222,11 @@ export default function OrderCreate() {
                 </div>
                 <Button
                   className="border rounded-lg w-full p-2 mt-2 mb-4 text-balck border-greenHortti bg-greenHorttiBg"
-                  onClick={() => openModal()}
+                  onClick={() => openStepsModal()}
                 >
                   Etapas
                 </Button>
-                <h2 className="text-xl font-semibold text-black mb-6">
+                <h2 className="text-xl font-semibold text-black my-6">
                   Nome Ordem
                 </h2>
                 <div className="border border-greenHortti border-10 p-5 rounded-md mb-4">
@@ -208,17 +237,20 @@ export default function OrderCreate() {
                     Ordem X - XXXX
                   </h2>
                 </div>
-                <div className=" flex justify-end space-x-4 mt-6">
-                  {/* Botões */}
-                  <AcceptButton
+                {/* Botões */}
+                <div className="w-full h-auto flex space-x-2">
+                  <OnClickButton
+                    className={`w-full h-auto py-2 px-4 rounded-lg flex items-center justify-items-center 
+                    ${isFormValidCreate ? 'bg-greenHortti text-white  hover:bg-green-700' : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'} `}
                     title="Finalizar"
                     image="/check-icon.svg"
-                    href="/desired-path"
+                    disable={!isFormValidCreate}
+                    onClick={() => openSuccessModal()}
                   />
                   <CancelButton
                     title="Cancelar"
                     image="/trash-icon.svg"
-                    href="/desired-path"
+                    href="/home"
                   />
                 </div>
               </div>
@@ -226,7 +258,11 @@ export default function OrderCreate() {
           </div>
         </div>
       </div>
-      <DefaultModal isVisible={isModalOpen} onClose={closeModal} title="Etapas">
+      <DefaultModal
+        isVisible={isStepsModalOpen}
+        onClose={closeStepsModal}
+        title="Etapas"
+      >
         {etapas.map((etapa, index) => (
           <div
             key={index}
@@ -235,6 +271,14 @@ export default function OrderCreate() {
             {etapa}
           </div>
         ))}
+      </DefaultModal>
+
+      <DefaultModal
+        isVisible={isSuccessModalOpen}
+        onClose={closeSuccessModal}
+        title="Sucesso!"
+      >
+        <div className="w-full">Ordem cadastrada com sucesso!</div>
       </DefaultModal>
     </main>
   );
