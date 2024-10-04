@@ -18,15 +18,8 @@ const DefaultModal: React.FC<DefaultModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className=" bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
-        <button
-          className="flex absolute top-5 right-5 text-gray-400 hover:text-gray-600"
-          onClick={onClose}
-        >
-          &times;
-        </button>
-
         {/* Título do Modal */}
-        {title && <h2 className="text-xl font-semibold mb-4">{title}</h2>}
+        {<h2 className="text-2xl text-black font-semibold mb-4">{title}</h2>}
 
         {/* Conteúdo do Modal */}
         <div className="mb-4 max-h-72 overflow-y-auto">{children}</div>

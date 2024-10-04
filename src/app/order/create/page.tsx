@@ -13,6 +13,7 @@ import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick
 
 export default function OrderCreate() {
   const router = useRouter();
+  const [produtoFinal, setProdutoFinal] = useState('');
   const [materiaPrima, setMateriaPrima] = useState('');
   const [lote, setLote] = useState('');
   const [quantidade, setQuantidade] = useState(0);
@@ -78,7 +79,11 @@ export default function OrderCreate() {
 
   const isFormValidAdd = materiaPrima && lote && quantidade > 0; //Veirificacao botao adicionar
   const isFormValidCreate =
-    items.length > 0 && tax != null && !Number.isNaN(tax) && line.length > 0; //Verificacao botao finalizar
+    items.length > 0 &&
+    tax != null &&
+    !Number.isNaN(tax) &&
+    line.length > 0 &&
+    produtoFinal.length > 0; //Verificacao botao finalizar
 
   return (
     <main>
@@ -108,6 +113,7 @@ export default function OrderCreate() {
                       'Batata Palito',
                       'Batata Rústica'
                     ]}
+                    onChange={e => setProdutoFinal(e.target.value)}
                   />
                 </div>
                 <div className="border border-greenHortti border-10 p-5 rounded-md">
@@ -221,7 +227,7 @@ export default function OrderCreate() {
                   />
                 </div>
                 <Button
-                  className="border rounded-lg w-full p-2 mt-2 mb-4 text-balck border-greenHortti bg-greenHorttiBg"
+                  className="border rounded-lg w-full p-2 mt-2 mb-4 text-black border-greenHortti bg-greenHorttiBg"
                   onClick={() => openStepsModal()}
                 >
                   Etapas
@@ -266,7 +272,7 @@ export default function OrderCreate() {
         {etapas.map((etapa, index) => (
           <div
             key={index}
-            className="w-full border-greenHortti border rounded-lg p-2 box mt-3"
+            className="w-full text-black border-greenHortti border rounded-lg p-2 box mt-3"
           >
             {etapa}
           </div>
