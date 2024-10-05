@@ -2,6 +2,7 @@ import Header from '@/src/components/common/header';
 import SelectInput from '@/src/components/common/inputs/SelectInput';
 import NumericInput from '@/src/components/common/inputs/NumericInput';
 import DateInput from '@/src/components/common/inputs/DateInput';
+import DynamicBox from '@/src/components/common/DynamicBox';
 
 export default function CreateBatch() {
   const metrics = ['kg', 'g', 'mg', 'l', 'ml', 'un'];
@@ -10,7 +11,7 @@ export default function CreateBatch() {
   return (
     <main className="">
       <Header />
-      <div className="w-auto max-w-[563px] h-auto border-2 rounded-lg border-[#006F48] p-5">
+      <DynamicBox title="Testando">
         <SelectInput
           label="Unidade de medida"
           placeholder="Selecione a medida"
@@ -23,7 +24,7 @@ export default function CreateBatch() {
           placeholder="Selecione o local"
           options={storageLocations}
         />
-      </div>
+      </DynamicBox>
     </main>
   );
 }
