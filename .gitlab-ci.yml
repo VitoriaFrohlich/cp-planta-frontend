@@ -55,8 +55,7 @@ test:
     - merge_requests
     - branches
 
-# Build Docker image job
-build_docker_image:
+build-frontend:
   stage: build
   image: docker:20.10.16
   services:
@@ -77,8 +76,7 @@ build_docker_image:
   only:
    - master
 
-# Push Docker image job
-push_docker_image:
+push-frontend:
   stage: push
   image: docker:20.10.16
   services:
