@@ -52,7 +52,6 @@ test:
     - merge_requests
     - branches
 
-# Job to build the Docker image for the frontend
 build-frontend:
   stage: build
   image: docker:latest  # Use Docker image for building
@@ -65,7 +64,6 @@ build-frontend:
   only:
     - main
 
-# Job to push the Docker image for the frontend
 push-frontend:
   stage: push
   image: docker:latest  # Use Docker image for pushing
