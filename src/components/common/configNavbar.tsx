@@ -17,7 +17,7 @@ const ConfigNavbar: React.FC<navbarProps> = ({ children }) => {
         <h1 className="text-black w-full self-start text-2xl font-semibold my-3 ml-3">
           Painel de Configuração
         </h1>
-        <div className="flex flex-row w-full justify-between space-x-4 px-12 my-6">
+        <div className="flex flex-row w-full justify-between space-x-4 px-16 my-6">
           <NavbarButtonComponent
             href="/config/raw-material"
             title="Matéria-Prima"
@@ -44,7 +44,7 @@ const ConfigNavbar: React.FC<navbarProps> = ({ children }) => {
             selected={isSelected('/config/place')}
           />
         </div>
-        <div className="w-auto h-px bg-greenHortti mx-12"></div>
+        <div className="w-auto h-px bg-greenHortti mx-16"></div>
       </nav>
       <main>{children}</main>
     </div>

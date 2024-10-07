@@ -14,7 +14,7 @@ const NavbarButtonComponent: React.FC<navbarButtonProps> = ({
   return (
     <div>
       <Link
-        className={`text-xl hover:text-greenHortti hover:border-greenHortti w-full h-auto ${selected ? 'text-greenHortti border-greenHortti border-b-2' : 'text-black'}`}
+        className={`text-xl hover:text-greenHortti hover:border-greenHortti w-full h-auto font-semibold ${selected ? 'text-greenHortti border-greenHortti border-b-2' : 'text-black'}`}
         href={href}
       >
         {title}
