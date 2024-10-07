@@ -10,7 +10,6 @@
     "tailwindcss",
     "eslint",
     "prettier",
-    "husky",
     "lint-staged",
     "commitizen",
     "semantic-release",
@@ -36,14 +35,8 @@
     "prettier": "npx prettier --write --ignore-unknown .",
     "format": "npm run prettier",
     "commit": "git-cz",
-    "prepare": "husky install",
-    "release": "semantic-release",
-    "linters": "npm run lint && npm run prettier"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npx lint-staged"
-    }
+    "linters": "npm run lint && npm run prettier",
+    "release": "semantic-release"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
@@ -92,7 +85,6 @@
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-promise": "^6.0.0",
-    "husky": "^9.1.5",
     "jest": "^29.7.0",
     "lint-staged": "^15.2.9",
     "postcss": "^8.4.41",

@@ -1,20 +1,38 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine
+# Stage 1: Build
+FROM node:22.5.0 AS builder
 
-# Set the working directory in the container
+# Defina o diretório de trabalho
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package.json package-lock.json ./
+# Copie o package.json e o package-lock.json para instalar as dependências
+COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Instale as dependências de produção e desenvolvimento
+RUN NODE_ENV=development npm i
 
-# Copy the rest of the application code
-COPY . .
+RUN rm -rf /app/node_modules && mkdir -p /app/node_modules
 
-# Expose the port the app runs on
+# Copie todo o código-fonte para o container
+COPY . /app/
+
+# Compile o projeto para produção
+RUN npm run build
+
+# Stage 2: Run
+FROM node:22.5.0 AS runner
+
+# Defina o diretório de trabalho
+WORKDIR /app
+
+# Copie os arquivos necessários do estágio de build
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+
+# Exponha a porta usada pelo Next.js
 EXPOSE 3001
 
-# Define the command to run the application
-CMD ["npm", "run", "dev"]
+# Comando para rodar a aplicação Next.js em produção
+CMD ["npm", "run", "start"]
+

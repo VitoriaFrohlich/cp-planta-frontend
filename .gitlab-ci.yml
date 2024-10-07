@@ -1,48 +1,71 @@
-# Definir a imagem base com Node.js
-image: node:18
-
-# Variáveis globais
-variables:
-  NODE_ENV: test
-
-# Cache para dependências (npm ou yarn)
-cache:
-  paths:
-    - node_modules/
-
 stages:
-  - install
+  - pre-commit-check
+  - commit-msg-check
   - lint
   - test
+  - build
+  - push
 
-# Etapa de Instalação de Dependências
-install_dependencies:
-  stage: install
+variables:
+  DOCKER_REGISTRY: docker.io
+  DOCKER_IMAGE_FRONTEND: norokai/cp-planta-frontend:latest
+
+before_script:
+  - npm ci  # Instala as dependências
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" $DOCKER_REGISTRY
+
+# Job para simular o pre-commit
+pre-commit-check:
+  stage: pre-commit-check
+  image: node:22.5.0
   script:
-    - npm install # Substitua por 'yarn install' se estiver usando yarn
-  artifacts:
-    paths:
-      - node_modules/
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - ./ci/pre-commit-check.sh  # Executa o script de pre-commit
+  only:
+    - merge_requests
+    - branches
 
-# Etapa de Lint (Verificação de Código)
+# Job para simular o commit-msg
+commit-msg-check:
+  stage: commit-msg-check
+  image: node:22.5.0
+  script:
+    - ./ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"  # Passa a mensagem de commit para validação
+  only:
+    - merge_requests
+    - branches
+
+# Job para verificar o lint
 lint:
   stage: lint
+  image: node:22.5.0
   script:
-    - npm run lint
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # Execute apenas em MRs
-  allow_failure: true # Não falhar se o lint não passar (opcional)
+    - npm run lint  # Comando para verificar o lint
+  only:
+    - merge_requests
+    - branches
 
-# Etapa de Testes
+# Job para executar os testes
 test:
   stage: test
+  image: node:22.5.0
   script:
-    - npm run test
-  artifacts:
-    when: always
-    reports:
-      junit: report.xml # Gerar relatório de testes
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - npm run test  # Comando para executar os testes
+  only:
+    - merge_requests
+    - branches
+
+# Job para build da imagem Docker do frontend
+build-frontend:
+  stage: build
+  script:
+    - docker build -f Dockerfile -t $DOCKER_IMAGE_FRONTEND .
+  only:
+    - main
+
+# Job para push da imagem Docker do frontend
+push-frontend:
+  stage: push
+  script:
+    - docker push $DOCKER_IMAGE_FRONTEND
+  only:
+    - main
