@@ -51,3 +51,32 @@ test:
   only:
     - merge_requests
     - branches
+
+# Job to build the Docker image for the frontend
+build-frontend:
+  stage: build
+  image: docker:latest  # Use Docker image for building
+  services:
+    - docker:dind  # Docker in Docker service
+  before_script:
+    - docker info  # Ensure Docker is running
+  script:
+    - docker build -f Dockerfile -t $DOCKER_IMAGE_FRONTEND .
+  only:
+    - main
+
+# Job to push the Docker image for the frontend
+push-frontend:
+  stage: push
+  image: docker:latest  # Use Docker image for pushing
+  services:
+    - docker:dind  # Docker in Docker service
+  before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
+  script:
+    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" $DOCKER_REGISTRY
+    - docker push $DOCKER_IMAGE_FRONTEND
+  only:
+    - main
+  dependencies:
+    - build-frontend
