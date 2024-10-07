@@ -55,6 +55,7 @@ test:
     - merge_requests
     - branches
 
+# Job to build the Docker image for the frontend
 build-frontend:
   stage: build
   image: docker:20.10.16
@@ -76,6 +77,7 @@ build-frontend:
   only:
    - master
 
+# Job to push the Docker image for the frontend
 push-frontend:
   stage: push
   image: docker:20.10.16
