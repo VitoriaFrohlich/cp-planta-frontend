@@ -11,11 +11,9 @@ variables:
 
 # Default settings for all jobs
 default:
-  image: node:22.5.0  # Using Node.js 22.5.0 image
-  services:
-    - docker:dind  # Enabling Docker in Docker (DinD) for running Docker containers
+  image: node:22.5.0  # Using Node.js 22.5.0 image for Node-related tasks
   before_script:
-    - npm install  # Using npm ci for faster and clean installs
+    - npm install  # Install dependencies using npm
 
 # Job for simulating the pre-commit check
 pre-commit-check:
@@ -56,10 +54,11 @@ test:
 # Job to build the Docker image for the frontend
 build-frontend:
   stage: build
-  image: docker:latest  # Docker image for building
+  image: docker:latest  # Use Docker image for building
   services:
-    - name: docker:dind  # Enabling Docker in Docker (DinD) service
-      privileged: true  # Privileged mode for Docker in Docker is allowed here at the job level
+    - docker:dind  # Docker in Docker service
+  before_script:
+    - docker info  # Ensure Docker is running
   script:
     - docker build -f Dockerfile -t $DOCKER_IMAGE_FRONTEND .
   only:
@@ -68,12 +67,12 @@ build-frontend:
 # Job to push the Docker image for the frontend
 push-frontend:
   stage: push
-  image: docker:latest  # Docker image for pushing
+  image: docker:latest  # Use Docker image for pushing
   services:
-    - name: docker:dind
-      privileged: true  # Privileged mode allowed at the job level
-  script:
+    - docker:dind  # Docker in Docker service
+  before_script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
+  script:
     - docker push $DOCKER_IMAGE_FRONTEND
   only:
     - main
