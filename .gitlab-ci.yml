@@ -7,65 +7,75 @@ stages:
   - push
 
 variables:
-  DOCKER_REGISTRY: docker.io
-  DOCKER_IMAGE_FRONTEND: norokai/cp-planta-frontend:latest
+  DOCKER_IMAGE_FRONTEND: norohim/cp-planta-frontend:latest
 
-before_script:
-  - npm ci  # Instala as dependências
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" $DOCKER_REGISTRY
+# Default settings for all jobs
+default:
+  image: node:22.5.0  # Using Node.js 22.5.0 image
+  services:
+    - docker:dind  # Enabling Docker in Docker (DinD) for running Docker containers
+  before_script:
+    - npm install  # Using npm ci for faster and clean installs
 
-# Job para simular o pre-commit
+# Job for simulating the pre-commit check
 pre-commit-check:
   stage: pre-commit-check
-  image: node:22.5.0
   script:
-    - ./ci/pre-commit-check.sh  # Executa o script de pre-commit
+    - bash ci/pre-commit-check.sh  # Executes the pre-commit script
   only:
     - merge_requests
     - branches
 
-# Job para simular o commit-msg
+# Job for simulating the commit-msg check
 commit-msg-check:
   stage: commit-msg-check
-  image: node:22.5.0
   script:
-    - ./ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"  # Passa a mensagem de commit para validação
+    - bash ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"  # Passes the commit message for validation
   only:
     - merge_requests
     - branches
 
-# Job para verificar o lint
+# Job for checking the lint
 lint:
   stage: lint
-  image: node:22.5.0
   script:
-    - npm run lint  # Comando para verificar o lint
+    - npm run lint  # Command to check lint
   only:
     - merge_requests
     - branches
 
-# Job para executar os testes
+# Job for running the tests
 test:
   stage: test
-  image: node:22.5.0
   script:
-    - npm run test  # Comando para executar os testes
+    - npm run test  # Command to run tests
   only:
     - merge_requests
     - branches
 
-# Job para build da imagem Docker do frontend
+# Job to build the Docker image for the frontend
 build-frontend:
   stage: build
+  image: docker:latest  # Docker image for building
+  services:
+    - name: docker:dind  # Enabling Docker in Docker (DinD) service
+      privileged: true  # Privileged mode for Docker in Docker is allowed here at the job level
   script:
     - docker build -f Dockerfile -t $DOCKER_IMAGE_FRONTEND .
   only:
     - main
 
-# Job para push da imagem Docker do frontend
+# Job to push the Docker image for the frontend
 push-frontend:
   stage: push
+  image: docker:latest  # Docker image for pushing
+  services:
+    - name: docker:dind
+      privileged: true  # Privileged mode allowed at the job level
   script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
     - docker push $DOCKER_IMAGE_FRONTEND
   only:
     - main
+  dependencies:
+    - build-frontend
