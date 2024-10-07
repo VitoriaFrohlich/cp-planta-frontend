@@ -63,7 +63,6 @@ build-frontend:
     - docker build -f Dockerfile -t $DOCKER_IMAGE_FRONTEND .
   only:
     - main
-  privileged: yes  # Changed to 'yes' based on your recent update
 
 # Job to push the Docker image for the frontend
 push-frontend:
