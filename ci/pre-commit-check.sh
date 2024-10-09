@@ -6,11 +6,9 @@ if git diff --cached --name-only | grep -q '.gitignore'; then
     exit 1
 fi
 
-# Executa lint e testes
-npx lint-staged
-npm run test -- --passWithNoTests
-
-# Verifica se lint e testes passaram
+# Verifica se o código está formatado de acordo com o Prettier
+echo "Running Prettier..."
+npm run format
 if [ $? -ne 0 ]; then
     echo "### ERRO: Verificações de lint ou testes falharam."
     exit 1

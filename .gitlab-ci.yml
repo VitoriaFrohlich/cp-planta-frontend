@@ -35,7 +35,7 @@ lint:
   before_script:
     - npm ci  # Instala as dependências
   script:
-    - npm run lint  # Comando para verificar o lint, ajuste conforme necessário
+    - npm run linters  # Command to check lint
   only:
     - merge_requests
     - branches
