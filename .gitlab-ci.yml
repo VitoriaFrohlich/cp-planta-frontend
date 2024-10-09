@@ -37,7 +37,7 @@ commit-msg-check:
 lint:
   stage: lint
   script:
-    - npm run lint  # Command to check lint
+    - npm run linters  # Command to check lint
   only:
     - merge_requests
     - branches

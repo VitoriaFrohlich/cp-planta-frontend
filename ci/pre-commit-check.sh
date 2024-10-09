@@ -10,7 +10,7 @@ fi
 
 # Verifica se o código está formatado de acordo com o Prettier
 echo "Running Prettier..."
-npm run format:check
+npm run format
 if [ $? -ne 0 ]; then
   echo "Prettier check failed."
   exit 1
