@@ -12,7 +12,7 @@ export default function CreateBatch() {
   return (
     <main className="">
       <Header />
-      <DynamicBox title="Testando">
+      <DynamicBox>
         <SelectInput
           label="Unidade de medida"
           placeholder="Selecione a medida"
