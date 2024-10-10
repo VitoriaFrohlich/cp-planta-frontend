@@ -50,7 +50,7 @@ test:
   before_script:
     - npm install -g jest@29.x.x
   script:
-    - npm run test:ci
+    - npm run test:ci  # Command to run tests (ensure the test script is defined in package.json)
   only:
     - merge_requests
     - branches
