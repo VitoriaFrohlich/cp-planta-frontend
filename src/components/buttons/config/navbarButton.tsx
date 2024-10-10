@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-interface navbarButtonProps {
+interface NavbarButtonProps {
   href: string;
   title: string;
   selected?: boolean;
 }
 
-const NavbarButtonComponent: React.FC<navbarButtonProps> = ({
+const NavbarButtonComponent: React.FC<NavbarButtonProps> = ({
   href,
   title,
   selected

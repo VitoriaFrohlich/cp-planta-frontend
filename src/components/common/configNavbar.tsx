@@ -1,6 +1,6 @@
 'use client';
 import { usePathname } from 'next/navigation';
-import NavbarButtonComponent from '../buttons/config/navbarButton';
+import NavbarButtonComponent from '../buttons/config/NavbarButton';
 
 interface navbarProps {
   children: React.ReactNode;
