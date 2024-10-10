@@ -13,38 +13,31 @@ variables:
 default:
   image: node:22.5.0
   before_script:
-    - npm install  
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}  # Cache per branch (or other identifier)
-    paths:
-      - node_modules/  # Cache the installed node_modules folder
+    - rm -rf node_modules  # Remove node_modules before installation to avoid conflicts
+    - npm install  # Install dependencies fresh in every job
 
 # Job for simulating the commit-msg check
 commit-msg-check:
   stage: commit-msg-check
   script:
-    - bash ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"  # Passes the commit message for validation
+    - bash ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"
   only:
     - merge_requests
     - branches
-
 
 # Job for checking the lint
 lint:
   stage: lint
   script:
-    - npm install  # Ensure all dependencies, including eslint, are installed
-    - npm run linters  # Assumes the lint script is defined in package.json
+    - npm run linters
   only:
-    - merge_requests
     - branches
 
 # Job for running the tests
 test:
   stage: test
   script:
-    - npm install 
-    - npm run test  # Command to run tests 
+    - npm run test  
   only:
     - merge_requests
     - branches
@@ -56,6 +49,7 @@ build-frontend:
   services:
     - docker:dind
   before_script:
+    - echo "Skipping npm install for Docker build"
     - docker info
   script:
     - docker build -f Dockerfile -t $DOCKER_IMAGE_FRONTEND .
@@ -69,6 +63,7 @@ push-frontend:
   services:
     - docker:dind
   before_script:
+    - echo "Skipping npm install for Docker push"
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
   script:
     - docker push $DOCKER_IMAGE_FRONTEND
