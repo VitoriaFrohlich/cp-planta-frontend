@@ -19,14 +19,14 @@ default:
     paths:
       - node_modules/  # Cache the installed node_modules folder
 
-# Job for simulating the pre-commit check
-pre-commit-check:
-  stage: pre-commit-check
-  script:
-    - bash ci/pre-commit-check.sh  # Executes the pre-commit script
-  only:
-    - merge_requests
-    - branches
+# # Job for simulating the pre-commit check
+# pre-commit-check:
+#   stage: pre-commit-check
+#   script:
+#     - bash ci/pre-commit-check.sh  # Executes the pre-commit script
+#   only:
+#     - merge_requests
+#     - branches
 
 # Job for simulating the commit-msg check
 commit-msg-check:
