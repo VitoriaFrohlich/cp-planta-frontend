@@ -1,19 +1,23 @@
 #!/bin/bash
 
+# Garante que o script está rodando do diretório raiz do projeto
+cd "$(dirname "$0")/.."
+
 # Verifica se o código está de acordo com o ESLint
-echo "Running linters and Prettier..."
-npm run linters
+echo "Running ESLint..."
+npm run lint
 if [ $? -ne 0 ]; then
-  echo "ESLint check failed."
+  echo "ESLint check failed. Please fix the issues and try again."
   exit 1
 fi
 
-# Verifica se o código está formatado de acordo com o Prettier
-echo "Running Prettier..."
-npm run format
+# Verifica se o código está formatado com Prettier (sem alterar)
+echo "Running Prettier check..."
+npm run prettier:check
 if [ $? -ne 0 ]; then
-  echo "Prettier check failed."
+  echo "Prettier check failed. Please format your code and try again."
   exit 1
 fi
 
-echo "### PRE-COMMIT: Verificações concluídas com sucesso."
+echo "Pre-commit checks passed!"
+exit 0

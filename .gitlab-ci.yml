@@ -28,14 +28,14 @@ commit-msg-check:
     - merge_requests
     - branches
 
-# # Job for checking the lint
-# lint:
-#   stage: lint
-#   script:
-#     - npm run linters  # Command to check lint
-#   only:
-#     - merge_requests
-#     - branches
+# Job for checking the lint
+lint:
+  stage: lint
+  script:
+    - npm run linters  # Command to check lint
+  only:
+    - merge_requests
+    - branches
 
 # Job para executar os testes
 test:
