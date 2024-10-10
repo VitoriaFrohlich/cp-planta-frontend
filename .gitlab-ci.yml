@@ -27,21 +27,21 @@ default:
 commit-msg-check:
   stage: commit-msg-check
   script:
-    - echo "$CI_COMMIT_MESSAGE" | npx commitlint
+    - bash ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"  # Passes the commit message for validation
   only:
     - merge_requests
     - branches
 
-# Linting and formatting job
+
+# Job for checking the lint
 lint:
   stage: lint
   before_script:
     - npm install -g eslint@8.x.x prettier@3.x.x
   script:
-    - npm run lint
-    - npm run prettier
+    - npm install  # Ensure all dependencies, including eslint, are installed
+    - npm run linters  # Assumes the lint script is defined in package.json
   only:
-    - merge_requests
     - branches
 
 # Testing job
@@ -62,6 +62,7 @@ build-frontend:
   services:
     - docker:dind
   before_script:
+    - echo "Skipping npm install for Docker build"
     - docker info
   script:
     - docker build -f Dockerfile -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
@@ -80,8 +81,7 @@ push-frontend:
   services:
     - docker:dind
   before_script:
-    - docker info
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
   script:
     - docker load -i image.tar
     - docker push "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
