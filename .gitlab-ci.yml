@@ -58,13 +58,9 @@ test:
 # Job to build the Docker image for the frontend
 build-frontend:
   stage: build
-  image: docker:20.10.16
+  image: docker:latest
   services:
-    - name: docker:20.10.16-dind
-      alias: docker
-  variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_TLS_CERTDIR: ""
+    - docker:dind
   before_script:
     - docker info
   script:
@@ -80,13 +76,9 @@ build-frontend:
 # Job to push the Docker image for the frontend
 push-frontend:
   stage: push
-  image: docker:20.10.16
+  image: docker:latest
   services:
-    - name: docker:20.10.16-dind
-      alias: docker
-  variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_TLS_CERTDIR: ""
+    - docker:dind
   before_script:
     - docker info
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
