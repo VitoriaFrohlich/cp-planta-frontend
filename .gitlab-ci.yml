@@ -13,8 +13,7 @@ variables:
 default:
   image: node:22.5.0  # Using Node.js 22.5.0 image for Node-related tasks
   before_script:
-    - npm install  # Install dependencies using npm
-    - eslint --init
+    - npm ci  # Install dependencies using npm (ensure ESLint is installed globally or in package.json)
 
 # Job para simular o pre-commit
 pre-commit-check:
@@ -23,8 +22,6 @@ pre-commit-check:
   before_script:
     - npm ci  # Instala as dependências
   script:
-    - npm i eslint
-    - eslint --init
     - bash ci/pre-commit-check.sh  # Executes the pre-commit script
   only:
     - merge_requests
@@ -46,9 +43,7 @@ commit-msg-check:
 lint:
   stage: lint
   script:
-    - npm i eslint
-    - eslint --init
-    - npm run linters  # Command to check lint
+    - npm run lint  # Assumes the lint script is defined in package.json
   only:
     - merge_requests
     - branches
@@ -60,8 +55,7 @@ test:
   before_script:
     - npm ci  # Instala as dependências
   script:
-    - npm i jest
-    - npm run test  # Command to run tests
+    - npm run test  # Command to run tests (ensure the test script is defined in package.json)
   only:
     - merge_requests
     - branches
@@ -86,8 +80,6 @@ push-frontend:
   services:
     - docker:dind  # Docker in Docker service
   before_script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
-  script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
   script:
     - docker push $DOCKER_IMAGE_FRONTEND
