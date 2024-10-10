@@ -3,7 +3,7 @@ import CardOperation from '../../cards/operation/CardOperation';
 export default function CardOperationSection() {
   return (
     <div className="space-y-8 lg:w-1/2">
-      <h2 className="text-3xl text-[#000000] text-center lg:text-left">
+      <h2 className="text-3xl text-black text-center lg:text-left">
         Operações em Andamento
       </h2>
       {/* Colunas responsivas para operações */}

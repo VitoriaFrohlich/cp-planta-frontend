@@ -28,7 +28,7 @@ export default function Home() {
           />
         </div>
         {/* Linha divisória */}
-        <hr className="border-[#006F48] border-1 mx-4 md:mx-9" />
+        <hr className="border-greenHortti border-1 mx-4 md:mx-9" />
 
         <div className="flex flex-col lg:flex-row justify-center gap-8 my-8 px-4">
           <InventorySection />

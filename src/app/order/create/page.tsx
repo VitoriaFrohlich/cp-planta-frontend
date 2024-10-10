@@ -13,30 +13,31 @@ import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick
 
 export default function OrderCreate() {
   const router = useRouter();
-  const [produtoFinal, setProdutoFinal] = useState('');
-  const [materiaPrima, setMateriaPrima] = useState('');
-  const [lote, setLote] = useState('');
-  const [quantidade, setQuantidade] = useState(0);
-  const [items, setItems] = useState([
-    { name: 'Batata Inglesa Média', lote: '10002', quantity: 10 },
-    { name: 'Batata Inglesa Média', lote: '20526', quantity: 10 },
-    { name: 'Batata Inglesa Média', lote: '60205', quantity: 10 },
-    { name: 'Batata Inglesa Média', lote: '47856', quantity: 10 }
+  const [finalProduct, setFinalProduct] = useState('');
+  const [rawMaterial, setMateriaPrima] = useState('');
+  const [batch, setBatch] = useState('');
+  const [quantity, setQuantity] = useState(0);
+  const [itens, setItens] = useState([
+    //dados mockados
+    { name: 'Batata Inglesa Média', batch: '10002', quantity: 10 },
+    { name: 'Batata Inglesa Média', batch: '20526', quantity: 10 },
+    { name: 'Batata Inglesa Média', batch: '60205', quantity: 10 },
+    { name: 'Batata Inglesa Média', batch: '47856', quantity: 10 }
   ]);
   const [tax, setTax] = useState<number | null>(null);
   const [line, setLine] = useState('');
 
   const handleRemoveItem = (indexToRemove: number) => {
-    setItems(items.filter((_, index) => index !== indexToRemove));
+    setItens(itens.filter((_, index) => index !== indexToRemove));
   };
 
-  const sumQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
+  const sumQuantity = itens.reduce((acc, iten) => acc + iten.quantity, 0);
 
   const calculateValue = () => {
     return tax == null ? null : sumQuantity * (tax / 100) + sumQuantity;
   };
 
-  const etapas = [
+  const steps = [
     'Etapa 1',
     'Etapa 2',
     'Etapa 3',
@@ -67,23 +68,23 @@ export default function OrderCreate() {
   };
 
   const handleAddItem = (
-    materiaPrima: string,
-    lote: string,
-    quantidade: number
+    rawMaterial: string,
+    batch: string,
+    quantity: number
   ) => {
-    setItems([
-      ...items,
-      { name: materiaPrima, lote: lote, quantity: quantidade }
+    setItens([
+      ...itens,
+      { name: rawMaterial, batch: batch, quantity: quantity }
     ]);
   }; //TODO: alterar para interfaces quando back tiver pronto
 
-  const isFormValidAdd = materiaPrima && lote && quantidade > 0; //Veirificacao botao adicionar
+  const isFormValidAdd = rawMaterial && batch && quantity > 0;
   const isFormValidCreate =
-    items.length > 0 &&
+    itens.length > 0 &&
     tax != null &&
     !Number.isNaN(tax) &&
     line.length > 0 &&
-    produtoFinal.length > 0; //Verificacao botao finalizar
+    finalProduct.length > 0;
 
   return (
     <main>
@@ -109,18 +110,19 @@ export default function OrderCreate() {
                     label="Produto Final"
                     placeholder="Selecione o Produto a ser produzido"
                     options={[
+                      //dados mockados
                       'Batata Frita',
                       'Batata Palito',
                       'Batata Rústica'
                     ]}
-                    onChange={e => setProdutoFinal(e.target.value)}
+                    onChange={e => setFinalProduct(e.target.value)}
                   />
                 </div>
                 <div className="border border-greenHortti border-10 p-5 rounded-md">
                   <SelectInput
                     label="Matéria Prima"
                     options={['Batata Inglesa Média', 'Cenoura', 'Tomate']}
-                    value={materiaPrima}
+                    value={rawMaterial}
                     onChange={e => setMateriaPrima(e.target.value)}
                     placeholder="Selecione o tipo"
                   />
@@ -128,16 +130,16 @@ export default function OrderCreate() {
                     label="Lote"
                     options={['120DED2', '1900DSC', '09OPP2D']}
                     placeholder="Selecione o lote"
-                    value={lote}
-                    onChange={e => setLote(e.target.value)}
+                    value={batch}
+                    onChange={e => setBatch(e.target.value)}
                   />
                   <NumericInput
                     label="Quantidade de Entrada de Materia Prima"
                     placeholder="0 KG"
-                    value={quantidade}
+                    value={quantity}
                     onChange={e => {
                       const value = parseInt(e.target.value);
-                      setQuantidade(value >= 0 ? value : 0);
+                      setQuantity(value >= 0 ? value : 0);
                     }}
                   />
                   <Button
@@ -147,33 +149,31 @@ export default function OrderCreate() {
                         : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'
                     }`}
                     disabled={!isFormValidAdd}
-                    onClick={() =>
-                      handleAddItem(materiaPrima, lote, quantidade)
-                    }
+                    onClick={() => handleAddItem(rawMaterial, batch, quantity)}
                   >
                     Adicionar
                   </Button>
 
                   <div className="w-full h-px bg-greenHortti" />
 
-                  <div className="grid grid-cols-3 gap-4 mb-2">
+                  <div className="grid grid-cols-3 gap-4 my-2 mx-10">
                     <div className="text-black font-semibold">Nome</div>
                     <div className="text-black font-semibold">Lote</div>
                     <div className="text-black font-semibold">Quantidade</div>
                   </div>
 
-                  <div className="h-48 overflow-auto ">
+                  <div className="h-auto max-h-48 overflow-auto ">
                     {/* Lista de itens adicionados */}
-                    {items.map((item, index) => (
+                    {itens.map((iten, index) => (
                       <div
                         key={index}
                         className="grid grid-cols-3 gap-4 items-center mb-4 overflow-auto"
                       >
-                        <div className="text-black">{item.name}</div>
-                        <div className="text-black">{item.lote}</div>
+                        <div className="text-black">{iten.name}</div>
+                        <div className="text-black">{iten.batch}</div>
                         <div className="flex justify-between text-black">
                           <span className="text-black">
-                            {item.quantity + ' Kg'}
+                            {iten.quantity + ' Kg'}
                           </span>
                           <button
                             className="text-red-600 font-semibold border border-red-600 rounded-full py-1 px-2"
@@ -269,12 +269,12 @@ export default function OrderCreate() {
         onClose={closeStepsModal}
         title="Etapas"
       >
-        {etapas.map((etapa, index) => (
+        {steps.map((steps, index) => (
           <div
             key={index}
             className="w-full text-black border-greenHortti border rounded-lg p-2 box mt-3"
           >
-            {etapa}
+            {steps}
           </div>
         ))}
       </DefaultModal>
