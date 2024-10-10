@@ -19,15 +19,6 @@ default:
     paths:
       - node_modules/  # Cache the installed node_modules folder
 
-# # Job for simulating the pre-commit check
-# pre-commit-check:
-#   stage: pre-commit-check
-#   script:
-#     - bash ci/pre-commit-check.sh  # Executes the pre-commit script
-#   only:
-#     - merge_requests
-#     - branches
-
 # Job for simulating the commit-msg check
 commit-msg-check:
   stage: commit-msg-check
@@ -41,7 +32,8 @@ commit-msg-check:
 lint:
   stage: lint
   script:
-    - npm run lint  # Assumes the lint script is defined in package.json
+    - npm install  # Ensure all dependencies, including eslint, are installed
+    - npm run linters  # Assumes the lint script is defined in package.json
   only:
     - merge_requests
     - branches
@@ -50,7 +42,7 @@ lint:
 test:
   stage: test
   script:
-    - npm run test  # Command to run tests (ensure the test script is defined in package.json)
+    - npm run test  # Command to run tests 
   only:
     - merge_requests
     - branches
