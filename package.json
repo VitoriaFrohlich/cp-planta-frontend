@@ -35,6 +35,7 @@
     "prettier": "npx prettier --write --ignore-unknown .",
     "format": "npm run prettier",
     "commit": "git-cz",
+    "prettier:check": "npx prettier --check --ignore-unknown .",
     "linters": "npm run lint && npm run prettier",
     "release": "semantic-release"
   },
