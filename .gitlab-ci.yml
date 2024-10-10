@@ -14,11 +14,14 @@ default:
   image: node:22.5.0  # Using Node.js 22.5.0 image for Node-related tasks
   before_script:
     - npm install  # Install dependencies using npm
+    - eslint --init
 
 # Job for simulating the pre-commit check
 pre-commit-check:
   stage: pre-commit-check
   script:
+    - npm i eslint
+    - eslint --init
     - bash ci/pre-commit-check.sh  # Executes the pre-commit script
   only:
     - merge_requests
@@ -37,6 +40,8 @@ commit-msg-check:
 lint:
   stage: lint
   script:
+    - npm i eslint
+    - eslint --init
     - npm run linters  # Command to check lint
   only:
     - merge_requests
@@ -46,6 +51,7 @@ lint:
 test:
   stage: test
   script:
+    - npm i jest
     - npm run test  # Command to run tests
   only:
     - merge_requests
