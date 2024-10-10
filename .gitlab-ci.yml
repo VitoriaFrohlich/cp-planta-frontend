@@ -11,9 +11,13 @@ variables:
 
 # Default settings for all jobs
 default:
-  image: node:22.5.0  # Using Node.js 22.5.0 image for Node-related tasks
+  image: node:22.5.0
   before_script:
-    - npm ci  # Install dependencies using npm (ensure ESLint is installed globally or in package.json)
+    - npm install  
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}  # Cache per branch (or other identifier)
+    paths:
+      - node_modules/  # Cache the installed node_modules folder
 
 # Job para simular o pre-commit
 pre-commit-check:
@@ -63,11 +67,11 @@ test:
 # Job to build the Docker image for the frontend
 build-frontend:
   stage: build
-  image: docker:latest  # Use Docker image for building
+  image: docker:latest
   services:
-    - docker:dind  # Docker in Docker service
+    - docker:dind
   before_script:
-    - docker info  # Ensure Docker is running
+    - docker info
   script:
     - docker build -f Dockerfile -t $DOCKER_IMAGE_FRONTEND .
   only:
@@ -76,9 +80,9 @@ build-frontend:
 # Job to push the Docker image for the frontend
 push-frontend:
   stage: push
-  image: docker:latest  # Use Docker image for pushing
+  image: docker:latest
   services:
-    - docker:dind  # Docker in Docker service
+    - docker:dind
   before_script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
   script:
