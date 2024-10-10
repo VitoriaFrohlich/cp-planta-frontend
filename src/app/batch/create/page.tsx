@@ -5,6 +5,7 @@ import DateInput from '@/src/components/common/inputs/DateInput';
 import DynamicBox from '@/src/components/common/DynamicBox';
 
 export default function CreateBatch() {
+  // Mock data
   const metrics = ['kg', 'g', 'mg', 'l', 'ml', 'un'];
   const storageLocations = ['Freezer 1', 'Freezer 2'];
 
