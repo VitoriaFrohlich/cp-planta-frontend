@@ -1,0 +1,28 @@
+interface NumericInputProps {
+  label: string;
+  placeholder: string;
+  disable?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const numericInput: React.FC<NumericInputProps> = ({
+  label,
+  placeholder,
+  disable,
+  onChange
+}) => {
+  return (
+    <div className="mb-4">
+      <label className="block text-black mb-1">{label}</label>
+      <input
+        type="date"
+        placeholder={placeholder}
+        className="w-full text-[#1e1e1e] mt-1 border border-greenHortti rounded-lg p-2"
+        disabled={disable === undefined ? false : disable}
+        onChange={onChange}
+      />
+    </div>
+  );
+};
+
+export default numericInput;
