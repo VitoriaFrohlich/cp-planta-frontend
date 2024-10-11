@@ -11,7 +11,7 @@ export default function ButtonSettings({ href }: Props) {
     <Link href={href}>
       <Image
         src={AddIcon}
-        alt="Add Icon"
+        alt="Configurações"
         width={45.31}
         height={45}
         className="absolute right-[30px] top-[34px]"
