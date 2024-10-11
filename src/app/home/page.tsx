@@ -19,12 +19,12 @@ export default function Home() {
           <ButtonOperation
             title="Cadastrar Lote"
             description="Cadastro de Matérias Primas para Operação"
-            href="/raw-material/create"
+            href="/config/raw-material"
           />
           <ButtonOperation
             title="Cadastrar Produto Final"
             description="Cadastro de Produtos Finais"
-            href="/final-product/create"
+            href="/config/final-product"
           />
         </div>
         <hr className="border-[#006F48] border-1 mx-9" />
