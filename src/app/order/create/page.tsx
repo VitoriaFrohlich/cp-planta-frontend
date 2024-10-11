@@ -10,6 +10,7 @@ import DefaultInput from '@/src/components/common/inputs/DefaultInput';
 import DefaultModal from '@/src/components/common/modals/DefaultModal';
 import React from 'react';
 import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
+import DynamicBox from '@/src/components/common/DynamicBox';
 
 export default function OrderCreate() {
   const router = useRouter();
@@ -101,11 +102,8 @@ export default function OrderCreate() {
             <div className="grid md:grid-cols-7 gap-6 relative">
               {/* Formulário - Cadastro de Ordem */}
               <div className="col-span-3">
-                <h2 className="text-xl font-semibold text-black mb-6">
-                  Cadastro de Ordem
-                </h2>
                 {/* Inputs do formulário */}
-                <div className="border border-greenHortti border-10 px-5 pt-5 rounded-md mb-3">
+                <DynamicBox title="Cadastro Ordem">
                   <SelectInput
                     label="Produto Final"
                     placeholder="Selecione o Produto a ser produzido"
@@ -117,8 +115,8 @@ export default function OrderCreate() {
                     ]}
                     onChange={e => setFinalProduct(e.target.value)}
                   />
-                </div>
-                <div className="border border-greenHortti border-10 p-5 rounded-md">
+                </DynamicBox>
+                <DynamicBox>
                   <SelectInput
                     label="Matéria Prima"
                     options={['Batata Inglesa Média', 'Cenoura', 'Tomate']}
@@ -185,7 +183,7 @@ export default function OrderCreate() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </DynamicBox>
               </div>
 
               {/* Separador Vertical */}
@@ -195,12 +193,7 @@ export default function OrderCreate() {
 
               {/* Receita Utilizada */}
               <div className="col-span-3">
-                <div>
-                  <h2 className="text-xl font-semibold text-black mb-6">
-                    Lotes Selecionados
-                  </h2>
-                </div>
-                <div className="border border-greenHortti border-10 p-5 rounded-md mb-4">
+                <DynamicBox title="Lotes Selecionados">
                   <SelectInput
                     label={'Linha selecionada'}
                     placeholder={'Selecione a Linha de Produção'}
@@ -225,24 +218,21 @@ export default function OrderCreate() {
                         : calculateValue()!.toString()
                     }
                   />
-                </div>
+                </DynamicBox>
                 <Button
                   className="border rounded-lg w-full p-2 mt-2 mb-4 text-black border-greenHortti bg-greenHorttiBg"
                   onClick={() => openStepsModal()}
                 >
                   Etapas
                 </Button>
-                <h2 className="text-xl font-semibold text-black my-6">
-                  Nome Ordem
-                </h2>
-                <div className="border border-greenHortti border-10 p-5 rounded-md mb-4">
+                <DynamicBox title="Nome ordem">
                   <h3 className="text-grayHortti">
                     Nome gerado automaticamente
                   </h3>
                   <h2 className="text-xl font-semibold text-black my-4">
                     Ordem X - XXXX
                   </h2>
-                </div>
+                </DynamicBox>
                 {/* Botões */}
                 <div className="w-full h-auto flex space-x-2">
                   <OnClickButton
