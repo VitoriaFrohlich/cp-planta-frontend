@@ -18,6 +18,7 @@ const config = {
         greenHortti: '#006F48',
         greenHorttiBg: '#EBFFEE',
         grayHortti: '#2E2E2E',
+        graySubtitleHortti: '#757575',
         orangeHortti: '#F56932'
       },
       backgroundImage: {
