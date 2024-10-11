@@ -34,9 +34,11 @@
     "lint": "eslint src --max-warnings=0",
     "prettier": "npx prettier --write --ignore-unknown .",
     "format": "npm run prettier",
+    "format:check": "npx prettier --check --ignore-unknown .",
     "commit": "git-cz",
+    "linters": "npm run lint && npm run prettier",
     "release": "semantic-release",
-    "linters": "npm run lint && npm run prettier"
+    "commitlint": "commitlint --edit"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [

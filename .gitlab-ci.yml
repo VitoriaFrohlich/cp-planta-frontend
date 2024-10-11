@@ -1,53 +1,99 @@
+variables:
+  # Docker image details
+  DOCKER_IMAGE_NAME: norohim/cp-planta-frontend
+  DOCKER_IMAGE_TAG: latest
+  DOCKER_DRIVER: overlay2
+
 stages:
-  - pre-commit-check
   - commit-msg-check
   - lint
   - test
+  - build
+  - push
 
-# Job para simular o pre-commit
-pre-commit-check:
-  stage: pre-commit-check
-  image: node:18 
+# Default settings for all jobs
+default:
+  image: node:22.5.0
   before_script:
-    - npm ci  # Instala as dependências
-  script:
-    - ./ci/pre-commit-check.sh  # Executa o script de pre-commit
-  only:
-    - merge_requests
-    - branches
+    - rm -rf node_modules  # Remove node_modules to avoid conflicts
+    - npm install  # Install dependencies cleanly
 
-# Job para simular o commit-msg
+# Commit message check using commitlint
 commit-msg-check:
   stage: commit-msg-check
-  image: node:18  
-  before_script:
-    - npm ci  # Instala as dependências
   script:
-    - ./ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"  # Passa a mensagem de commit para validação
+    - echo "$CI_COMMIT_MESSAGE" | npx commitlint
   only:
-    - merge_requests
     - branches
+  tags:
+    - docker
 
-# Job para verificar o lint
+# Linting and formatting job
 lint:
   stage: lint
-  image: node:18  
-  before_script:
-    - npm ci  # Instala as dependências
   script:
-    - npm run lint  # Comando para verificar o lint, ajuste conforme necessário
+    - npm run lint
+    - npm run format:check
   only:
     - merge_requests
     - branches
+  tags:
+    - docker
 
-# Job para executar os testes
+# Testing job
 test:
   stage: test
-  image: node:18  
-  before_script:
-    - npm ci  # Instala as dependências
   script:
-    - npm run test  # Comando para executar os testes, ajuste conforme necessário
+    - npm run test:ci
   only:
     - merge_requests
     - branches
+  tags:
+    - docker
+
+# Build Docker image job
+build_docker_image:
+  stage: build
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - docker info
+  script:
+    - docker build -f Dockerfile -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
+    - docker save "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" -o image.tar
+  artifacts:
+    paths:
+      - image.tar
+    expire_in: 1 hour
+  only:
+    - main
+  tags:
+    - docker
+
+# Push Docker image job
+push_docker_image:
+  stage: push
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - docker info
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  script:
+    - docker load -i image.tar
+    - docker push "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
+  dependencies:
+    - build_docker_image
+  only:
+    - main
+  tags:
+    - docker
