@@ -6,15 +6,15 @@ stages:
   - build
   - push
 
-variables:
-  DOCKER_IMAGE_FRONTEND: norohim/cp-planta-frontend:latest
+cache:
+  paths:
+    - node_modules/
 
 # Default settings for all jobs
 default:
   image: node:22.5.0
   before_script:
-    - rm -rf node_modules  # Remove node_modules before installation to avoid conflicts
-    - npm install  # Install dependencies fresh in every job
+    - npm install  # Install dependencies cleanly
 
 # Job for simulating the commit-msg check
 commit-msg-check:
