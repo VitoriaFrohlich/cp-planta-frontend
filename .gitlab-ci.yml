@@ -11,11 +11,14 @@ stages:
   - build
   - push
 
+cache:
+  paths:
+    - node_modules/
+
 # Default settings for all jobs
 default:
   image: node:22.5.0
   before_script:
-    - rm -rf node_modules  # Remove node_modules to avoid conflicts
     - npm install  # Install dependencies cleanly
 
 # Commit message check using commitlint
