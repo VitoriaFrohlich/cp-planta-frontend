@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <main>
       <Header />
-      <ButtonSettings href="/settings" />
+      <ButtonSettings href="/config/raw-material" />
       <div>
         <div className="flex gap-6 justify-center mx-9 my-[34px]">
           <ButtonOperation
@@ -19,7 +19,7 @@ export default function Home() {
           <ButtonOperation
             title="Cadastrar Lote"
             description="Cadastro de Matérias Primas para Operação"
-            href="/config/raw-material"
+            href="/batch/create"
           />
           <ButtonOperation
             title="Cadastrar Produto Final"

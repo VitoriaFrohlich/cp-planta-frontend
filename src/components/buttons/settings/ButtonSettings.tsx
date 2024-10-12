@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import AddIcon from '../../icons/gear-icon.svg';
+import GearIcon from '../../icons/gear-icon.svg';
 
 type Props = {
   href: string;
@@ -10,7 +10,7 @@ export default function ButtonSettings({ href }: Props) {
   return (
     <Link href={href}>
       <Image
-        src={AddIcon}
+        src={GearIcon}
         alt="Configurações"
         width={45.31}
         height={45}
