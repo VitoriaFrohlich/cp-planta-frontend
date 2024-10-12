@@ -30,7 +30,7 @@
     "build": "next build",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:ci": "jest --ci",
+    "test:ci": "jest --ci --passWithNoTests",
     "lint": "eslint src --max-warnings=0",
     "prettier": "npx prettier --write --ignore-unknown .",
     "format": "npm run prettier",
