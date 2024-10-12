@@ -28,8 +28,6 @@ commit-msg-check:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
   only:
     - branches
-  tags:
-    - docker
 
 # Linting and formatting job
 lint:
@@ -40,8 +38,6 @@ lint:
   only:
     - merge_requests
     - branches
-  tags:
-    - docker
 
 # Testing job
 test:
@@ -51,8 +47,6 @@ test:
   only:
     - merge_requests
     - branches
-  tags:
-    - docker
 
 # Build Docker image job
 build_docker_image:
@@ -75,8 +69,6 @@ build_docker_image:
     expire_in: 1 hour
   only:
     - main
-  tags:
-    - docker
 
 # Push Docker image job
 push_docker_image:
@@ -98,5 +90,3 @@ push_docker_image:
     - build_docker_image
   only:
     - main
-  tags:
-    - docker
