@@ -18,7 +18,6 @@ module.exports = {
         'ci',       // CI configuration changes
       ],
     ],
-
     // Enforce that the subject is not empty
     'subject-empty': [2, 'never'],
 
