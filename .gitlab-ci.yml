@@ -14,7 +14,7 @@ cache:
 default:
   image: node:22.5.0
   before_script:
-    - npm install  # Install dependencies cleanly
+    - npm install --force # Install dependencies cleanly
 
 # Job for simulating the commit-msg check
 commit-msg-check:
