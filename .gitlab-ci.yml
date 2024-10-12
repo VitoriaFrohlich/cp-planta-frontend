@@ -31,6 +31,8 @@ commit-msg-check:
 # Job for checking the lint
 lint:
   stage: lint
+  before_script:
+    - npm install -g eslint prettier
   script:
     - npm run linters
   only:
@@ -39,9 +41,8 @@ lint:
 # Job para executar os testes
 test:
   stage: test
-  image: node:18  
   before_script:
-    - npm ci  # Instala as dependências
+    - npm install -g jest
   script:
     - npm run test  
   only:
