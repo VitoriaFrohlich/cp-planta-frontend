@@ -33,7 +33,7 @@ commit-msg-check:
 lint:
   stage: lint
   before_script:
-    - npm install -g eslint prettier
+    - npm install -g eslint@8.x.x prettier@3.x.x
   script:
     - npm run linters
   only:
@@ -43,7 +43,7 @@ lint:
 test:
   stage: test
   before_script:
-    - npm install -g jest
+    - npm install -g jest@27.x.x
   script:
     - npm run test  
   only:
