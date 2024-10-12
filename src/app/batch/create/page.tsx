@@ -15,8 +15,8 @@ export default function CreateBatch() {
   return (
     <main className="">
       <Header />
-      <div className="w-full flex mt-10 gap-16">
-        <div className=" flex flex-col">
+      <div className="w-full flex mt-10 gap-14 px-14">
+        <div className=" flex flex-col w-full max-w-[603px]">
           <DynamicBox title="Cadastro de Lote">
             <SelectInput 
               label="Matéria Prima"
@@ -34,7 +34,7 @@ export default function CreateBatch() {
           </DynamicBox>
         </div>
         <div className="w-[1px] h-auto border border-greenHortti " />
-        <div className="flex flex-col gap-y-16">
+        <div className="flex flex-col gap-y-16 w-full max-w-[603px]">
           <DynamicBox title=' '>
             <SelectInput
               label="Unidade de medida"
