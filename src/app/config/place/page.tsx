@@ -33,6 +33,6 @@ export default function createPlace() {
           DeleteModal={SimpleModal} // Abre modal de deletar
         />
       </ConfigNavbarComponent>
-    </main>
+    </main> 
   );
 }
