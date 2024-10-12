@@ -27,9 +27,8 @@ default:
 commit-msg-check:
   stage: commit-msg-check
   script:
-    - bash ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"  # Passes the commit message for validation
+    - echo "$CI_COMMIT_MESSAGE" | npx commitlint
   only:
-    - merge_requests
     - branches
 
 
