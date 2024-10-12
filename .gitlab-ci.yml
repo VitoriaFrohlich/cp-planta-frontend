@@ -46,7 +46,7 @@ lint:
 test:
   stage: test
   before_script:
-    - npm install -g jest@27.x.x
+    - npm install -g jest@29.x.x
   script:
     - npm run test:ci
   only:
