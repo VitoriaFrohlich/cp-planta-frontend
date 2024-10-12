@@ -19,6 +19,7 @@ cache:
 default:
   image: node:22.5.0
   before_script:
+    - rm -rf node_modules/ # Remove node_modules directory
     - npm install --force # Install dependencies cleanly
 
 # Commit message check using commitlint
