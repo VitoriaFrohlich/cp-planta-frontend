@@ -75,5 +75,3 @@ push-frontend:
     - docker push $DOCKER_IMAGE_FRONTEND
   only:
     - main
-  dependencies:
-    - build-frontend
