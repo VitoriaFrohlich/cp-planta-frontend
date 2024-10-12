@@ -38,8 +38,8 @@ lint:
   before_script:
     - npm install -g eslint@8.x.x prettier@3.x.x
   script:
-    - npm install  # Ensure all dependencies, including eslint, are installed
-    - npm run linters  # Assumes the lint script is defined in package.json
+    - npm run lint
+    - npm run prettier
   only:
     - branches
 
