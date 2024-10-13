@@ -1,5 +1,9 @@
 {
     "compilerOptions": {
+      "typeRoots": ["./node_modules/@types"],
+      "types": ["aos", "babel__core", "babel__generator", "babel__template", "babel__traverse", 
+      "conventional-commits-parser", "graceful-fs", "http-cache-semantics", "istanbul-lib-coverage", "istanbul-lib-report", "istanbul-reports", "jest", "json-schema", 
+      "minimist", "node", "normalize-package-data", "parse-path", "prop-types", "react", "react-dom", "semver", "stack-utils", "yargs", "yargs-parser"],
       "module": "ESNext",            
       "target": "ES2020",
       "moduleResolution": "node",      
