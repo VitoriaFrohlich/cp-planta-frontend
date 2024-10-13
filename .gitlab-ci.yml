@@ -12,8 +12,7 @@ stages:
   - push
 
 cache:
-  paths:
-    - node_modules/
+  paths: []
 
 # Default settings for all jobs
 default:
@@ -38,7 +37,7 @@ commit-msg-check:
 lint:
   stage: lint
   before_script:
-    - npm install -g npm install eslint@latest prettier@3.x.x
+    - npm install -g eslint@latest prettier@3.x.x
   script:
     - npm run lint
     - npm run prettier
