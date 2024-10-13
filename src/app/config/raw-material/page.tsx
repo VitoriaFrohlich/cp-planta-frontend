@@ -1,71 +1,38 @@
 'use client';
+import { useState } from 'react';
 import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import Header from '@/src/components/common/header';
-import { useState } from 'react';
-
-// Componente de lista de matérias-primas
-const RawMaterialItem = ({ name, quantity }: { name: string, quantity: number }) => (
-  <div className="flex items-center justify-between border rounded-lg p-4 my-2 bg-white shadow">
-    <img
-      src={`/${name.toLowerCase()}.jpg`}
-      alt={name}
-      className="w-24 h-16 rounded-lg object-cover"
-    />
-    <span className="text-xl font-semibold">{name}</span>
-    <span className="text-lg">{quantity} lotes</span>
-    <div className="flex space-x-4">
-      <button className="text-greenHortti font-bold">✏️</button>
-      <button className="text-red-600 font-bold">🗑️</button>
-    </div>
-  </div>
-);
+import ImageExample from '@/public/config-image-example.svg';
+import GenericList from '@/src/components/common/GenericList';
+import ModalExample from '@/src/components/common/SimpleModal';
 
 export default function RawMaterialConfig() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [materials, setMaterials] = useState([
-    { name: 'Batata Branca', quantity: 8 },
-    { name: 'Cenoura', quantity: 5 },
-    { name: 'Maçã Fuji', quantity: 7 },
-  ]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const filteredMaterials = materials.filter(material =>
-    material.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Função que retorna os itens da lista
+  const getRawMaterials = () => [
+    { image: ImageExample, name: 'Batata Branca', quantity: 8 },
+    { image: ImageExample, name: 'Cenoura', quantity: 5 },
+    { image: ImageExample, name: 'Maçã Fuji', quantity: 7 },
+  ];
 
   return (
     <main>
       <Header />
       <ConfigNavbarComponent>
-        <div className="px-16 pb-8">
-          <div className="flex justify-between items-center mb-6">
-            <input
-              type="text"
-              className="border p-3 rounded-lg w-1/3"
-              placeholder="Pesquise..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-            />
-            <button className="bg-greenHortti text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700">
-              ➕ Adicionar
-            </button>
-          </div>
-          
-          <div className="space-y-4">
-            {filteredMaterials.map((material, index) => (
-              <RawMaterialItem
-                key={index}
-                name={material.name}
-                quantity={material.quantity}
-              />
-            ))}
-          </div>
-          
-          <div className="mt-8">
-            <button className="bg-gray-300 px-6 py-2 rounded-lg font-semibold hover:bg-gray-400">
-              ↩️ Retornar
-            </button>
-          </div>
-        </div>
+        <GenericList
+          columns={[
+            { label: 'Imagem', key: 'image', type: 'image', width: 'w-1/4' },
+            { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/4' },
+            { label: 'Qnt. lotes', key: 'quantity', type: 'text', width: 'w-1/4' }
+          ]}
+          getItems={getRawMaterials} // Função que busca os itens
+          AddModal={ModalExample} // Abre modal de adicionar
+          EditModal={ModalExample} // Abre modal de editar
+          DeleteModal={ModalExample} // Abre modal de deletar
+        />
       </ConfigNavbarComponent>
     </main>
   );
