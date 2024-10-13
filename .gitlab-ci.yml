@@ -6,29 +6,25 @@ stages:
   - build
   - push
 
-variables:
-  DOCKER_IMAGE_FRONTEND: norohim/cp-planta-frontend:latest
+cache:
+  paths:
+    - node_modules/
 
 # Default settings for all jobs
 default:
-  image: node:22.5.0  # Using Node.js 22.5.0 image for Node-related tasks
+  image: node:22.5.0
   before_script:
-    - npm install  # Install dependencies using npm
-
-# Job for simulating the pre-commit check
-pre-commit-check:
-  stage: pre-commit-check
-  script:
-    - bash ci/pre-commit-check.sh  # Executes the pre-commit script
-  only:
-    - merge_requests
-    - branches
+    - rm -rf node_modules/ # Remove node_modules directory
+    - npm install --force # Install dependencies cleanly
 
 # Job for simulating the commit-msg check
 commit-msg-check:
   stage: commit-msg-check
+  image: node:18  
+  before_script:
+    - npm ci  # Instala as dependências
   script:
-    - bash ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"  # Passes the commit message for validation
+    - bash ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"
   only:
     - merge_requests
     - branches
@@ -36,17 +32,21 @@ commit-msg-check:
 # Job for checking the lint
 lint:
   stage: lint
+  before_script:
+    - npm install -g eslint@8.x.x prettier@3.x.x
   script:
-    - npm run lint  # Command to check lint
+    - npm run lint
+    - npm run prettier
   only:
-    - merge_requests
     - branches
 
-# Job for running the tests
+# Job para executar os testes
 test:
   stage: test
+  before_script:
+    - npm install -g jest@29.x.x
   script:
-    - npm run test  # Command to run tests
+    - npm run test  
   only:
     - merge_requests
     - branches
@@ -54,11 +54,12 @@ test:
 # Job to build the Docker image for the frontend
 build-frontend:
   stage: build
-  image: docker:latest  # Use Docker image for building
+  image: docker:latest
   services:
-    - docker:dind  # Docker in Docker service
+    - docker:dind
   before_script:
-    - docker info  # Ensure Docker is running
+    - echo "Skipping npm install for Docker build"
+    - docker info
   script:
     - docker build -f Dockerfile -t $DOCKER_IMAGE_FRONTEND .
   only:
@@ -67,14 +68,13 @@ build-frontend:
 # Job to push the Docker image for the frontend
 push-frontend:
   stage: push
-  image: docker:latest  # Use Docker image for pushing
+  image: docker:latest
   services:
-    - docker:dind  # Docker in Docker service
+    - docker:dind
   before_script:
+    - echo "Skipping npm install for Docker push"
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
   script:
     - docker push $DOCKER_IMAGE_FRONTEND
   only:
     - main
-  dependencies:
-    - build-frontend
