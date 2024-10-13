@@ -3,6 +3,7 @@ import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
 import SimpleModal from '@/src/components/common/SimpleModal';
+import ImageExample from '@/public/config-image-example.svg';
 
 export default function createStep() {
   // Função que retorna os itens da lista
