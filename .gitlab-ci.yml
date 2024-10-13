@@ -25,8 +25,6 @@ default:
 # Commit message check using commitlint
 commit-msg-check:
   stage: commit-msg-check
-  before_script:
-    - npm install  # Instala as dependências
   script:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
   only:
