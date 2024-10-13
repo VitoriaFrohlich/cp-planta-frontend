@@ -28,6 +28,7 @@ commit-msg-check:
   script:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
   only:
+    - merge_requests
     - branches
 
 # Linting and formatting job
