@@ -36,7 +36,8 @@
     "format": "npm run prettier",
     "commit": "git-cz",
     "linters": "npm run lint && npm run prettier",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "commitlint": "commitlint --edit"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
