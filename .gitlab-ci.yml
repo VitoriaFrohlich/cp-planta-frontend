@@ -27,7 +27,7 @@ default:
 commit-msg-check:
   stage: commit-msg-check
   before_script:
-    - npm install  # Instala as dependências
+    - npm ci  # Instala as dependências
   script:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
   only:
@@ -38,7 +38,7 @@ commit-msg-check:
 lint:
   stage: lint
   before_script:
-    - npm install -g eslint@8.x.x prettier@3.x.x
+    - npm install -g npm install eslint@latest prettier@3.x.x
   script:
     - npm run lint
     - npm run prettier
