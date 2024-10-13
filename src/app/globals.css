@@ -20,6 +20,11 @@ body {
   color: rgb(var(--foreground-rgb));
 }
 
+
+.text-webkit-center {    
+  text-align: -webkit-center;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

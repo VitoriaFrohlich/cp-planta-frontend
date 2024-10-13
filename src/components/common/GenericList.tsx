@@ -123,7 +123,7 @@ export default function GenericList<T extends { [key: string]: any }>({
             filteredList.map(item => (
               <div key={item.id} className="flex items-center justify-between border rounded-lg p-4 my-2 text-black bg-white shadow border-greenHortti">
                 {columns.map((col, index) => (
-                  <div key={index} className={`${col.width} text-center`}>
+                  <div key={index} className={`${col.width} text-webkit-center`}>
                     {col.type === 'image' ? (
                       <Image src={item[col.key]} alt={String(item[col.key])} className="w-80 h-16 rounded-lg object-cover" />
                     ) : (
