@@ -11,9 +11,6 @@ stages:
   - build
   - push
 
-cache:
-  paths: []
-
 # Default settings for all jobs
 default:
   image: node:22.5.0
@@ -36,6 +33,7 @@ lint:
   stage: lint
   before_script:
     - npm install -g eslint@8.x.x prettier@3.x.x
+    - npm install --force # Install dependencies cleanly
   script:
     - npm run lint
     - npm run prettier
@@ -48,6 +46,7 @@ test:
   stage: test
   before_script:
     - npm install -g jest@29.x.x
+    - npm install --force # Install dependencies cleanly
   script:
     - npm run test:ci 
   only:
