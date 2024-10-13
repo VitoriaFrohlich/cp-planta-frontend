@@ -24,7 +24,7 @@ interface Props<T> {
   DeleteModal: React.FC<{ item: T; onClose: () => void }>;
 }
 
-export default function GenericList<T extends { id: number }>({
+export default function GenericList<T extends { [key: string]: any }>({
   columns,
   getItems,
   AddModal,
@@ -109,7 +109,7 @@ export default function GenericList<T extends { id: number }>({
         {/* Tabela */}
         <div className="space-y-4">
           {/* Cabeçalhos da tabela */}
-          <div className="flex items-center justify-between pt-3 my-2 text-gray-400 bg-white">
+          <div className="flex items-center justify-between px-4 pt-3 my-2 text-gray-400 bg-white">
             {columns.map((col, index) => (
               <div key={index} className={`${col.width} text-center`}>
                 {col.label}
