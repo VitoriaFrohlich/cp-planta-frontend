@@ -43,6 +43,7 @@ lint:
     - npm run prettier
   only:
     - branches
+    - merge_requests
 
 # Testing job
 test:
