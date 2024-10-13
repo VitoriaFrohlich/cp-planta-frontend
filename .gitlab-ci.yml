@@ -74,7 +74,7 @@ build_docker_image:
       - image.tar
     expire_in: 1 hour
   only:
-    - main
+   - master
 
 # Push Docker image job
 push_docker_image:
@@ -95,4 +95,4 @@ push_docker_image:
   dependencies:
     - build_docker_image
   only:
-    - main
+    - master
