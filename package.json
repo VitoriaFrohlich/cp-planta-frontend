@@ -93,7 +93,7 @@
     "@types/stack-utils": "^2.0.3",
     "@types/yargs": "^17.0.33",
     "@types/yargs-parser": "^21.0.3",
-    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
     "autoprefixer": "^10.4.20",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",

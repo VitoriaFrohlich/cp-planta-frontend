@@ -49,7 +49,7 @@ test:
   before_script:
     - npm install -g jest@29.x.x
   script:
-    - npm run test  # Command to run tests
+    - npm run test:ci 
   only:
     - merge_requests
     - branches
