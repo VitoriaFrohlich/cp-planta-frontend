@@ -26,12 +26,14 @@ default:
 # Commit message check using commitlint
 commit-msg-check:
   stage: commit-msg-check
+  image: node:18  
+  before_script:
+    - npm ci  # Instala as dependências
   script:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
   only:
     - merge_requests
     - branches
-
 
 # Job for checking the lint
 lint:
@@ -50,20 +52,19 @@ test:
   before_script:
     - npm install -g jest@29.x.x
   script:
-    - npm run test:ci  # Command to run tests (ensure the test script is defined in package.json)
+    - npm run test  # Command to run tests
   only:
     - merge_requests
     - branches
 
-# Job to build the Docker image for the frontend
-build-frontend:
+# Build Docker image job
+build_docker_image:
   stage: build
-  image: docker:latest
+  image: docker:latest  # Use Docker image for building
   services:
-    - docker:dind
+    - docker:dind  # Docker in Docker service
   before_script:
-    - echo "Skipping npm install for Docker build"
-    - docker info
+    - docker info  # Ensure Docker is running
   script:
     - docker build -f Dockerfile -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
     - docker save "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" -o image.tar
@@ -74,14 +75,15 @@ build-frontend:
   only:
    - master
 
-# Job to push the Docker image for the frontend
-push-frontend:
+# Push Docker image job
+push_docker_image:
   stage: push
-  image: docker:latest
+  image: docker:latest  # Use Docker image for pushing
   services:
-    - docker:dind
+    - docker:dind  # Docker in Docker service
   before_script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
+    - docker info
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   script:
     - docker load -i image.tar
     - docker push "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
