@@ -1,80 +1,98 @@
+variables:
+  # Docker image details
+  DOCKER_IMAGE_NAME: norohim/cp-planta-frontend
+  DOCKER_IMAGE_TAG: latest
+  DOCKER_DRIVER: overlay2
+
 stages:
-  - pre-commit-check
   - commit-msg-check
   - lint
   - test
   - build
   - push
 
-variables:
-  DOCKER_IMAGE_FRONTEND: norohim/cp-planta-frontend:latest
+cache:
+  paths:
+    - node_modules/
 
 # Default settings for all jobs
 default:
-  image: node:22.5.0  # Using Node.js 22.5.0 image for Node-related tasks
+  image: node:22.5.0
   before_script:
-    - npm install  # Install dependencies using npm
+    - rm -rf node_modules/ # Remove node_modules directory
+    - npm install --force # Install dependencies cleanly
 
-# Job for simulating the pre-commit check
-pre-commit-check:
-  stage: pre-commit-check
-  script:
-    - bash ci/pre-commit-check.sh  # Executes the pre-commit script
-  only:
-    - merge_requests
-    - branches
-
-# Job for simulating the commit-msg check
+# Commit message check using commitlint
 commit-msg-check:
   stage: commit-msg-check
   script:
-    - bash ci/commit-msg-check.sh "$CI_COMMIT_MESSAGE"  # Passes the commit message for validation
+    - echo "$CI_COMMIT_MESSAGE" | npx commitlint
   only:
     - merge_requests
     - branches
 
-# Job for checking the lint
+# Linting and formatting job
 lint:
   stage: lint
+  before_script:
+    - npm install -g eslint@8.x.x prettier@3.x.x
   script:
-    - npm run lint  # Command to check lint
+    - npm run lint
+    - npm run prettier
   only:
     - merge_requests
     - branches
 
-# Job for running the tests
+# Testing job
 test:
   stage: test
+  before_script:
+    - npm install -g jest@29.x.x
   script:
-    - npm run test  # Command to run tests
+    - npm run test:ci
   only:
     - merge_requests
     - branches
 
-# Job to build the Docker image for the frontend
-build-frontend:
+# Build Docker image job
+build_docker_image:
   stage: build
-  image: docker:latest  # Use Docker image for building
+  image: docker:20.10.16
   services:
-    - docker:dind  # Docker in Docker service
+    - name: docker:20.10.16-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_TLS_CERTDIR: ""
   before_script:
-    - docker info  # Ensure Docker is running
+    - docker info
   script:
-    - docker build -f Dockerfile -t $DOCKER_IMAGE_FRONTEND .
+    - docker build -f Dockerfile -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
+    - docker save "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" -o image.tar
+  artifacts:
+    paths:
+      - image.tar
+    expire_in: 1 hour
   only:
     - main
 
-# Job to push the Docker image for the frontend
-push-frontend:
+# Push Docker image job
+push_docker_image:
   stage: push
-  image: docker:latest  # Use Docker image for pushing
+  image: docker:20.10.16
   services:
-    - docker:dind  # Docker in Docker service
+    - name: docker:20.10.16-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_TLS_CERTDIR: ""
   before_script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
+    - docker info
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   script:
-    - docker push $DOCKER_IMAGE_FRONTEND
+    - docker load -i image.tar
+    - docker push "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
+  dependencies:
+    - build_docker_image
   only:
     - main
-  dependencies:
-    - build-frontend
