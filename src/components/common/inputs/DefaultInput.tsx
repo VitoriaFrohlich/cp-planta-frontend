@@ -6,7 +6,7 @@ interface DefaultInputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const defaultInput: React.FC<DefaultInputProps> = ({
+const DefaultInput: React.FC<DefaultInputProps> = ({
   label,
   placeholder,
   disable,
@@ -27,4 +27,4 @@ const defaultInput: React.FC<DefaultInputProps> = ({
   );
 };
 
-export default defaultInput;
+export default DefaultInput;
