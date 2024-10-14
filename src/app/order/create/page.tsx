@@ -1,7 +1,7 @@
 'use client';
 import SelectInput from '@/src/components/common/inputs/SelectInput';
 import NumericInput from '@/src/components/common/inputs/NumericInput';
-import CancelButton from '@/src/components/buttons/operation/CancelButton';
+import CancelButton from '@/src/components/buttons/order/CancelButton';
 import Header from '@/src/components/common/header';
 import { Button } from '@headlessui/react';
 import { useState } from 'react';
@@ -11,6 +11,7 @@ import DefaultModal from '@/src/components/common/modals/DefaultModal';
 import React from 'react';
 import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
 import DynamicBox from '@/src/components/common/DynamicBox';
+import BatchListComponent from '@/src/components/order/BatchListComponent';
 
 export default function OrderCreate() {
   const router = useRouter();
@@ -20,10 +21,9 @@ export default function OrderCreate() {
   const [quantity, setQuantity] = useState(0);
   const [itens, setItens] = useState([
     //dados mockados
-    { name: 'Batata Inglesa Média', batch: '10002', quantity: 10 },
-    { name: 'Batata Inglesa Média', batch: '20526', quantity: 10 },
-    { name: 'Batata Inglesa Média', batch: '60205', quantity: 10 },
-    { name: 'Batata Inglesa Média', batch: '47856', quantity: 10 }
+    { batch: "BATB202012", rawMaterial: 'Batata Branca', quantity: 8 },
+    { batch: "CEN123193", rawMaterial: 'Cenoura', quantity: 5 },
+    { batch: "MACF63820", rawMaterial: 'Maçã Fuji', quantity: 7 },
   ]);
   const [tax, setTax] = useState<number | null>(null);
   const [line, setLine] = useState('');
@@ -32,10 +32,11 @@ export default function OrderCreate() {
     setItens(itens.filter((_, index) => index !== indexToRemove));
   };
 
-  const sumQuantity = itens.reduce((acc, iten) => acc + iten.quantity, 0);
+  const sumQuantity = itens.reduce((acc, item) => acc + item.quantity, 0);
 
   const calculateValue = () => {
-    return tax == null ? null : sumQuantity * (tax / 100) + sumQuantity;
+    if (tax == null || isNaN(tax)) return '';
+    return sumQuantity * (tax / 100) + sumQuantity;
   };
 
   const steps = [
@@ -68,6 +69,9 @@ export default function OrderCreate() {
     setIsSuccessModalOpen(false);
   };
 
+  const getBatchs = async () => {
+    return itens;
+  };
   const handleAddItem = (
     rawMaterial: string,
     batch: string,
@@ -75,8 +79,11 @@ export default function OrderCreate() {
   ) => {
     setItens([
       ...itens,
-      { name: rawMaterial, batch: batch, quantity: quantity }
+      {batch, rawMaterial,  quantity }
     ]);
+    setMateriaPrima('');
+    setBatch('');
+    setQuantity(0);
   }; //TODO: alterar para interfaces quando back tiver pronto
 
   const isFormValidAdd = rawMaterial && batch && quantity > 0;
@@ -154,35 +161,8 @@ export default function OrderCreate() {
 
                   <div className="w-full h-px bg-greenHortti" />
 
-                  <div className="grid grid-cols-3 gap-4 my-2 mx-10">
-                    <div className="text-black font-semibold">Nome</div>
-                    <div className="text-black font-semibold">Lote</div>
-                    <div className="text-black font-semibold">Quantidade</div>
-                  </div>
-
-                  <div className="h-auto max-h-48 overflow-auto ">
-                    {/* Lista de itens adicionados */}
-                    {itens.map((iten, index) => (
-                      <div
-                        key={index}
-                        className="grid grid-cols-3 gap-4 items-center mb-4 overflow-auto"
-                      >
-                        <div className="text-black">{iten.name}</div>
-                        <div className="text-black">{iten.batch}</div>
-                        <div className="flex justify-between text-black">
-                          <span className="text-black">
-                            {iten.quantity + ' Kg'}
-                          </span>
-                          <button
-                            className="text-red-600 font-semibold border border-red-600 rounded-full py-1 px-2"
-                            onClick={() => handleRemoveItem(index)}
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                <BatchListComponent 
+                itens={itens} header editable onRemove={handleRemoveItem}/>
                 </DynamicBox>
               </div>
 

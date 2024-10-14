@@ -1,5 +1,5 @@
 import InventorySection from '@/src/components/sections/inventory/InventorySection';
-import ButtonOperation from '../../components/buttons/operation/ButtonOperation';
+import ButtonOperation from '../../components/buttons/order/ButtonOperation';
 import Header from '../../components/common/header';
 import CardOperationSection from '@/src/components/sections/card/CardOperationSection';
 import ButtonSettings from '@/src/components/buttons/settings/ButtonSettings';
