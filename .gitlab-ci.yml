@@ -48,7 +48,7 @@ test:
     - npm install -g jest@29.x.x
     - npm install --force # Install dependencies cleanly
   script:
-    - npm run test:ci 
+    - npm run test:ci
   only:
     - merge_requests
     - branches
@@ -56,11 +56,11 @@ test:
 # Build Docker image job
 build_docker_image:
   stage: build
-  image: docker:latest  # Use Docker image for building
+  image: docker:latest # Use Docker image for building
   services:
-    - docker:dind  # Docker in Docker service
+    - docker:dind # Docker in Docker service
   before_script:
-    - docker info  # Ensure Docker is running
+    - docker info # Ensure Docker is running
   script:
     - docker build -f Dockerfile -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
     - docker save "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" -o image.tar
@@ -69,14 +69,14 @@ build_docker_image:
       - image.tar
     expire_in: 1 hour
   only:
-   - master
+    - master
 
 # Push Docker image job
 push_docker_image:
   stage: push
-  image: docker:latest  # Use Docker image for pushing
+  image: docker:latest # Use Docker image for pushing
   services:
-    - docker:dind  # Docker in Docker service
+    - docker:dind # Docker in Docker service
   before_script:
     - docker info
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
