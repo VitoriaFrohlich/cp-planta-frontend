@@ -1,25 +1,71 @@
-import { useEffect } from 'react';
-
-interface ModalExampleProps {
-  onClose: () => void;  // Função chamada para fechar o modal
-  item?: any;  // Item opcional para exibição ou manipulação
+interface ModalProps {
+  onClose?: () => void; // Função chamada para fechar o modal
+  onConfirm?: () => void; // Função chamada ao confirmar a ação
+  item?: { name: string }; // Item opcional para exibição ou manipulação
+  actionType: number; // Tipo de ação: adicionar, editar ou deletar
 }
 
-export default function SimpleModal({ onClose, item }: ModalExampleProps) {
+export default function SimpleModal({
+  onClose,
+  onConfirm,
+  item,
+  actionType
+}: ModalProps) {
+  if (!item && actionType !== 0) return null; // Não exibe o modal de edição/remoção se o item não for passado
 
-  if (!item && item !== undefined) return null; // Exibe o modal mesmo sem item, se não for passado
+  const getTitle = () => {
+    const titles: Record<number, string> = {
+      0: 'Adicionar Novo Item',
+      1: `Editando: ${item?.name}`,
+      2: `Deletar: ${item?.name}`
+    };
+
+    return titles[actionType];
+  };
+
+  const getMessage = () => {
+    const messages: Record<number, string> = {
+      0: 'Preencha os detalhes do novo item.',
+      1: `Detalhes do item: ${item?.name}`,
+      2: `Tem certeza de que deseja deletar o item: ${item?.name}? Esta ação não pode ser desfeita.`
+    };
+
+    return messages[actionType];
+  };
+
+  const getConfirmButtonText = () => {
+    const buttonTexts: Record<number, string> = {
+      0: 'Adicionar',
+      1: 'Salvar',
+      2: 'Deletar'
+    };
+
+    return buttonTexts[actionType];
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 text-black text-center">
-        <h2 className="text-xl font-bold mb-4">{item ? `Editando: ${item.name}` : 'Adicionar Novo Item'}</h2>
-        <p>{item ? `Detalhes do item: ${item.name}` : 'Preencha os detalhes do novo item.'}</p>
-        <button
-          onClick={onClose}  
-          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 mt-4"
-        >
-          Fechar
-        </button>
+        <h2 className="text-xl font-bold mb-4">{getTitle()}</h2>
+        <p>{getMessage()}</p>
+        <div className="flex justify-center mt-4 space-x-4">
+          <button
+            onClick={onClose}
+            className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={() => onConfirm}
+            className={`px-4 py-2 rounded-lg hover:bg-opacity-90 ${
+              actionType === 2
+                ? 'bg-red-600 text-white hover:bg-red-700'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
+          >
+            {getConfirmButtonText()}
+          </button>
+        </div>
       </div>
     </div>
   );

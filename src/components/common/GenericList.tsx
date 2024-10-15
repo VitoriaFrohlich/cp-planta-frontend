@@ -1,5 +1,5 @@
-'use client';
-import { useState, useEffect } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
@@ -19,9 +19,24 @@ interface TableColumn {
 interface Props<T> {
   columns: TableColumn[];
   getItems: () => Promise<T[]>;
-  AddModal: React.FC<{ onClose: () => void }>;
-  EditModal: React.FC<{ item: T; onClose: () => void }>;
-  DeleteModal: React.FC<{ item: T; onClose: () => void }>;
+  AddModal: React.FC<{
+    onClose: () => void;
+    onConfirm: () => void;
+    item?: T;
+    actionType: number;
+  }>;
+  EditModal: React.FC<{
+    onClose: () => void;
+    onConfirm: () => void;
+    item?: T;
+    actionType: number;
+  }>;
+  DeleteModal: React.FC<{
+    onClose: () => void;
+    onConfirm: () => void;
+    item?: T;
+    actionType: number;
+  }>;
 }
 
 export default function GenericList<T extends { [key: string]: any }>({
@@ -41,31 +56,47 @@ export default function GenericList<T extends { [key: string]: any }>({
   const [showDeleteModal, setShowDeleteModal] = useState<T | null>(null);
 
   // Função para carregar os itens
-  const loadItems = async () => {
+  const loadItems = useCallback(async () => {
     const items = await getItems();
     setOriginalList(items);
     setFilteredList(items);
-  };
+  }, [getItems]);
 
   useEffect(() => {
     loadItems();
-  }, []);
+  }, [loadItems]);
 
   // Função para debouncing na pesquisa
   useEffect(() => {
     if (searchTerm.length != 0) {
       setIsSearching(true);
-        const lowerSearchTerm = searchTerm.toLowerCase();
-        const newList = originalList.filter(item =>
-          columns.some(col => String(item[col.key]).toLowerCase().includes(lowerSearchTerm))
-        );
-        setFilteredList(newList);
-        setIsSearching(false);
-
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      const newList = originalList.filter(item =>
+        columns.some(col =>
+          String(item[col.key]).toLowerCase().includes(lowerSearchTerm)
+        )
+      );
+      setFilteredList(newList);
+      setIsSearching(false);
     } else {
       setFilteredList(originalList);
     }
-  }, [searchTerm]);
+  }, [searchTerm, columns, originalList]);
+
+  const handleAddConfirm = () => {
+    setShowAddModal(false);
+    loadItems();
+  };
+
+  const handleEditConfirm = () => {
+    setShowAddModal(false);
+    loadItems();
+  };
+
+  const handleDeleteConfirm = () => {
+    setShowAddModal(false);
+    loadItems();
+  };
 
   const handleAddClose = () => {
     setShowAddModal(false);
@@ -91,7 +122,7 @@ export default function GenericList<T extends { [key: string]: any }>({
             <input
               type="text"
               className="pl-10 w-full text-[#1e1e1e] mt-1 border border-greenHortti rounded-lg p-2"
-              placeholder="Pesquise"
+              placeholder="Pesquisar"
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
             />
@@ -100,7 +131,10 @@ export default function GenericList<T extends { [key: string]: any }>({
             </div>
           </div>
           {/* Botão Adicionar */}
-          <button className="bg-greenHortti text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center" onClick={() => setShowAddModal(true)}>
+          <button
+            className="bg-greenHortti text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center"
+            onClick={() => setShowAddModal(true)}
+          >
             <Image src={AddIcon} alt="Adicionar" width={14} height={14} />
             <span className="ml-2 text-sm">Adicionar</span>
           </button>
@@ -121,11 +155,21 @@ export default function GenericList<T extends { [key: string]: any }>({
           {/* Lista de itens */}
           {!isSearching && filteredList.length > 0 ? (
             filteredList.map(item => (
-              <div key={item.id} className="flex items-center justify-between border rounded-lg p-4 my-2 text-black bg-white shadow border-greenHortti">
+              <div
+                key={item.id}
+                className="flex items-center justify-between border rounded-lg p-4 my-2 text-black bg-white shadow border-greenHortti"
+              >
                 {columns.map((col, index) => (
-                  <div key={index} className={`${col.width} text-webkit-center`}>
+                  <div
+                    key={index}
+                    className={`${col.width} text-webkit-center`}
+                  >
                     {col.type === 'image' ? (
-                      <Image src={item[col.key]} alt={String(item[col.key])} className="w-80 h-16 rounded-lg object-cover" />
+                      <Image
+                        src={item[col.key]}
+                        alt={String(item[col.key])}
+                        className="w-80 h-16 rounded-lg object-cover"
+                      />
                     ) : (
                       <span className="text-lg">{String(item[col.key])}</span>
                     )}
@@ -133,11 +177,22 @@ export default function GenericList<T extends { [key: string]: any }>({
                 ))}
                 {/* Ações */}
                 <div className="flex space-x-4 w-28">
-                  <button className="text-greenHortti px-4 font-bold" onClick={() => setShowEditModal(item)}>
+                  <button
+                    className="text-greenHortti px-4 font-bold"
+                    onClick={() => setShowEditModal(item)}
+                  >
                     <Image src={EditIcon} alt="Editar" width={18} height={18} />
                   </button>
-                  <button className="text-red-600 px-4 font-bold" onClick={() => setShowDeleteModal(item)}>
-                    <Image src={DeleteIcon} alt="Deletar" width={14} height={14} />
+                  <button
+                    className="text-red-600 px-4 font-bold"
+                    onClick={() => setShowDeleteModal(item)}
+                  >
+                    <Image
+                      src={DeleteIcon}
+                      alt="Deletar"
+                      width={14}
+                      height={14}
+                    />
                   </button>
                 </div>
               </div>
@@ -149,7 +204,10 @@ export default function GenericList<T extends { [key: string]: any }>({
 
         {/* Botão Retornar */}
         <div className="my-8 float-right">
-          <button className="bg-gray-800 text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center" onClick={() => router.push("/home")}>
+          <button
+            className="bg-gray-800 text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center"
+            onClick={() => router.push('/home')}
+          >
             <Image src={ReturnIcon} alt="Retornar" width={14} height={14} />
             <span className="ml-2 text-sm">Retornar</span>
           </button>
@@ -157,9 +215,29 @@ export default function GenericList<T extends { [key: string]: any }>({
       </div>
 
       {/* Modais */}
-      {showAddModal && <AddModal onClose={handleAddClose} />}
-      {showEditModal && <EditModal item={showEditModal} onClose={handleEditClose} />}
-      {showDeleteModal && <DeleteModal item={showDeleteModal} onClose={handleDeleteClose} />}
+      {showAddModal && (
+        <AddModal
+          actionType={0}
+          onConfirm={handleAddConfirm}
+          onClose={handleAddClose}
+        />
+      )}
+      {showEditModal && (
+        <EditModal
+          actionType={1}
+          item={showEditModal}
+          onConfirm={handleEditConfirm}
+          onClose={handleEditClose}
+        />
+      )}
+      {showDeleteModal && (
+        <DeleteModal
+          actionType={2}
+          item={showDeleteModal}
+          onConfirm={handleDeleteConfirm}
+          onClose={handleDeleteClose}
+        />
+      )}
     </main>
   );
 }

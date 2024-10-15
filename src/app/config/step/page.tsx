@@ -3,17 +3,16 @@ import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
 import SimpleModal from '@/src/components/common/SimpleModal';
-import ImageExample from '@/public/config-image-example.svg';
 
 export default function createStep() {
-  
   // Função que retorna os itens da lista
+  // Mock-data
   const getSteps = async () => [
-    { id: 1, name: 'Lavar'},
-    { id: 2, name: 'Descascar'},
-    { id: 3, name: 'Fatiar'},
-    { id: 4, name: 'Embalar'},
-    { id: 5, name: 'Rotular'},
+    { id: 1, name: 'Lavar' },
+    { id: 2, name: 'Descascar' },
+    { id: 3, name: 'Fatiar' },
+    { id: 4, name: 'Embalar' },
+    { id: 5, name: 'Rotular' }
   ];
 
   return (
@@ -22,7 +21,7 @@ export default function createStep() {
       <ConfigNavbarComponent>
         <GenericList
           columns={[
-            { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/2' },
+            { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/2' }
           ]}
           getItems={getSteps} // Função que busca os itens
           AddModal={SimpleModal} // Abre modal de adicionar
