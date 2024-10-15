@@ -21,9 +21,9 @@ export default function OrderCreate() {
   const [quantity, setQuantity] = useState(0);
   const [itens, setItens] = useState([
     //dados mockados
-    { batch: "BATB2020", rawMaterial: 'Batata Branca Grande', quantity: 80 },
-    { batch: "CEN123193", rawMaterial: 'Cenoura', quantity: 50 },
-    { batch: "MACF63820", rawMaterial: 'Maçã Fuji', quantity: 7 },
+    { batch: 'BATB2020', rawMaterial: 'Batata Branca Grande', quantity: 80 },
+    { batch: 'CEN123193', rawMaterial: 'Cenoura', quantity: 50 },
+    { batch: 'MACF63820', rawMaterial: 'Maçã Fuji', quantity: 7 }
   ]);
   const [tax, setTax] = useState<number | null>(null);
   const [line, setLine] = useState('');
@@ -77,10 +77,7 @@ export default function OrderCreate() {
     batch: string,
     quantity: number
   ) => {
-    setItens([
-      ...itens,
-      {batch, rawMaterial,  quantity }
-    ]);
+    setItens([...itens, { batch, rawMaterial, quantity }]);
     setMateriaPrima('');
     setBatch('');
     setQuantity(0);
@@ -110,7 +107,7 @@ export default function OrderCreate() {
               {/* Formulário - Cadastro de Ordem */}
               <div className="col-span-3">
                 {/* Inputs do formulário */}
-                <DynamicBox title="Cadastro Ordem" extraStyle='mb-5'>
+                <DynamicBox title="Cadastro Ordem" extraStyle="mb-5">
                   <SelectInput
                     label="Produto Final"
                     placeholder="Selecione o Produto a ser produzido"
@@ -161,8 +158,13 @@ export default function OrderCreate() {
 
                   <div className="w-full h-px bg-greenHortti" />
 
-                <BatchListComponent 
-                itens={itens} header editable scrollable onRemove={handleRemoveItem}/>
+                  <BatchListComponent
+                    itens={itens}
+                    header
+                    editable
+                    scrollable
+                    onRemove={handleRemoveItem}
+                  />
                 </DynamicBox>
               </div>
 
@@ -173,7 +175,7 @@ export default function OrderCreate() {
 
               {/* Receita Utilizada */}
               <div className="col-span-3">
-                <DynamicBox title="Lotes Selecionados" extraStyle='m-5'>
+                <DynamicBox title="Lotes Selecionados" extraStyle="m-5">
                   <SelectInput
                     label={'Linha selecionada'}
                     placeholder={'Selecione a Linha de Produção'}
@@ -205,7 +207,7 @@ export default function OrderCreate() {
                 >
                   Etapas
                 </Button>
-                <DynamicBox title="Nome ordem" extraStyle='mb-5'>
+                <DynamicBox title="Nome ordem" extraStyle="mb-5">
                   <h3 className="text-grayHortti">
                     Nome gerado automaticamente
                   </h3>
