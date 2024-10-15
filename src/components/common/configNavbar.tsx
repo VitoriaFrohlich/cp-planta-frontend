@@ -1,15 +1,17 @@
+// src/components/common/ConfigNavbar.tsx
 'use client';
 import { usePathname } from 'next/navigation';
-import NavbarButtonComponent from '../buttons/config/NavbarButton';
+import NavbarButtonComponent from '../buttons/config/navbarButton';
 
 interface navbarProps {
+  openModal: () => void; 
   children: React.ReactNode;
 }
 
-const ConfigNavbar: React.FC<navbarProps> = ({ children }) => {
+const ConfigNavbar: React.FC<navbarProps> = ({ openModal, children }) => {
   const pathname = usePathname();
-
-  const isSelected = (href: string) => pathname === href; //Verifica se o caminho atual é igual ao href, se sim deixa selecionado
+  
+  const isSelected = (href: string) => pathname === href;
 
   return (
     <div>
@@ -24,9 +26,10 @@ const ConfigNavbar: React.FC<navbarProps> = ({ children }) => {
             selected={isSelected('/config/raw-material')}
           />
           <NavbarButtonComponent
-            href="/config/final-product"
+            href="/config/final-product" 
             title="Produto Final"
             selected={isSelected('/config/final-product')}
+            onClick={openModal} 
           />
           <NavbarButtonComponent
             href="/config/category"
