@@ -39,7 +39,7 @@ export default function OrderCreate() {
     return sumQuantity * (tax / 100) + sumQuantity;
   };
 
-  const steps = [
+  const steps = [ //dados mockados
     'Etapa 1',
     'Etapa 2',
     'Etapa 3',
@@ -104,9 +104,7 @@ export default function OrderCreate() {
         <div className="flex items-center justify-center p-6">
           <div className="w-full max-w-7xl p-8">
             <div className="grid md:grid-cols-7 gap-6 relative">
-              {/* Formulário - Cadastro de Ordem */}
               <div className="col-span-3">
-                {/* Inputs do formulário */}
                 <DynamicBox title="Cadastro Ordem" extraStyle="mb-5">
                   <SelectInput
                     label="Produto Final"
@@ -168,14 +166,12 @@ export default function OrderCreate() {
                 </DynamicBox>
               </div>
 
-              {/* Separador Vertical */}
               <div className="flex items-center justify-center col-span-1">
                 <div className="w-px bg-greenHortti h-full"></div>
               </div>
 
-              {/* Receita Utilizada */}
               <div className="col-span-3">
-                <DynamicBox title="Lotes Selecionados" extraStyle="m-5">
+                <DynamicBox title="Lotes Selecionados" extraStyle="mb-5">
                   <SelectInput
                     label={'Linha selecionada'}
                     placeholder={'Selecione a Linha de Produção'}
@@ -215,7 +211,6 @@ export default function OrderCreate() {
                     Ordem X - XXXX
                   </h2>
                 </DynamicBox>
-                {/* Botões */}
                 <div className="w-full h-auto flex space-x-2">
                   <OnClickButton
                     className={`w-full h-auto py-2 px-4 rounded-lg flex items-center justify-items-center 
