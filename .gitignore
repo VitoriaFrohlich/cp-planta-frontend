@@ -161,3 +161,4 @@ Thumbs.db
 commitlint.config.js
 tsconfig.json
 next.config.js
+gitlab-ci.yml
