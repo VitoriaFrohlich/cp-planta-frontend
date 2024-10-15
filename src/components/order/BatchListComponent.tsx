@@ -6,6 +6,7 @@ type Props = {
   onRemove?: (index: number) => void;
   header?: boolean;
   extraStyle?: string;
+  scrollable?: boolean
 };
 
 export default function BatchListComponent({
@@ -13,7 +14,8 @@ export default function BatchListComponent({
   editable = false,
   onRemove,
   header = false,
-  extraStyle = ""
+  extraStyle = "",
+  scrollable = false
 }: Props) {
   return (
       <div>
@@ -35,7 +37,7 @@ export default function BatchListComponent({
         )}
 
       {editable && onRemove &&( 
-      <div className={`h-auto max-h-56 overflow-auto ${extraStyle}`}>
+      <div className={`h-auto max-h-64 ${extraStyle} ${scrollable? 'overflow-auto':'overflow-hidden'}`}>
         {itens.map((item, index) => (
           <div
             key={index}
@@ -65,7 +67,7 @@ export default function BatchListComponent({
       )}
 
       {!editable && (
-        <div className={`h-auto max-h-56 overflow-hidden ${extraStyle}`}>
+        <div className={`h-auto max-h-64 ${extraStyle} ${scrollable? 'overflow-auto':'overflow-hidden'}`}>
           {itens.map((item, index) => (
             <div key={index} className="mb-4 border-b pb-2 w-full">
               <DynamicBox extraStyle="w-full p-3">

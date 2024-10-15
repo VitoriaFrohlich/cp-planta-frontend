@@ -162,7 +162,7 @@ export default function OrderCreate() {
                   <div className="w-full h-px bg-greenHortti" />
 
                 <BatchListComponent 
-                itens={itens} header editable onRemove={handleRemoveItem}/>
+                itens={itens} header editable scrollable onRemove={handleRemoveItem}/>
                 </DynamicBox>
               </div>
 
