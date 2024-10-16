@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import DynamicBox from '@/src/components/common/DynamicBox';
-import Header from '../header';
 import AcceptButton from '@/src/components/buttons/order/AcceptButton';
 import CancelButton from '@/src/components/buttons/order/CancelButton';
 import Image from 'next/image';
@@ -51,13 +50,8 @@ const FinalProductModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg p-5 w-full h-full flex flex-col">
-        <div className="h-1/8">
-          {' '}
-          {/* Ajuste a altura para 1/3 da altura do modal */}
-          <Header />
-        </div>
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-lg w-1/2 h-auto p-4 ">
         <div className="w-full p-8 flex-grow overflow-y-auto">
           <div className="flex flex-row h-full">
             <div className="grid md:grid-cols-7 gap-6 mx-auto w-full max-w-screen-lg relative">
@@ -136,15 +130,13 @@ const FinalProductModal: React.FC = () => {
                         {itensMateriaPrima.map((item, index) => (
                           <li
                             key={index}
-                            className="flex justify-between items-center"
+                            className="text-black flex items-center border-b pb-2 w-full mb-4"
                           >
-                            <span className="w-full text-black mt-1 border border-greenHortti rounded-lg p-2">
-                              {item}
-                            </span>
+                            <div className="flex-1 pr-4">{item}</div>
                             <button
                               type="button"
                               onClick={() => removerItemMateriaPrima(index)}
-                              className="text-red-600 font-semibold border border-red-600 rounded-full py-1 px-2 ml-2"
+                              className="text-red-600 font-semibold border border-red-600 rounded-full py-1 px-2 ml-auto"
                             >
                               ✕
                             </button>
@@ -195,15 +187,13 @@ const FinalProductModal: React.FC = () => {
                         {itensEtapa.map((item, index) => (
                           <li
                             key={index}
-                            className="text-black flex justify-between items-center"
+                            className="text-black flex items-center border-b pb-2 w-full mb-4"
                           >
-                            <span className="w-full text-black mt-1 border border-greenHortti rounded-lg p-2">
-                              {item}
-                            </span>
+                            <div className="flex-1 pr-4">{item}</div>
                             <button
                               type="button"
                               onClick={() => removerItemEtapa(index)}
-                              className="text-red-600 font-semibold border border-red-600 rounded-full py-1 px-2 ml-2"
+                              className="text-red-600 font-semibold border border-red-600 rounded-full py-1 px-2 ml-auto"
                             >
                               ✕
                             </button>
@@ -226,9 +216,9 @@ const FinalProductModal: React.FC = () => {
                       src={imagem}
                       alt="Imagem do Produto"
                       className="mt-2 w-full h-full object-cover rounded-xl"
-                      layout="fixed" // Adicione esta propriedade para manter a proporção
-                      width={500} // Defina a largura desejada
-                      height={500} // Defina a altura desejada
+                      layout="fixed"
+                      width={500}
+                      height={500}
                     />
                   </div>
                 </DynamicBox>
