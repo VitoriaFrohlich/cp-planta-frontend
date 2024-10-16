@@ -51,7 +51,7 @@ test:
     - rm -rf node_modules/ package-lock.json
     - npm install --force # Install dependencies cleanly
   script:
-    - npm run test:ci
+    - npm run test:ci  # Command to run tests
   only:
     - merge_requests
     - branches
