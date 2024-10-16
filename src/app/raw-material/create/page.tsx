@@ -1,4 +1,4 @@
-import ConfigNavbarComponent from '@/src/components/common/ConfigNavbar';
+import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 
 export default function RawMaterialCreate() {
   return (

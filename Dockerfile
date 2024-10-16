@@ -4,16 +4,17 @@ FROM node:latest AS builder
 # Defina o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copie os arquivos package.json e package-lock.json (se existir)
-COPY package*.json ./
+# Copie os arquivos package.json 
+COPY package.json ./
 
 # Instale as dependências
 RUN npm install --force
 
+COPY tsconfig.json ./   
 # Copie o restante do código da aplicação
 COPY . .
 
-# Compile o projeto para produção (se aplicável)
+# Compile o projeto para produção 
 RUN npm run build
 
 # Agora, crie uma imagem final com o código de produção
