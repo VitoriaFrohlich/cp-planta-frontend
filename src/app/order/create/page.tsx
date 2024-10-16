@@ -39,7 +39,8 @@ export default function OrderCreate() {
     return sumQuantity * (tax / 100) + sumQuantity;
   };
 
-  const steps = [ //dados mockados
+  const steps = [
+    //dados mockados
     'Etapa 1',
     'Etapa 2',
     'Etapa 3',

@@ -1,5 +1,3 @@
-import DynamicBox from '../common/DynamicBox';
-
 type Props = {
   itens: {
     batch: string;
@@ -61,22 +59,25 @@ export default function BatchListComponent({
               className="grid grid-cols-10 gap-4 items-center mb-4 border-b pb-2 w-full"
             >
               <div className="col-span-9">
-                  <div className="text-black font-semibold w-full grid grid-cols-9">
-                    <div className="col-span-3 text-center truncate" title={item.batch}>
-                      {' '}
-                      {item.batch}
-                    </div>
-                    <div
-                      className="col-span-4 text-center truncate"
-                      title={item.rawMaterial}
-                    >
-                      {' '}
-                      {item.rawMaterial}
-                    </div>
-                    <div className="col-span-2 text-center mr-3">
-                      {item.quantity}
-                    </div>
+                <div className="text-black font-semibold w-full grid grid-cols-9">
+                  <div
+                    className="col-span-3 text-center truncate"
+                    title={item.batch}
+                  >
+                    {' '}
+                    {item.batch}
                   </div>
+                  <div
+                    className="col-span-4 text-center truncate"
+                    title={item.rawMaterial}
+                  >
+                    {' '}
+                    {item.rawMaterial}
+                  </div>
+                  <div className="col-span-2 text-center mr-3">
+                    {item.quantity}
+                  </div>
+                </div>
               </div>
               <div className="flex justify-center">
                 <button
@@ -97,18 +98,15 @@ export default function BatchListComponent({
         >
           {itens.map((item, index) => (
             <div key={index} className="mb-4 border-b pb-2 w-full">
-                <div className="flex justify-between items-center text-black font-semibold w-full">
-                  <div
-                    className="truncate w-1/3 text-center"
-                    title={item.batch}
-                  >
-                    {item.batch}
-                  </div>
-                  <div className="truncate w-1/3" title={item.rawMaterial}>
-                    {item.rawMaterial}
-                  </div>
-                  <div className="w-1/6 text-right mr-3">{item.quantity}</div>
+              <div className="flex justify-between items-center text-black font-semibold w-full">
+                <div className="truncate w-1/3 text-center" title={item.batch}>
+                  {item.batch}
                 </div>
+                <div className="truncate w-1/3" title={item.rawMaterial}>
+                  {item.rawMaterial}
+                </div>
+                <div className="w-1/6 text-right mr-3">{item.quantity}</div>
+              </div>
             </div>
           ))}
         </div>
