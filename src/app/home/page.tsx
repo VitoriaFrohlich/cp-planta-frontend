@@ -1,5 +1,5 @@
 import InventorySection from '@/src/components/sections/inventory/InventorySection';
-import ButtonOperation from '../../components/buttons/operation/ButtonOperation';
+import ButtonOperation from '../../components/buttons/order/ButtonOperation';
 import Header from '../../components/common/header';
 import CardOperationSection from '@/src/components/sections/card/CardOperationSection';
 import ButtonSettings from '@/src/components/buttons/settings/ButtonSettings';
@@ -14,7 +14,7 @@ export default function Home() {
           <ButtonOperation
             title="Criar Ordem"
             description="Selecione Etapas para a Produção"
-            href="/operation/create"
+            href="/order/create"
           />
           <ButtonOperation
             title="Cadastrar Lote"
@@ -27,11 +27,14 @@ export default function Home() {
             href="/config/final-product"
           />
         </div>
-        <hr className="border-[#006F48] border-1 mx-9" />
-        <div className="flex justify-center gap-[67px] my-8">
-          <CardOperationSection />
+        {/* Linha divisória */}
+        <hr className="border-greenHortti border-1 mx-4 md:mx-9" />
+
+        <div className="flex flex-col lg:flex-row justify-center gap-8 my-8 px-4">
           <InventorySection />
+          <CardOperationSection />
         </div>
+        {/* Seções de operações e estoque */}
       </div>
     </main>
   );
