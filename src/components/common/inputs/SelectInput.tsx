@@ -17,17 +17,17 @@ const selectInput: React.FC<SelectInputProps> = ({
     <div className="mb-4">
       <label className="block text-black mb-1">{label}</label>
       <select
-        className="w-full text-black mt-1 border border-greenHortti rounded-lg p-2"
+        className="w-full text-black mt-1 border border-greenHortti rounded-lg p-2 box"
         onChange={onChange}
         value={value}
       >
         {placeholder && (
-          <option className="text-[#1e1e1e]" value="">
+          <option className="text-[#1e1e1e] w-full" value="">
             {placeholder}
           </option>
         )}
         {options.map((option, index) => (
-          <option className="text-[#1e1e1e]" key={index} value={option}>
+          <option className="text-[#1e1e1e] w-full" key={index} value={option}>
             {option}
           </option>
         ))}

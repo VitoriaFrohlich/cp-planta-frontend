@@ -1,28 +1,40 @@
-// src/app/config/final-product/page.tsx
 'use client';
-import { useState } from 'react';
-import ConfigNavbarComponent from '@/src/components/common/ConfigNavbar';
-import FinalProductModal from '@/src/components/common/modals/FinalProductModal'; // Importando o modal
+import ConfigNavbarComponent from '@/src/components/common/configNavbar';
+import GenericList from '@/src/components/common/GenericList';
+import Header from '@/src/components/common/header';
+import SimpleModal from '@/src/components/common/SimpleModal';
+import ImageExample from '@/public/config-image-example.svg';
+import FinalProductModal from '@/src/components/common/modals/FinalProductModal';
 
-export default function CreateFinalProduct() {
-  const [isModalOpen, setModalOpen] = useState(false); // Estado para controlar o modal
-
-  // Função para abrir o modal
-  const openModal = () => {
-    setModalOpen(true); // Apenas alterando o estado para true
-  };
-
-  // Função para fechar o modal
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+export default function createFinalProduct() {
+  // Função que retorna os itens da lista
+  const getFinalProduct = async () => [
+    { id: 1, image: ImageExample, name: 'Batata palito', quantity: 4 },
+    { id: 2, image: ImageExample, name: 'Cenoura Fatiada', quantity: 2 },
+    { id: 3, image: ImageExample, name: 'Maçã Fuji em Cubos', quantity: 9 }
+  ];
 
   return (
     <main>
-      <ConfigNavbarComponent openModal={openModal}>
-        {null}
+      <Header />
+      <ConfigNavbarComponent>
+        <GenericList
+          columns={[
+            { label: 'Imagem', key: 'image', type: 'image', width: 'w-1/4' },
+            { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/4' },
+            {
+              label: 'Qnt. lotes',
+              key: 'quantity',
+              type: 'text',
+              width: 'w-1/4'
+            }
+          ]}
+          getItems={getFinalProduct} // Função que busca os itens
+          AddModal={FinalProductModal} // Abre modal de adicionar
+          EditModal={SimpleModal} // Abre modal de editar
+          DeleteModal={SimpleModal} // Abre modal de deletar
+        />
       </ConfigNavbarComponent>
-      <FinalProductModal isOpen={isModalOpen} onClose={closeModal} />
     </main>
   );
 }
