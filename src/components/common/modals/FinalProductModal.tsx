@@ -3,6 +3,7 @@ import DynamicBox from '@/src/components/common/DynamicBox';
 import Header from '../header';
 import AcceptButton from '@/src/components/buttons/order/AcceptButton';
 import CancelButton from '@/src/components/buttons/order/CancelButton';
+import Image from 'next/image';
 
 const FinalProductModal: React.FC = () => {
   const [descricao, setDescricao] = useState('');
@@ -221,10 +222,13 @@ const FinalProductModal: React.FC = () => {
                     Selecione uma Imagem de no máximo 20mb
                   </p>
                   <div className="h-40 w-full">
-                    <img
+                    <Image
                       src={imagem}
                       alt="Imagem do Produto"
                       className="mt-2 w-full h-full object-cover rounded-xl"
+                      layout="fixed" // Adicione esta propriedade para manter a proporção
+                      width={500} // Defina a largura desejada
+                      height={500} // Defina a altura desejada
                     />
                   </div>
                 </DynamicBox>
