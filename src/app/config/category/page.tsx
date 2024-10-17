@@ -2,6 +2,8 @@
 import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
+import CategoryModal from '@/src/components/common/modals/CategoryModal';
+import DeleteModal from '@/src/components/common/modals/DeleteModal';
 import SimpleModal from '@/src/components/common/SimpleModal';
 
 export default function createCategory() {
@@ -9,6 +11,9 @@ export default function createCategory() {
   const getCategory = async () => [
     { id: 1, name: 'Verduras', quantity: 2 },
     { id: 2, name: 'Frutas', quantity: 1 }
+  ];
+  const deleteCategory = async (id : string) => [
+    //Deletar categoria
   ];
 
   return (
@@ -26,9 +31,10 @@ export default function createCategory() {
             }
           ]}
           getItems={getCategory} // Função que busca os itens
-          AddModal={SimpleModal} // Abre modal de adicionar
-          EditModal={SimpleModal} // Abre modal de editar
-          DeleteModal={SimpleModal} // Abre modal de deletar
+          deleteItem={deleteCategory} // Função que deleta o item
+          AddModal={CategoryModal} // Abre modal de adicionar
+          EditModal={CategoryModal} // Abre modal de editar
+          DeleteModal={DeleteModal} // Abre modal de deletar
         />
       </ConfigNavbarComponent>
     </main>

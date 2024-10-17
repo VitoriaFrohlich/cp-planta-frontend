@@ -55,7 +55,7 @@ export default function SimpleModal({
             Cancelar
           </button>
           <button
-            onClick={() => onConfirm}
+            onClick={onConfirm}
             className={`px-4 py-2 rounded-lg hover:bg-opacity-90 ${
               actionType === 2
                 ? 'bg-red-600 text-white hover:bg-red-700'

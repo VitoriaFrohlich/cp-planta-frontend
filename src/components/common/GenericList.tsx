@@ -20,6 +20,7 @@ interface TableColumn {
 interface Props<T> {
   columns: TableColumn[];
   getItems: () => Promise<T[]>;
+  deleteItem: (item: string) => Promise<T[]>;
   AddModal: React.FC<{
     onClose: () => void;
     onConfirm: () => void;
@@ -43,6 +44,7 @@ interface Props<T> {
 export default function GenericList<T extends { [key: string]: any }>({
   columns,
   getItems,
+  deleteItem,
   AddModal,
   EditModal,
   DeleteModal
@@ -114,6 +116,7 @@ export default function GenericList<T extends { [key: string]: any }>({
   };
 
   const handleDeleteConfirm = () => {
+    deleteItem(showDeleteModal?.id)
     setShowDeleteModal(null);
     loadItems();
     setShowToast("Deletado com sucesso!");
@@ -239,7 +242,6 @@ export default function GenericList<T extends { [key: string]: any }>({
       {showDeleteModal && (
         <DeleteModal
           item={showDeleteModal}
-          actionType={2}
           onClose={handleDeleteClose}
           onConfirm={handleDeleteConfirm}
         />
