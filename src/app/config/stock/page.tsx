@@ -1,8 +1,8 @@
 'use client';
-import ConfigNavbarComponent from '@/src/components/common/ConfigNavbar';
+import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
-import StockModal from '@/src/components/common/modals/PlaceModal';
+import StockModal from '@/src/components/common/modals/StockModal';
 import SimpleModal from '@/src/components/common/SimpleModal';
 
 export default function createStock() {

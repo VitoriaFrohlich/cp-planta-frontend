@@ -10,8 +10,7 @@ export default function SimpleModal({
    onConfirm,
   item,
   actionType
-}: ModalProps) {
-  if (!item && actionType !== 0) return null; // Não exibe o modal de edição/remoção se o item não for passado
+}: ModalProps) { // Não exibe o modal de edição/remoção se o item não for passado
 
   const getTitle = () => {
     const titles: Record<number, string> = {

@@ -1,5 +1,5 @@
 'use client';
-import ConfigNavbarComponent from '@/src/components/common/ConfigNavbar';
+import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
 import SimpleModal from '@/src/components/common/SimpleModal';
