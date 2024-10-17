@@ -1,10 +1,11 @@
 'use client';
-import ConfigNavbarComponent from '@/src/components/common/configNavbar';
+import ConfigNavbarComponent from '@/src/components/common/ConfigNavbar';
 import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
+import StockModal from '@/src/components/common/modals/PlaceModal';
 import SimpleModal from '@/src/components/common/SimpleModal';
 
-export default function createPlace() {
+export default function createStock() {
   // Função que retorna os itens da lista
   const getPlaces = async () => [
     { id: 1, name: 'Frezzer', quantity: 8 },
@@ -28,8 +29,8 @@ export default function createPlace() {
             }
           ]}
           getItems={getPlaces} // Função que busca os itens
-          AddModal={SimpleModal} // Abre modal de adicionar
-          EditModal={SimpleModal} // Abre modal de editar
+          AddModal={StockModal} // Abre modal de adicionar
+          EditModal={StockModal} // Abre modal de editar
           DeleteModal={SimpleModal} // Abre modal de deletar
         />
       </ConfigNavbarComponent>

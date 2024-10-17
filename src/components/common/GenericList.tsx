@@ -19,24 +19,9 @@ interface TableColumn {
 interface Props<T> {
   columns: TableColumn[];
   getItems: () => Promise<T[]>;
-  AddModal: React.FC<{
-    onClose: () => void;
-    onConfirm: () => void;
-    item?: T;
-    actionType: number;
-  }>;
-  EditModal: React.FC<{
-    onClose: () => void;
-    onConfirm: () => void;
-    item?: T;
-    actionType: number;
-  }>;
-  DeleteModal: React.FC<{
-    onClose: () => void;
-    onConfirm: () => void;
-    item?: T;
-    actionType: number;
-  }>;
+  AddModal: React.FC<{ onClose: () => void }>;
+  EditModal: React.FC<{ item: T; onClose: () => void }>;
+  DeleteModal: React.FC<{ item: T; onClose: () => void }>;
 }
 
 export default function GenericList<T extends { [key: string]: any }>({
@@ -81,22 +66,7 @@ export default function GenericList<T extends { [key: string]: any }>({
     } else {
       setFilteredList(originalList);
     }
-  }, [searchTerm, columns, originalList]);
-
-  const handleAddConfirm = () => {
-    setShowAddModal(false);
-    loadItems();
-  };
-
-  const handleEditConfirm = () => {
-    setShowAddModal(false);
-    loadItems();
-  };
-
-  const handleDeleteConfirm = () => {
-    setShowAddModal(false);
-    loadItems();
-  };
+  }, [searchTerm, originalList]);
 
   const handleAddClose = () => {
     setShowAddModal(false);
@@ -217,24 +187,18 @@ export default function GenericList<T extends { [key: string]: any }>({
       {/* Modais */}
       {showAddModal && (
         <AddModal
-          actionType={0}
-          onConfirm={handleAddConfirm}
           onClose={handleAddClose}
         />
       )}
       {showEditModal && (
         <EditModal
-          actionType={1}
           item={showEditModal}
-          onConfirm={handleEditConfirm}
           onClose={handleEditClose}
         />
       )}
       {showDeleteModal && (
         <DeleteModal
-          actionType={2}
           item={showDeleteModal}
-          onConfirm={handleDeleteConfirm}
           onClose={handleDeleteClose}
         />
       )}

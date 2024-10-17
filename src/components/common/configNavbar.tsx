@@ -39,9 +39,9 @@ const ConfigNavbar: React.FC<navbarProps> = ({ children }) => {
             selected={isSelected('/config/step')}
           />
           <NavbarButtonComponent
-            href="/config/place"
-            title="Local"
-            selected={isSelected('/config/place')}
+            href="/config/stock"
+            title="Estoque"
+            selected={isSelected('/config/stock')}
           />
         </div>
         <div className="w-auto h-px bg-greenHortti mx-16"></div>

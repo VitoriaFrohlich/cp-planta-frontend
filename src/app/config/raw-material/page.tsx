@@ -1,5 +1,5 @@
 'use client';
-import ConfigNavbarComponent from '@/src/components/common/configNavbar';
+import ConfigNavbarComponent from '@/src/components/common/ConfigNavbar';
 import Header from '@/src/components/common/header';
 import ImageExample from '@/public/config-image-example.svg';
 import GenericList from '@/src/components/common/GenericList';

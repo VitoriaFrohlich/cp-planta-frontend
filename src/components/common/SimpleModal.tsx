@@ -2,12 +2,12 @@ interface ModalProps {
   onClose?: () => void; // Função chamada para fechar o modal
   onConfirm?: () => void; // Função chamada ao confirmar a ação
   item?: { name: string }; // Item opcional para exibição ou manipulação
-  actionType: number; // Tipo de ação: adicionar, editar ou deletar
+  actionType?: number; // Tipo de ação: adicionar, editar ou deletar
 }
 
 export default function SimpleModal({
   onClose,
-  onConfirm,
+   onConfirm,
   item,
   actionType
 }: ModalProps) {
@@ -20,7 +20,7 @@ export default function SimpleModal({
       2: `Deletar: ${item?.name}`
     };
 
-    return titles[actionType];
+    return titles[actionType ?? 0];
   };
 
   const getMessage = () => {
@@ -30,7 +30,7 @@ export default function SimpleModal({
       2: `Tem certeza de que deseja deletar o item: ${item?.name}? Esta ação não pode ser desfeita.`
     };
 
-    return messages[actionType];
+    return messages[actionType ?? 0];
   };
 
   const getConfirmButtonText = () => {
@@ -40,7 +40,7 @@ export default function SimpleModal({
       2: 'Deletar'
     };
 
-    return buttonTexts[actionType];
+    return buttonTexts[actionType ?? 0];
   };
 
   return (
