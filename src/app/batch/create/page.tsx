@@ -1,18 +1,23 @@
 'use client';
 import Header from '@/src/components/common/header';
 import SelectInput from '@/src/components/common/inputs/SelectInput';
+import CancelButton from '@/src/components/buttons/order/CancelButton';
 import NumericInput from '@/src/components/common/inputs/NumericInput';
 import DateInput from '@/src/components/common/inputs/DateInput';
 import DynamicBox from '@/src/components/common/DynamicBox';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
+import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
 import BatchListComponent from '@/src/components/order/BatchListComponent';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import checkIcon from '@/public/check-icon.svg';
 import returnIcon from '@/src/components/icons/return-icon.svg';
 
 export default function CreateBatch() {
   // Mock data
+  const router = useRouter();
+  // const isFormValidBatchCreate = [];
   const typesMaterials = ['Batata', 'Cenoura', 'Tomate'];
   const metrics = ['kg', 'g', 'mg', 'l', 'ml', 'un'];
   const storageLocations = ['Freezer 1', 'Freezer 2'];
@@ -26,6 +31,12 @@ export default function CreateBatch() {
   return (
     <main className="">
       <Header />
+      <button
+        className=" text-greenHortti pt-10 pl-10"
+        onClick={() => router.back()}
+      >
+        Voltar
+      </button>
       <div className="w-full flex gap-14 py-7 px-14 justify-center">
         <div className="flex flex-col w-full max-w-[603px] gap-y-11 start">
           <DynamicBox title="Cadastro de Lote">
@@ -70,7 +81,20 @@ export default function CreateBatch() {
             <h3 className="text-black text-2xl font-bold">{batchId}</h3>
           </DynamicBox>
           <div className="flex w-auto justify-between gap-4">
-            <button
+          <div className="w-full h-auto flex space-x-2">
+                  <OnClickButton
+                    className={'w-full h-auto py-2 px-4 rounded-lg flex items-center justify-items-center bg-greenHortti text-white  hover:bg-green-700'}
+                    title="Finalizar"
+                    image="/check-icon.svg"
+                    onClick={() => alert('Lote cadastrado com sucesso!')}
+                  />
+                  <CancelButton
+                    title="Cancelar"
+                    image="/trash-icon.svg"
+                    href="/home"
+                  />
+            </div>
+            {/* <button
               className="bg-greenHortti text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center w-full justify-center"
               onClick={() => alert('Lote cadastrado com sucesso!')}
             >
@@ -83,8 +107,8 @@ export default function CreateBatch() {
             >
               <Image src={returnIcon} alt="Adicionar" width={14} height={14} />
               <span className="ml-2 text-sm">Retornar</span>
-            </button>
-          </div>
+            </button>*/}
+          </div> 
         </div>
       </div>
     </main>
