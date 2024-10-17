@@ -6,6 +6,7 @@ import SimpleModal from '@/src/components/common/SimpleModal';
 import ImageExample from '@/public/config-image-example.svg';
 import FinalProductModal from '@/src/components/common/modals/FinalProductModal';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
+import FinalProductModal from '@/src/components/common/modals/FinalProductModal';
 
 export default function createFinalProduct() {
   // Função que retorna os itens da lista
