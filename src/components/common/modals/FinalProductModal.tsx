@@ -55,8 +55,6 @@ const FinalProductModal: React.FC = () => {
           onChange={e => setRawMaterialCategory(e.target.value)}
           options={['batata', 'cenoura']}
         />
-      </DynamicBox>
-      <DynamicBox extraStyle="mb-5">
         <SelectInput
           label="Tipo de Materia Prima"
           value={category}
