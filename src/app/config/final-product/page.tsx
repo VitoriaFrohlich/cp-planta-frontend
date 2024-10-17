@@ -4,6 +4,7 @@ import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
 import SimpleModal from '@/src/components/common/SimpleModal';
 import ImageExample from '@/public/config-image-example.svg';
+import FinalProductModal from '@/src/components/common/modals/FinalProductModal';
 
 export default function createFinalProduct() {
   // Função que retorna os itens da lista
@@ -29,7 +30,7 @@ export default function createFinalProduct() {
             }
           ]}
           getItems={getFinalProduct} // Função que busca os itens
-          AddModal={SimpleModal} // Abre modal de adicionar
+          AddModal={FinalProductModal} // Abre modal de adicionar
           EditModal={SimpleModal} // Abre modal de editar
           DeleteModal={SimpleModal} // Abre modal de deletar
         />

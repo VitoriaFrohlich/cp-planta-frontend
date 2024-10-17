@@ -56,7 +56,7 @@ export default function BatchListComponent({
           {itens.map((item, index) => (
             <div
               key={index}
-              className="grid grid-cols-10 gap-4 items-center mb-4 border-b pb-2 w-full"
+              className="grid grid-cols-10 items-center mb-4 border-b pb-2 w-full"
             >
               <div className="col-span-9">
                 <div className="text-black font-semibold w-full grid grid-cols-9">
@@ -81,7 +81,7 @@ export default function BatchListComponent({
               </div>
               <div className="flex justify-center">
                 <button
-                  className="text-red-600 font-semibold border border-red-600 rounded-full py-1 px-2 hover:bg-red-600 hover:text-white transition-colors"
+                  className="text-red-600 font-semibold border border-red-600 rounded-full py-0.4 px-1.5 hover:bg-red-600 hover:text-white transition-colors"
                   onClick={() => onRemove(index)}
                 >
                   ✕

@@ -3,7 +3,7 @@ interface SelectInputProps {
   placeholder: string;
   options: string[];
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  value?: string;
+  value?: string | number;
 }
 
 const selectInput: React.FC<SelectInputProps> = ({
