@@ -3,6 +3,7 @@ variables:
   DOCKER_IMAGE_NAME: norohim/cp-planta-frontend
   DOCKER_IMAGE_TAG: latest
   DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
 
 stages:
   - commit-msg-check
@@ -65,12 +66,10 @@ test:
 # Build and Push Docker image job
 build_and_push_docker_image:
   stage: build_and_push
-  image: docker:latest # Use Docker image for building
+  image: docker:20.10.16
   services:
-    - docker:dind 
-  variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_TLS_CERTDIR: ""
+    - name: docker:20.10.16-dind
+      alias: docker
   before_script:
     - docker info
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
