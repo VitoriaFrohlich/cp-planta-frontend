@@ -26,6 +26,7 @@
   "homepage": "https://www.ages.pucrs.br/projetos-2/cpplanta/",
   "scripts": {
     "start": "next start",
+    "start:prod": "next build && next start",
     "dev": "next dev",
     "build": "next build",
     "test": "jest",
