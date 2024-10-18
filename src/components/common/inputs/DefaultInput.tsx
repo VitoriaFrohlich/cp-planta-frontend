@@ -3,6 +3,7 @@ interface DefaultInputProps {
   placeholder: string;
   disable?: boolean;
   value?: string;
+  error?: string | null;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -11,6 +12,7 @@ const DefaultInput: React.FC<DefaultInputProps> = ({
   placeholder,
   disable,
   value,
+  error,
   onChange
 }) => {
   return (
@@ -23,6 +25,8 @@ const DefaultInput: React.FC<DefaultInputProps> = ({
         value={value}
         onChange={onChange}
       />
+      {/* Exibe o erro se houver */}
+      {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
     </div>
   );
 };

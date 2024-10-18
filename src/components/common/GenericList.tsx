@@ -8,6 +8,7 @@ import SearchIcon from '@/src/components/icons/search-icon.svg';
 import EditIcon from '@/src/components/icons/edit-icon.svg';
 import DeleteIcon from '@/src/components/icons/delete-icon.svg';
 import ReturnIcon from '@/src/components/icons/return-icon.svg';
+import Toast from './Toast';
 
 interface TableColumn {
   label: string;
@@ -19,29 +20,31 @@ interface TableColumn {
 interface Props<T> {
   columns: TableColumn[];
   getItems: () => Promise<T[]>;
+  deleteItem: (item: string) => Promise<T[]>;
   AddModal: React.FC<{
     onClose: () => void;
     onConfirm: () => void;
     item?: T;
-    actionType: number;
+    actionType?: number;
   }>;
   EditModal: React.FC<{
     onClose: () => void;
     onConfirm: () => void;
     item?: T;
-    actionType: number;
+    actionType?: number;
   }>;
   DeleteModal: React.FC<{
     onClose: () => void;
     onConfirm: () => void;
     item?: T;
-    actionType: number;
+    actionType?: number;
   }>;
 }
 
 export default function GenericList<T extends { [key: string]: any }>({
   columns,
   getItems,
+  deleteItem,
   AddModal,
   EditModal,
   DeleteModal
@@ -54,6 +57,7 @@ export default function GenericList<T extends { [key: string]: any }>({
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState<T | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState<T | null>(null);
+  const [showToast, setShowToast] = useState<string | null>(null); // Controle para exibir o toast
 
   // Função para carregar os itens
   const loadItems = useCallback(async () => {
@@ -81,22 +85,7 @@ export default function GenericList<T extends { [key: string]: any }>({
     } else {
       setFilteredList(originalList);
     }
-  }, [searchTerm, columns, originalList]);
-
-  const handleAddConfirm = () => {
-    setShowAddModal(false);
-    loadItems();
-  };
-
-  const handleEditConfirm = () => {
-    setShowAddModal(false);
-    loadItems();
-  };
-
-  const handleDeleteConfirm = () => {
-    setShowAddModal(false);
-    loadItems();
-  };
+  }, [searchTerm, originalList, columns]);
 
   const handleAddClose = () => {
     setShowAddModal(false);
@@ -111,6 +100,25 @@ export default function GenericList<T extends { [key: string]: any }>({
   const handleDeleteClose = () => {
     setShowDeleteModal(null);
     loadItems();
+  };
+
+  const handleAddConfirm = () => {
+    setShowAddModal(false);
+    loadItems();
+    setShowToast('Adicionado com sucesso!');
+  };
+
+  const handleEditConfirm = () => {
+    setShowEditModal(null);
+    loadItems();
+    setShowToast('Editado com sucesso!');
+  };
+
+  const handleDeleteConfirm = () => {
+    deleteItem(showDeleteModal?.id);
+    setShowDeleteModal(null);
+    loadItems();
+    setShowToast('Deletado com sucesso!');
   };
 
   return (
@@ -218,24 +226,29 @@ export default function GenericList<T extends { [key: string]: any }>({
       {showAddModal && (
         <AddModal
           actionType={0}
-          onConfirm={handleAddConfirm}
           onClose={handleAddClose}
+          onConfirm={handleAddConfirm}
         />
       )}
       {showEditModal && (
         <EditModal
-          actionType={1}
           item={showEditModal}
-          onConfirm={handleEditConfirm}
+          actionType={1}
           onClose={handleEditClose}
+          onConfirm={handleEditConfirm}
         />
       )}
       {showDeleteModal && (
         <DeleteModal
-          actionType={2}
           item={showDeleteModal}
-          onConfirm={handleDeleteConfirm}
           onClose={handleDeleteClose}
+          onConfirm={handleDeleteConfirm}
+        />
+      )}
+      {showToast && (
+        <Toast
+          message={showToast}
+          onClose={() => setShowToast(null)} // Fecha o toast quando ele expirar
         />
       )}
     </main>

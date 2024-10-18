@@ -2,7 +2,8 @@
 import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
-import SimpleModal from '@/src/components/common/SimpleModal';
+import DeleteModal from '@/src/components/common/modals/DeleteModal';
+import StepModal from '@/src/components/common/modals/StepModal';
 
 export default function createStep() {
   // Função que retorna os itens da lista
@@ -15,6 +16,10 @@ export default function createStep() {
     { id: 5, name: 'Rotular' }
   ];
 
+  const deleteStep = async (_id: string) => [
+    //Deletar Etapa
+  ];
+
   return (
     <main>
       <Header />
@@ -24,9 +29,10 @@ export default function createStep() {
             { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/2' }
           ]}
           getItems={getSteps} // Função que busca os itens
-          AddModal={SimpleModal} // Abre modal de adicionar
-          EditModal={SimpleModal} // Abre modal de editar
-          DeleteModal={SimpleModal} // Abre modal de deletar
+          deleteItem={deleteStep} // Função que deleta o item
+          AddModal={StepModal} // Abre modal de adicionar
+          EditModal={StepModal} // Abre modal de editar
+          DeleteModal={DeleteModal} // Abre modal de deletar
         />
       </ConfigNavbarComponent>
     </main>
