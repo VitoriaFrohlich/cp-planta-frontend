@@ -22,7 +22,7 @@ export default function Home() {
             href="/batch/create"
           />
           <ButtonOperation
-            title="Cadastrar Produto Final"
+            title="Saída de Produto Final"
             description="Cadastro de Produtos Finais"
             href="/config/final-product"
           />
