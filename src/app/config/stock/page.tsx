@@ -2,17 +2,21 @@
 import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
-import SimpleModal from '@/src/components/common/SimpleModal';
+import DeleteModal from '@/src/components/common/modals/DeleteModal';
+import StockModal from '@/src/components/common/modals/StockModal';
 
-export default function createPlace() {
+export default function createStock() {
   // Função que retorna os itens da lista
-  const getPlaces = async () => [
+  const getStocks = async () => [
     { id: 1, name: 'Frezzer', quantity: 8 },
     { id: 2, name: 'Geladeira', quantity: 5 },
     { id: 3, name: 'Armário 1', quantity: 7 },
     { id: 4, name: 'Armário 2', quantity: 7 }
   ];
 
+  const deleteStock = async (_id: string) => [
+    //Deletar estoque
+  ];
   return (
     <main>
       <Header />
@@ -27,10 +31,11 @@ export default function createPlace() {
               width: 'w-1/3'
             }
           ]}
-          getItems={getPlaces} // Função que busca os itens
-          AddModal={SimpleModal} // Abre modal de adicionar
-          EditModal={SimpleModal} // Abre modal de editar
-          DeleteModal={SimpleModal} // Abre modal de deletar
+          getItems={getStocks} // Função que busca os itens
+          deleteItem={deleteStock} // Função que deleta o item
+          AddModal={StockModal} // Abre modal de adicionar
+          EditModal={StockModal} // Abre modal de editar
+          DeleteModal={DeleteModal} // Abre modal de deletar
         />
       </ConfigNavbarComponent>
     </main>

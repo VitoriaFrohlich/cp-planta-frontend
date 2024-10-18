@@ -4,6 +4,7 @@ interface SelectInputProps {
   options: string[];
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   value?: string | number;
+  error?: string;
 }
 
 const selectInput: React.FC<SelectInputProps> = ({
@@ -11,6 +12,7 @@ const selectInput: React.FC<SelectInputProps> = ({
   placeholder,
   options,
   onChange,
+  error,
   value
 }) => {
   return (
@@ -32,6 +34,8 @@ const selectInput: React.FC<SelectInputProps> = ({
           </option>
         ))}
       </select>
+      {/* Exibe o erro se houver */}
+      {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
     </div>
   );
 };

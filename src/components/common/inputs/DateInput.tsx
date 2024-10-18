@@ -2,6 +2,7 @@ interface NumericInputProps {
   label: string;
   placeholder: string;
   disable?: boolean;
+  error?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -9,6 +10,7 @@ const numericInput: React.FC<NumericInputProps> = ({
   label,
   placeholder,
   disable,
+  error,
   onChange
 }) => {
   return (
@@ -21,6 +23,8 @@ const numericInput: React.FC<NumericInputProps> = ({
         disabled={disable === undefined ? false : disable}
         onChange={onChange}
       />
+      {/* Exibe o erro se houver */}
+      {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
     </div>
   );
 };

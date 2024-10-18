@@ -3,7 +3,7 @@ import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import Header from '@/src/components/common/header';
 import ImageExample from '@/public/config-image-example.svg';
 import GenericList from '@/src/components/common/GenericList';
-import SimpleModal from '@/src/components/common/SimpleModal';
+import DeleteModal from '@/src/components/common/modals/DeleteModal';
 import RawMaterialModal from '@/src/components/common/modals/RawMaterialModal';
 
 export default function RawMaterialConfig() {
@@ -12,6 +12,9 @@ export default function RawMaterialConfig() {
     { id: 1, image: ImageExample, name: 'Batata Branca', quantity: 8 },
     { id: 2, image: ImageExample, name: 'Cenoura', quantity: 5 },
     { id: 3, image: ImageExample, name: 'Maçã Fuji', quantity: 7 }
+  ];
+  const deleteRawMaterial = async (_id: string) => [
+    //Deletar materia prima
   ];
 
   return (
@@ -30,9 +33,10 @@ export default function RawMaterialConfig() {
             }
           ]}
           getItems={getRawMaterials} // Função que busca os itens
+          deleteItem={deleteRawMaterial} // Função que deleta o item
           AddModal={RawMaterialModal} // Abre modal de adicionar
-          EditModal={SimpleModal} // Abre modal de editar
-          DeleteModal={SimpleModal} // Abre modal de deletar
+          EditModal={RawMaterialModal} // Abre modal de editar
+          DeleteModal={DeleteModal} // Abre modal de deletar
         />
       </ConfigNavbarComponent>
     </main>

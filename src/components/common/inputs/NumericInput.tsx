@@ -4,6 +4,7 @@ interface NumericInputProps {
   disable?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: number;
+  error?: string;
 }
 
 const numericInput: React.FC<NumericInputProps> = ({
@@ -11,6 +12,7 @@ const numericInput: React.FC<NumericInputProps> = ({
   placeholder,
   disable,
   onChange,
+  error,
   value
 }) => {
   return (
@@ -24,6 +26,8 @@ const numericInput: React.FC<NumericInputProps> = ({
         value={value}
         onChange={onChange}
       />
+      {/* Exibe o erro se houver */}
+      {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
     </div>
   );
 };

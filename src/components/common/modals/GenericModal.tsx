@@ -1,48 +1,53 @@
 import React from 'react';
-import { createPortal } from 'react-dom';
+import AcceptButton from '../../buttons/order/AcceptButton';
+import CancelButton from '../../buttons/order/CancelButton';
 
 interface ModalProps {
-  isOpen?: boolean;
-  onClose: () => void;
   title: string;
   children: React.ReactNode;
+  onClose?: () => void;
+  onConfirm?: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
-  if (!isOpen) return null;
+export default function GenericModal({
+  title,
+  children,
+  onClose,
+  onConfirm
+}: ModalProps) {
+  const formattedTitle = title?.trim() ? title : '\u00A0';
 
-  return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl h-auto max-h-[90vh] overflow-y-auto p-12 relative">
-        <div className="flex justify-between items-center border-b pb-3 mb-4">
-          <h2 className="text-xl font-bold text-black">{title}</h2>
-          <button
-            onClick={onClose}
-            className="text-red-600 font-semibold text-xl"
-          >
-            ✕
-          </button>
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-hidden">
+        {' '}
+        {/* Define max-height and prevent overflow */}
+        {/* Cabeçalho fixo */}
+        <div className="p-4 border-b">
+          {title && (
+            <h2 className="text-black text-2xl font-bold">{formattedTitle}</h2>
+          )}
         </div>
-        {/* Conteúdo Dinâmico (Children) */}
-        <div>{children}</div>
-        <div className="mt-6 flex justify-end space-x-3">
-          <button
-            onClick={onClose}
-            className="border rounded-lg px-4 py-2 text-white bg-greenHortti"
-          >
-            Adicionar
-          </button>
-          <button
-            onClick={onClose}
-            className="border rounded-lg px-4 py-2 text-white bg-gray-700"
-          >
-            Fechar
-          </button>
+        {/* Conteúdo rolável */}
+        <div className="p-8 overflow-y-auto max-h-[70vh]">{children}</div>
+        {/* Rodapé com botões */}
+        <div className="flex justify-end space-x-4 p-4 border-t">
+          {onConfirm && (
+            <AcceptButton
+              title="Finalizar"
+              image="/check-icon.svg"
+              onClick={onConfirm}
+            />
+          )}
+          {onClose && (
+            <CancelButton
+              title="Cancelar"
+              image="/trash-icon.svg"
+              onClick={onClose}
+            />
+          )}
         </div>
       </div>
-    </div>,
-    document.body // Renderiza fora da árvore principal de componentes
+    </div>
   );
-};
-
-export default Modal;
+}
