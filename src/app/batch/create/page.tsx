@@ -10,9 +10,6 @@ import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick
 import BatchListComponent from '@/src/components/order/BatchListComponent';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import checkIcon from '@/public/check-icon.svg';
-import returnIcon from '@/src/components/icons/return-icon.svg';
 
 export default function CreateBatch() {
   // Mock data
@@ -81,18 +78,20 @@ export default function CreateBatch() {
             <h3 className="text-black text-2xl font-bold">{batchId}</h3>
           </DynamicBox>
           <div className="flex w-auto justify-between gap-4">
-          <div className="w-full h-auto flex space-x-2">
-                  <OnClickButton
-                    className={'w-full h-auto py-2 px-4 rounded-lg flex items-center justify-items-center bg-greenHortti text-white  hover:bg-green-700'}
-                    title="Finalizar"
-                    image="/check-icon.svg"
-                    onClick={() => alert('Lote cadastrado com sucesso!')}
-                  />
-                  <CancelButton
-                    title="Cancelar"
-                    image="/trash-icon.svg"
-                    href="/home"
-                  />
+            <div className="w-full h-auto flex space-x-2">
+              <OnClickButton
+                className={
+                  'w-full h-auto py-2 px-4 rounded-lg flex items-center justify-items-center bg-greenHortti text-white  hover:bg-green-700'
+                }
+                title="Finalizar"
+                image="/check-icon.svg"
+                onClick={() => alert('Lote cadastrado com sucesso!')}
+              />
+              <CancelButton
+                title="Cancelar"
+                image="/trash-icon.svg"
+                href="/home"
+              />
             </div>
             {/* <button
               className="bg-greenHortti text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center w-full justify-center"
@@ -108,7 +107,7 @@ export default function CreateBatch() {
               <Image src={returnIcon} alt="Adicionar" width={14} height={14} />
               <span className="ml-2 text-sm">Retornar</span>
             </button>*/}
-          </div> 
+          </div>
         </div>
       </div>
     </main>
