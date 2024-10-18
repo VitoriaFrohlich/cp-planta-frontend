@@ -1,22 +1,41 @@
+'use client';
 import Header from '@/src/components/common/header';
 import SelectInput from '@/src/components/common/inputs/SelectInput';
+import CancelButton from '@/src/components/buttons/order/CancelButton';
 import NumericInput from '@/src/components/common/inputs/NumericInput';
 import DateInput from '@/src/components/common/inputs/DateInput';
 import DynamicBox from '@/src/components/common/DynamicBox';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
+import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
+import BatchListComponent from '@/src/components/order/BatchListComponent';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function CreateBatch() {
   // Mock data
+  const router = useRouter();
+  // const isFormValidBatchCreate = [];
   const typesMaterials = ['Batata', 'Cenoura', 'Tomate'];
   const metrics = ['kg', 'g', 'mg', 'l', 'ml', 'un'];
   const storageLocations = ['Freezer 1', 'Freezer 2'];
   const batchId = 'L01/2310';
+  const [items, _] = useState([
+    { batch: 'L01/2301', rawMaterial: 'Batata Branca Grande', quantity: 80 },
+    { batch: 'L01/2304', rawMaterial: 'Cenoura', quantity: 50 },
+    { batch: 'L01/2309', rawMaterial: 'Maçã Fuji', quantity: 7 }
+  ]);
 
   return (
     <main className="">
       <Header />
-      <div className="w-full flex mt-10 gap-14 px-14">
-        <div className=" flex flex-col w-full max-w-[603px]">
+      <button
+        className=" text-greenHortti pt-10 pl-10"
+        onClick={() => router.back()}
+      >
+        Voltar
+      </button>
+      <div className="w-full flex gap-14 py-7 px-14 justify-center">
+        <div className="flex flex-col w-full max-w-[603px] gap-y-11 start">
           <DynamicBox title="Cadastro de Lote">
             <SelectInput
               label="Matéria Prima"
@@ -28,6 +47,9 @@ export default function CreateBatch() {
               placeholder="Digite o nome do fornecedor"
             />
             <NumericInput label="Preço custo" placeholder="R$ 0,00" />
+          </DynamicBox>
+          <DynamicBox title="Lista de Lotes Cadastrados" collapsible>
+            <BatchListComponent itens={items} />
           </DynamicBox>
         </div>
         <div className="w-[1px] h-auto border border-greenHortti " />
@@ -55,6 +77,37 @@ export default function CreateBatch() {
             </p>
             <h3 className="text-black text-2xl font-bold">{batchId}</h3>
           </DynamicBox>
+          <div className="flex w-auto justify-between gap-4">
+            <div className="w-full h-auto flex space-x-2">
+              <OnClickButton
+                className={
+                  'w-full h-auto py-2 px-4 rounded-lg flex items-center justify-items-center bg-greenHortti text-white  hover:bg-green-700'
+                }
+                title="Finalizar"
+                image="/check-icon.svg"
+                onClick={() => alert('Lote cadastrado com sucesso!')}
+              />
+              <CancelButton
+                title="Cancelar"
+                image="/trash-icon.svg"
+                href="/home"
+              />
+            </div>
+            {/* <button
+              className="bg-greenHortti text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center w-full justify-center"
+              onClick={() => alert('Lote cadastrado com sucesso!')}
+            >
+              <Image src={checkIcon} alt="Adicionar" width={14} height={14} />
+              <span className="ml-2 text-sm">Finalizar</span>
+            </button>
+            <button
+              className="bg-black text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center w-full justify-center"
+              onClick={() => (window.location.href = '/home')}
+            >
+              <Image src={returnIcon} alt="Adicionar" width={14} height={14} />
+              <span className="ml-2 text-sm">Retornar</span>
+            </button>*/}
+          </div>
         </div>
       </div>
     </main>

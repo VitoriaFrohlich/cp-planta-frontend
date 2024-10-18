@@ -92,4 +92,3 @@ trigger-infra-pipeline:
     - master
   dependencies:
     - build_and_push_docker_image
-
