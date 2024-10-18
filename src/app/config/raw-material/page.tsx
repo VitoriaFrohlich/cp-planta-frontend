@@ -4,6 +4,7 @@ import Header from '@/src/components/common/header';
 import ImageExample from '@/public/config-image-example.svg';
 import GenericList from '@/src/components/common/GenericList';
 import SimpleModal from '@/src/components/common/SimpleModal';
+import RawMaterialModal from '@/src/components/common/modals/RawMaterialModal';
 
 export default function RawMaterialConfig() {
   // Função que retorna os itens da lista
@@ -29,7 +30,7 @@ export default function RawMaterialConfig() {
             }
           ]}
           getItems={getRawMaterials} // Função que busca os itens
-          AddModal={SimpleModal} // Abre modal de adicionar
+          AddModal={RawMaterialModal} // Abre modal de adicionar
           EditModal={SimpleModal} // Abre modal de editar
           DeleteModal={SimpleModal} // Abre modal de deletar
         />
