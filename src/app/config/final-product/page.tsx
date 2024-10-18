@@ -2,9 +2,7 @@
 import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
-import SimpleModal from '@/src/components/common/SimpleModal';
 import ImageExample from '@/public/config-image-example.svg';
-import FinalProductModal from '@/src/components/common/modals/FinalProductModal';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
 import FinalProductModal from '@/src/components/common/modals/FinalProductModal';
 
@@ -15,7 +13,7 @@ export default function createFinalProduct() {
     { id: 2, image: ImageExample, name: 'Cenoura Fatiada', quantity: 2 },
     { id: 3, image: ImageExample, name: 'Maçã Fuji em Cubos', quantity: 9 }
   ];
-  const deleteFinalProduct = async (id: string) => [
+  const deleteFinalProduct = async (_id: string) => [
     //Deletar produto final
   ];
 

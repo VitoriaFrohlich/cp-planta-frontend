@@ -3,13 +3,13 @@ import GenericModal from './GenericModal';
 import DefaultInput from '../inputs/DefaultInput';
 import DynamicBox from '../DynamicBox';
 
-interface ModalProps {
+interface Props {
   onClose: () => void;
   onConfirm: () => void;
   item?: { name: string };
 }
 
-export default function StockModal({ onClose, onConfirm, item }: ModalProps) {
+export default function StockModal({ onClose, onConfirm, item }: Props) {
   const [descricao, setDescricao] = useState('');
   const [error, setError] = useState<string | null>(null);
 

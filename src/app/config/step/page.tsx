@@ -4,7 +4,6 @@ import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
 import StepModal from '@/src/components/common/modals/StepModal';
-import SimpleModal from '@/src/components/common/SimpleModal';
 
 export default function createStep() {
   // Função que retorna os itens da lista
@@ -17,7 +16,7 @@ export default function createStep() {
     { id: 5, name: 'Rotular' }
   ];
 
-  const deleteStep = async (id: string) => [
+  const deleteStep = async (_id: string) => [
     //Deletar Etapa
   ];
 

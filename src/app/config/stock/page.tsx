@@ -4,7 +4,6 @@ import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
 import StockModal from '@/src/components/common/modals/StockModal';
-import SimpleModal from '@/src/components/common/SimpleModal';
 
 export default function createStock() {
   // Função que retorna os itens da lista
@@ -15,7 +14,7 @@ export default function createStock() {
     { id: 4, name: 'Armário 2', quantity: 7 }
   ];
 
-  const deleteStock = async (id: string) => [
+  const deleteStock = async (_id: string) => [
     //Deletar estoque
   ];
   return (

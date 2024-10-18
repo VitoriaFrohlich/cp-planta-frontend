@@ -85,7 +85,7 @@ export default function GenericList<T extends { [key: string]: any }>({
     } else {
       setFilteredList(originalList);
     }
-  }, [searchTerm, originalList]);
+  }, [searchTerm, originalList, columns]);
 
   const handleAddClose = () => {
     setShowAddModal(false);

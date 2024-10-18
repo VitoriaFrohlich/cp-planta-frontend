@@ -4,7 +4,6 @@ import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
 import CategoryModal from '@/src/components/common/modals/CategoryModal';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
-import SimpleModal from '@/src/components/common/SimpleModal';
 
 export default function createCategory() {
   // Função que retorna os itens da lista
@@ -12,7 +11,7 @@ export default function createCategory() {
     { id: 1, name: 'Verduras', quantity: 2 },
     { id: 2, name: 'Frutas', quantity: 1 }
   ];
-  const deleteCategory = async (id: string) => [
+  const deleteCategory = async (_id: string) => [
     //Deletar categoria
   ];
 

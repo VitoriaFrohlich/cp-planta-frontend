@@ -7,24 +7,15 @@ import SelectInput from '../inputs/SelectInput';
 import DefaultListItems from '../lists/DefaultListItems';
 import Image from 'next/image';
 
-interface ModalProps {
+interface Props {
   onClose: () => void;
   onConfirm: () => void;
   item?: {
     name: string;
-    // rawMateriaCategory: string ,
-    //  category: string,
-    //  step : string,
-    //  categorys : []
-    //  stepsType : []
   };
 }
 
-export default function FinalProductModal({
-  onClose,
-  onConfirm,
-  item
-}: ModalProps) {
+export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
   const [descricao, setDescricao] = useState('');
   const [rawMateriaCategory, setRawMaterialCategory] = useState('');
   const [category, setCategory] = useState('');
@@ -37,10 +28,6 @@ export default function FinalProductModal({
   useEffect(() => {
     if (item != null) {
       setDescricao(item?.name ?? '');
-      // setRawMaterialCategory(item?.rawMateriaCategory ?? '');
-      // setCategory(item?.rawMateriaCategory ?? '');
-      // setCategorys(item?.categorys ?? []);
-      // setStepsType(item?.stepsType ?? []);
       //Adicionar campos do item para carregar na edicao
     }
   }, [item]);

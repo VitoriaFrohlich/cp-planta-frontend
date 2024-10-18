@@ -5,17 +5,13 @@ import DynamicBox from '../DynamicBox';
 import Image from 'next/image';
 import SelectInput from '../inputs/SelectInput';
 
-interface ModalProps {
+interface Props {
   onClose: () => void;
   onConfirm: () => void;
   item?: { name: string };
 }
 
-export default function RawMaterialModal({
-  onClose,
-  onConfirm,
-  item
-}: ModalProps) {
+export default function RawMaterialModal({ onClose, onConfirm, item }: Props) {
   const [descricao, setDescricao] = useState('');
   const [category, setCategory] = useState('');
   const [error, setError] = useState<string | null>(null);

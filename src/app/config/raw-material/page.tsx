@@ -3,8 +3,6 @@ import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import Header from '@/src/components/common/header';
 import ImageExample from '@/public/config-image-example.svg';
 import GenericList from '@/src/components/common/GenericList';
-import SimpleModal from '@/src/components/common/SimpleModal';
-import RawMaterialModal from '@/src/components/common/modals/RawMaterialModal';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
 import RawMaterialModal from '@/src/components/common/modals/RawMaterialModal';
 
@@ -15,7 +13,7 @@ export default function RawMaterialConfig() {
     { id: 2, image: ImageExample, name: 'Cenoura', quantity: 5 },
     { id: 3, image: ImageExample, name: 'Maçã Fuji', quantity: 7 }
   ];
-  const deleteRawMaterial = async (id: string) => [
+  const deleteRawMaterial = async (_id: string) => [
     //Deletar materia prima
   ];
 
