@@ -37,7 +37,7 @@ export default function createFinalProduct() {
           getItems={getFinalProduct} // Função que busca os itens
           deleteItem={deleteFinalProduct} // Função que deleta o item
           AddModal={FinalProductModal} // Abre modal de adicionar
-          EditModal={SimpleModal} // Abre modal de editar
+          EditModal={FinalProductModal} // Abre modal de editar
           DeleteModal={DeleteModal} // Abre modal de deletar
         />
       </ConfigNavbarComponent>

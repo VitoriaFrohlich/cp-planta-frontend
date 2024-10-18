@@ -1,24 +1,66 @@
-import { useState } from 'react';
-import { Button } from '@headlessui/react';
-import DynamicBox from '@/src/components/common/DynamicBox';
-import Image from 'next/image';
-import GenericModal from '@/src/components/common/modals/GenericModal';
-import SelectInput from '../inputs/SelectInput';
+import { useEffect, useState } from 'react';
+import GenericModal from './GenericModal';
 import DefaultInput from '../inputs/DefaultInput';
+import { Button } from '@headlessui/react';
+import DynamicBox from '../DynamicBox';
+import SelectInput from '../inputs/SelectInput';
 import DefaultListItems from '../lists/DefaultListItems';
+import Image from 'next/image';
 
-const FinalProductModal: React.FC = () => {
+interface ModalProps {
+  onClose: () => void;
+  onConfirm: () => void;
+  item?: { 
+              name: string
+          // rawMateriaCategory: string ,
+          //  category: string,
+          //  step : string,
+          //  categorys : []
+          //  stepsType : []
+           };
+}
+
+export default function FinalProductModal({
+  onClose,
+  onConfirm,
+  item,
+}: ModalProps) {
+  const [descricao, setDescricao] = useState('');
   const [rawMateriaCategory, setRawMaterialCategory] = useState('');
   const [category, setCategory] = useState('');
   const [step, setSteps] = useState('');
 
   const [categorys, setCategorys] = useState<{ category: string }[]>([]);
   const [stepsType, setStepsType] = useState<{ step: string }[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  // rever esses pontos:
-  // const openModal = () => setIsModalOpen(true);
-  const [isModalOpen, setIsModalOpen] = useState(true);
-  const closeModal = () => setIsModalOpen(false);
+  useEffect(() => {
+    if (item != null) {
+      setDescricao(item?.name ?? '');
+      // setRawMaterialCategory(item?.rawMateriaCategory ?? '');
+      // setCategory(item?.rawMateriaCategory ?? '');
+      // setCategorys(item?.categorys ?? []);
+      // setStepsType(item?.stepsType ?? []);
+      //Adicionar campos do item para carregar na edicao
+    }
+  }, [item]);
+
+  const validateFields = (): boolean => {
+    if (descricao.trim() === '') {
+      setError('O campo descrição é obrigatório.');
+      return false;
+    }
+
+    setError(null);
+    return true;
+  };
+
+  const handleSave = () => {
+    if (!validateFields()) {
+      return;
+    }
+    onConfirm();
+  };
   const isFormValidAddType = category != '';
   const isFormValidAddSteps = step != '';
 
@@ -39,15 +81,16 @@ const FinalProductModal: React.FC = () => {
   const handleRemoveSteps = (indexToRemove: number) => {
     setStepsType(stepsType.filter((_, index) => index !== indexToRemove));
   };
-
   return (
-    <GenericModal
-      isOpen={isModalOpen} //ajustar esse ponto
-      onClose={closeModal}
-      title="Cadastrar Produto Final"
-    >
-      <DynamicBox extraStyle="mb-5">
-        <DefaultInput label="Descricao" placeholder="Descricao" />
+                <GenericModal title={(item == null ? "Cadastro" : "Edição") + " de Produto Final"} onClose={onClose}  onConfirm={handleSave}>
+                  <DynamicBox extraStyle="mb-5">
+                    <DefaultInput
+                      placeholder="Descrição"
+                      value={descricao}
+                      onChange={e => setDescricao(e.target.value)}
+                      label='Descrição'
+                      error={error}
+                    />
         <SelectInput
           label="Categoria"
           value={rawMateriaCategory}
@@ -130,8 +173,6 @@ const FinalProductModal: React.FC = () => {
           />
         </div>
       </DynamicBox>
-    </GenericModal>
+                </GenericModal>
   );
-};
-
-export default FinalProductModal;
+}
