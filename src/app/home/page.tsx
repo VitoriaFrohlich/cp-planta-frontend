@@ -24,7 +24,7 @@ export default function Home() {
           <ButtonOperation
             title="Saída de Produto Final"
             description="Cadastro de Produtos Finais"
-            href="/config/final-product"
+            href="/out-final-product"
           />
         </div>
         {/* Linha divisória */}
