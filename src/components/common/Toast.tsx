@@ -6,7 +6,11 @@ interface ToastProps {
   onClose?: () => void; // Função chamada ao fechar o toast
 }
 
-export default function Toast({ message, duration = 3000, onClose }: ToastProps) {
+export default function Toast({
+  message,
+  duration = 3000,
+  onClose
+}: ToastProps) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {

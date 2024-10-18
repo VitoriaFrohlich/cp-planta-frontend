@@ -17,7 +17,7 @@ export default function createStep() {
     { id: 5, name: 'Rotular' }
   ];
 
-  const deleteStep = async (id : string) => [
+  const deleteStep = async (id: string) => [
     //Deletar Etapa
   ];
 

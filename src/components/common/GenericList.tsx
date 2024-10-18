@@ -59,7 +59,6 @@ export default function GenericList<T extends { [key: string]: any }>({
   const [showDeleteModal, setShowDeleteModal] = useState<T | null>(null);
   const [showToast, setShowToast] = useState<string | null>(null); // Controle para exibir o toast
 
-
   // Função para carregar os itens
   const loadItems = useCallback(async () => {
     const items = await getItems();
@@ -106,20 +105,20 @@ export default function GenericList<T extends { [key: string]: any }>({
   const handleAddConfirm = () => {
     setShowAddModal(false);
     loadItems();
-    setShowToast("Adicionado com sucesso!");
+    setShowToast('Adicionado com sucesso!');
   };
 
   const handleEditConfirm = () => {
     setShowEditModal(null);
     loadItems();
-    setShowToast("Editado com sucesso!");
+    setShowToast('Editado com sucesso!');
   };
 
   const handleDeleteConfirm = () => {
-    deleteItem(showDeleteModal?.id)
+    deleteItem(showDeleteModal?.id);
     setShowDeleteModal(null);
     loadItems();
-    setShowToast("Deletado com sucesso!");
+    setShowToast('Deletado com sucesso!');
   };
 
   return (

@@ -15,7 +15,7 @@ export default function createStock() {
     { id: 4, name: 'Armário 2', quantity: 7 }
   ];
 
-  const deleteStock = async (id : string) => [
+  const deleteStock = async (id: string) => [
     //Deletar estoque
   ];
   return (

@@ -13,25 +13,23 @@ export default function GenericModal({
   title,
   children,
   onClose,
-  onConfirm,
+  onConfirm
 }: ModalProps) {
   const formattedTitle = title?.trim() ? title : '\u00A0';
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 overflow-y-auto">
-      <div className="bg-white rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-hidden"> {/* Define max-height and prevent overflow */}
+      <div className="bg-white rounded-lg shadow-lg w-1/2 max-h-[90vh] overflow-hidden">
+        {' '}
+        {/* Define max-height and prevent overflow */}
         {/* Cabeçalho fixo */}
         <div className="p-4 border-b">
           {title && (
             <h2 className="text-black text-2xl font-bold">{formattedTitle}</h2>
           )}
         </div>
-
         {/* Conteúdo rolável */}
-        <div className="p-8 overflow-y-auto max-h-[70vh]">
-          {children}
-        </div>
-
+        <div className="p-8 overflow-y-auto max-h-[70vh]">{children}</div>
         {/* Rodapé com botões */}
         <div className="flex justify-end space-x-4 p-4 border-t">
           {onConfirm && (

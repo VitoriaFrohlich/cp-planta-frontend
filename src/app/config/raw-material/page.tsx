@@ -15,7 +15,7 @@ export default function RawMaterialConfig() {
     { id: 2, image: ImageExample, name: 'Cenoura', quantity: 5 },
     { id: 3, image: ImageExample, name: 'Maçã Fuji', quantity: 7 }
   ];
-  const deleteRawMaterial = async (id : string) => [
+  const deleteRawMaterial = async (id: string) => [
     //Deletar materia prima
   ];
 
@@ -37,7 +37,7 @@ export default function RawMaterialConfig() {
           getItems={getRawMaterials} // Função que busca os itens
           deleteItem={deleteRawMaterial} // Função que deleta o item
           AddModal={RawMaterialModal} // Abre modal de adicionar
-          EditModal={SimpleModal} // Abre modal de editar
+          EditModal={RawMaterialModal} // Abre modal de editar
           DeleteModal={DeleteModal} // Abre modal de deletar
         />
       </ConfigNavbarComponent>

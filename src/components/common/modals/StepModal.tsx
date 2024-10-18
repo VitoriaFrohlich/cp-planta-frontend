@@ -9,11 +9,7 @@ interface ModalProps {
   item?: { name: string };
 }
 
-export default function StepModal({
-  onClose,
-  onConfirm,
-  item,
-}: ModalProps) {
+export default function StepModal({ onClose, onConfirm, item }: ModalProps) {
   const [descricao, setDescricao] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -41,18 +37,22 @@ export default function StepModal({
   };
 
   return (
-                <GenericModal title={(item == null ? "Cadastro" : "Edição") + " de Etapa"} onClose={onClose}  onConfirm={handleSave}>
-                 <DynamicBox extraStyle="mb-5">
-                  <form className="flex flex-col gap-4">
-                    <DefaultInput
-                      placeholder="Descrição"
-                      value={descricao}
-                      onChange={e => setDescricao(e.target.value)}
-                      label='Descrição'
-                      error={error}
-                    />
-                  </form>
-                </DynamicBox>
-                </GenericModal>
+    <GenericModal
+      title={(item == null ? 'Cadastro' : 'Edição') + ' de Etapa'}
+      onClose={onClose}
+      onConfirm={handleSave}
+    >
+      <DynamicBox extraStyle="mb-5">
+        <form className="flex flex-col gap-4">
+          <DefaultInput
+            placeholder="Descrição"
+            value={descricao}
+            onChange={e => setDescricao(e.target.value)}
+            label="Descrição"
+            error={error}
+          />
+        </form>
+      </DynamicBox>
+    </GenericModal>
   );
 }

@@ -10,20 +10,20 @@ import Image from 'next/image';
 interface ModalProps {
   onClose: () => void;
   onConfirm: () => void;
-  item?: { 
-              name: string
-          // rawMateriaCategory: string ,
-          //  category: string,
-          //  step : string,
-          //  categorys : []
-          //  stepsType : []
-           };
+  item?: {
+    name: string;
+    // rawMateriaCategory: string ,
+    //  category: string,
+    //  step : string,
+    //  categorys : []
+    //  stepsType : []
+  };
 }
 
 export default function FinalProductModal({
   onClose,
   onConfirm,
-  item,
+  item
 }: ModalProps) {
   const [descricao, setDescricao] = useState('');
   const [rawMateriaCategory, setRawMaterialCategory] = useState('');
@@ -82,15 +82,19 @@ export default function FinalProductModal({
     setStepsType(stepsType.filter((_, index) => index !== indexToRemove));
   };
   return (
-                <GenericModal title={(item == null ? "Cadastro" : "Edição") + " de Produto Final"} onClose={onClose}  onConfirm={handleSave}>
-                  <DynamicBox extraStyle="mb-5">
-                    <DefaultInput
-                      placeholder="Descrição"
-                      value={descricao}
-                      onChange={e => setDescricao(e.target.value)}
-                      label='Descrição'
-                      error={error}
-                    />
+    <GenericModal
+      title={(item == null ? 'Cadastro' : 'Edição') + ' de Produto Final'}
+      onClose={onClose}
+      onConfirm={handleSave}
+    >
+      <DynamicBox extraStyle="mb-5">
+        <DefaultInput
+          placeholder="Descrição"
+          value={descricao}
+          onChange={e => setDescricao(e.target.value)}
+          label="Descrição"
+          error={error}
+        />
         <SelectInput
           label="Categoria"
           value={rawMateriaCategory}
@@ -173,6 +177,6 @@ export default function FinalProductModal({
           />
         </div>
       </DynamicBox>
-                </GenericModal>
+    </GenericModal>
   );
 }

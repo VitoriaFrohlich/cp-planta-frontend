@@ -1,31 +1,67 @@
-import { useState } from 'react';
-import DynamicBox from '@/src/components/common/DynamicBox';
-import Image from 'next/image';
-import GenericModal from '@/src/components/common/modals/GenericModal';
-import SelectInput from '../inputs/SelectInput';
+import { useEffect, useState } from 'react';
+import GenericModal from './GenericModal';
 import DefaultInput from '../inputs/DefaultInput';
+import DynamicBox from '../DynamicBox';
+import Image from 'next/image';
+import SelectInput from '../inputs/SelectInput';
 
-const RawMaterialModal: React.FC = () => {
-  const [rawMaterial, setRawMaterial] = useState('');
+interface ModalProps {
+  onClose: () => void;
+  onConfirm: () => void;
+  item?: { name: string };
+}
 
-  // rever esses pontos:
-  // const openModal = () => setIsModalOpen(true);
-  const [isModalOpen, setIsModalOpen] = useState(true);
-  const closeModal = () => setIsModalOpen(false);
+export default function RawMaterialModal({
+  onClose,
+  onConfirm,
+  item
+}: ModalProps) {
+  const [descricao, setDescricao] = useState('');
+  const [category, setCategory] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (item != null) {
+      setDescricao(item?.name ?? '');
+    }
+  }, [item]);
+
+  const validateFields = (): boolean => {
+    if (descricao.trim() === '') {
+      setError('O campo descrição é obrigatório.');
+      return false;
+    }
+
+    setError(null);
+    return true;
+  };
+
+  const handleSave = () => {
+    if (!validateFields()) {
+      return;
+    }
+    onConfirm();
+  };
 
   return (
     <GenericModal
-      isOpen={isModalOpen} //ajustar esse ponto
-      onClose={closeModal}
-      title="Cadastrar Materia Prima"
+      title={(item == null ? 'Cadastro' : 'Edição') + ' de Matéria prima'}
+      onClose={onClose}
+      onConfirm={handleSave}
     >
       <DynamicBox extraStyle="mb-5">
-        <DefaultInput label="Descricao" placeholder="Descricao" />
+        <DefaultInput
+          placeholder="Descrição"
+          value={descricao}
+          onChange={e => setDescricao(e.target.value)}
+          label="Descrição"
+          error={error}
+        />
         <SelectInput
           label="Categoria"
-          value={rawMaterial}
+          value={category}
           placeholder="Selecione a categoria"
-          onChange={e => setRawMaterial(e.target.value)}
+          onChange={e => setCategory(e.target.value)}
           options={['Fruta', 'Vegetal', 'Legume', 'Tuberculo']}
         />
       </DynamicBox>
@@ -45,6 +81,4 @@ const RawMaterialModal: React.FC = () => {
       </DynamicBox>
     </GenericModal>
   );
-};
-
-export default RawMaterialModal;
+}

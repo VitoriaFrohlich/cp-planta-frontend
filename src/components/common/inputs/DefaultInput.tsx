@@ -26,11 +26,7 @@ const DefaultInput: React.FC<DefaultInputProps> = ({
         onChange={onChange}
       />
       {/* Exibe o erro se houver */}
-      {error && (
-        <p className="text-red-600 text-sm mt-1">
-          {error}
-        </p>
-      )}
+      {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
     </div>
   );
 };

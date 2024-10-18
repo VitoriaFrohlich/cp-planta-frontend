@@ -15,7 +15,7 @@ export default function createFinalProduct() {
     { id: 2, image: ImageExample, name: 'Cenoura Fatiada', quantity: 2 },
     { id: 3, image: ImageExample, name: 'Maçã Fuji em Cubos', quantity: 9 }
   ];
-  const deleteFinalProduct = async (id : string) => [
+  const deleteFinalProduct = async (id: string) => [
     //Deletar produto final
   ];
 

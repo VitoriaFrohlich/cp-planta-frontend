@@ -12,7 +12,7 @@ interface ModalProps {
 export default function CategoryModal({
   onClose,
   onConfirm,
-  item,
+  item
 }: ModalProps) {
   const [descricao, setDescricao] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -41,18 +41,22 @@ export default function CategoryModal({
   };
 
   return (
-                <GenericModal title={(item == null ? "Cadastro" : "Edição") + " de Categoria"} onClose={onClose}  onConfirm={handleSave}>
-                  <DynamicBox extraStyle="mb-5">
-                  <form className="flex flex-col gap-4">
-                    <DefaultInput
-                      placeholder="Descrição"
-                      value={descricao}
-                      onChange={e => setDescricao(e.target.value)}
-                      label='Descrição'
-                      error={error}
-                    />
-                  </form>
-                </DynamicBox>
-                </GenericModal>
+    <GenericModal
+      title={(item == null ? 'Cadastro' : 'Edição') + ' de Categoria'}
+      onClose={onClose}
+      onConfirm={handleSave}
+    >
+      <DynamicBox extraStyle="mb-5">
+        <form className="flex flex-col gap-4">
+          <DefaultInput
+            placeholder="Descrição"
+            value={descricao}
+            onChange={e => setDescricao(e.target.value)}
+            label="Descrição"
+            error={error}
+          />
+        </form>
+      </DynamicBox>
+    </GenericModal>
   );
 }

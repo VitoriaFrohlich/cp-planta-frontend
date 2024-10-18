@@ -12,7 +12,7 @@ export default function createCategory() {
     { id: 1, name: 'Verduras', quantity: 2 },
     { id: 2, name: 'Frutas', quantity: 1 }
   ];
-  const deleteCategory = async (id : string) => [
+  const deleteCategory = async (id: string) => [
     //Deletar categoria
   ];
 

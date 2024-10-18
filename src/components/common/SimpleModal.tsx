@@ -7,10 +7,11 @@ interface ModalProps {
 
 export default function SimpleModal({
   onClose,
-   onConfirm,
+  onConfirm,
   item,
   actionType
-}: ModalProps) { // Não exibe o modal de edição/remoção se o item não for passado
+}: ModalProps) {
+  // Não exibe o modal de edição/remoção se o item não for passado
 
   const getTitle = () => {
     const titles: Record<number, string> = {
