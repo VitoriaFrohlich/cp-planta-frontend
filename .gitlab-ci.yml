@@ -8,19 +8,31 @@ stages:
   - commit-msg-check
   - lint
   - test
+<<<<<<< HEAD
   - build
   - push
+=======
+  - build_and_push
+  - deploy
+>>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9
 
 # Default settings for all jobs
 default:
   image: node:22.5.0
   before_script:
     - npm cache clean --force
+<<<<<<< HEAD
     - rm -rf node_modules/ # Remove node_modules directory
     - npm install --force # Install dependencies cleanly
+=======
+    - rm -rf node_modules/ package-lock.json # Remove node_modules directory
+    - npm install --force --ignore-scripts # Install dependencies cleanly
+    - df -h
+>>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9
 
 # Commit message check using commitlint
 commit-msg-check:
+  image: node:22.5.0
   stage: commit-msg-check
   script:
     - echo "$CI_COMMIT_MESSAGE" | npx commitlint
@@ -30,10 +42,19 @@ commit-msg-check:
 
 # Job for checking the lint
 lint:
+  image: node:22.5.0
   stage: lint
   before_script:
+<<<<<<< HEAD
     - npm install -g eslint@8.x.x prettier@3.x.x
     - npm install --force # Install dependencies cleanly
+=======
+    - npm cache clean --force
+    - rm -rf node_modules/ package-lock.json # Remove node_modules directory
+    - npm install --force --ignore-scripts # Install dependencies cleanly
+    - npm install -g eslint@8.x.x prettier@3.x.x
+    - df -h
+>>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9
   script:
     - npm run lint
     - npm run prettier
@@ -45,24 +66,46 @@ lint:
 test:
   stage: test
   before_script:
+<<<<<<< HEAD
     - npm install -g jest@29.x.x
     - npm install --force # Install dependencies cleanly
   script:
     - npm run test:ci 
+=======
+    - npm cache clean --force
+    - rm -rf node_modules/ package-lock.json # Remove node_modules directory
+    - npm install --force --ignore-scripts # Install dependencies cleanly
+    - npm install -g jest@29.x.x
+    - df -h
+  script:
+    - npm run test:ci  # Command to run tests
+>>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9
   only:
     - merge_requests
     - branches
 
+<<<<<<< HEAD
 # Build Docker image job
 build_docker_image:
   stage: build
   image: docker:latest  # Use Docker image for building
+=======
+# Build and Push Docker image job
+build_and_push_docker_image:
+  stage: build_and_push
+  image: docker:latest # Use Docker image for building
+>>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9
   services:
-    - docker:dind  # Docker in Docker service
+    - docker:dind 
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_TLS_CERTDIR: ""
   before_script:
-    - docker info  # Ensure Docker is running
+    - docker info
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   script:
     - docker build -f Dockerfile -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
+<<<<<<< HEAD
     - docker save "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" -o image.tar
   artifacts:
     paths:
@@ -87,3 +130,21 @@ push_docker_image:
     - build_docker_image
   only:
     - master
+=======
+    - docker push "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
+  only:
+    - master   
+
+# trigger deploy when build an push succeed
+trigger-infra-pipeline:
+  stage: deploy
+  before_script:
+    - apt-get install -y curl bash 
+  script:
+    - echo "Triggering infrastructure pipeline..."
+    - curl -X POST --fail -F token=90cbad47a562a7bae7cf8de55d3e34 -F ref=main https://tools.ages.pucrs.br/api/v4/projects/683/trigger/pipeline
+  only:
+    - master
+  dependencies:
+    - build_and_push_docker_image
+>>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9

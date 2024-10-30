@@ -1,6 +1,6 @@
 'use client';
 import { usePathname } from 'next/navigation';
-import NavbarButtonComponent from '../buttons/config/NavbarButton';
+import NavbarButtonComponent from '../buttons/config/navbarButton';
 
 interface navbarProps {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ const ConfigNavbar: React.FC<navbarProps> = ({ children }) => {
   return (
     <div>
       <nav className="my-8">
-        <h1 className="text-black w-full self-start text-2xl font-semibold my-3 ml-3">
+        <h1 className="text-black w-full self-start text-2xl font-bold px-10 my-3 mb-3 ml-3">
           Painel de Configuração
         </h1>
         <div className="flex flex-row w-full justify-between space-x-4 px-16 my-6">
@@ -39,9 +39,9 @@ const ConfigNavbar: React.FC<navbarProps> = ({ children }) => {
             selected={isSelected('/config/step')}
           />
           <NavbarButtonComponent
-            href="/config/place"
-            title="Local"
-            selected={isSelected('/config/place')}
+            href="/config/stock"
+            title="Estoque"
+            selected={isSelected('/config/stock')}
           />
         </div>
         <div className="w-auto h-px bg-greenHortti mx-16"></div>

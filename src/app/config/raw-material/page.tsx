@@ -1,12 +1,43 @@
-import ConfigNavbarComponent from '@/src/components/common/ConfigNavbar';
+'use client';
+import ConfigNavbarComponent from '@/src/components/common/configNavbar';
+import Header from '@/src/components/common/header';
+import ImageExample from '@/public/config-image-example.svg';
+import GenericList from '@/src/components/common/GenericList';
+import DeleteModal from '@/src/components/common/modals/DeleteModal';
+import RawMaterialModal from '@/src/components/common/modals/RawMaterialModal';
 
-export default function createRawMaterial() {
+export default function RawMaterialConfig() {
+  // Função que retorna os itens da lista
+  const getRawMaterials = async () => [
+    { id: 1, image: ImageExample, name: 'Batata Branca', quantity: 8 },
+    { id: 2, image: ImageExample, name: 'Cenoura', quantity: 5 },
+    { id: 3, image: ImageExample, name: 'Maçã Fuji', quantity: 7 }
+  ];
+  const deleteRawMaterial = async (_id: string) => [
+    //Deletar materia prima
+  ];
+
   return (
     <main>
+      <Header />
       <ConfigNavbarComponent>
-        <div className="text-lg self-center font-semibold">
-          <p>Raw material component</p>
-        </div>
+        <GenericList
+          columns={[
+            { label: 'Imagem', key: 'image', type: 'image', width: 'w-1/4' },
+            { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/4' },
+            {
+              label: 'Qnt. lotes',
+              key: 'quantity',
+              type: 'text',
+              width: 'w-1/4'
+            }
+          ]}
+          getItems={getRawMaterials} // Função que busca os itens
+          deleteItem={deleteRawMaterial} // Função que deleta o item
+          AddModal={RawMaterialModal} // Abre modal de adicionar
+          EditModal={RawMaterialModal} // Abre modal de editar
+          DeleteModal={DeleteModal} // Abre modal de deletar
+        />
       </ConfigNavbarComponent>
     </main>
   );
