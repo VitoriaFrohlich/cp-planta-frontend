@@ -8,27 +8,17 @@ stages:
   - commit-msg-check
   - lint
   - test
-<<<<<<< HEAD
-  - build
-  - push
-=======
   - build_and_push
   - deploy
->>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9
 
 # Default settings for all jobs
 default:
   image: node:22.5.0
   before_script:
     - npm cache clean --force
-<<<<<<< HEAD
-    - rm -rf node_modules/ # Remove node_modules directory
-    - npm install --force # Install dependencies cleanly
-=======
     - rm -rf node_modules/ package-lock.json # Remove node_modules directory
     - npm install --force --ignore-scripts # Install dependencies cleanly
     - df -h
->>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9
 
 # Commit message check using commitlint
 commit-msg-check:
@@ -45,16 +35,11 @@ lint:
   image: node:22.5.0
   stage: lint
   before_script:
-<<<<<<< HEAD
-    - npm install -g eslint@8.x.x prettier@3.x.x
-    - npm install --force # Install dependencies cleanly
-=======
     - npm cache clean --force
     - rm -rf node_modules/ package-lock.json # Remove node_modules directory
     - npm install --force --ignore-scripts # Install dependencies cleanly
     - npm install -g eslint@8.x.x prettier@3.x.x
     - df -h
->>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9
   script:
     - npm run lint
     - npm run prettier
@@ -66,12 +51,6 @@ lint:
 test:
   stage: test
   before_script:
-<<<<<<< HEAD
-    - npm install -g jest@29.x.x
-    - npm install --force # Install dependencies cleanly
-  script:
-    - npm run test:ci 
-=======
     - npm cache clean --force
     - rm -rf node_modules/ package-lock.json # Remove node_modules directory
     - npm install --force --ignore-scripts # Install dependencies cleanly
@@ -79,22 +58,14 @@ test:
     - df -h
   script:
     - npm run test:ci  # Command to run tests
->>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9
   only:
     - merge_requests
     - branches
 
-<<<<<<< HEAD
-# Build Docker image job
-build_docker_image:
-  stage: build
-  image: docker:latest  # Use Docker image for building
-=======
 # Build and Push Docker image job
 build_and_push_docker_image:
   stage: build_and_push
   image: docker:latest # Use Docker image for building
->>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9
   services:
     - docker:dind 
   variables:
@@ -105,32 +76,6 @@ build_and_push_docker_image:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   script:
     - docker build -f Dockerfile -t "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" .
-<<<<<<< HEAD
-    - docker save "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG" -o image.tar
-  artifacts:
-    paths:
-      - image.tar
-    expire_in: 1 hour
-  only:
-   - master
-
-# Push Docker image job
-push_docker_image:
-  stage: push
-  image: docker:latest  # Use Docker image for pushing
-  services:
-    - docker:dind  # Docker in Docker service
-  before_script:
-    - docker info
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  script:
-    - docker load -i image.tar
-    - docker push "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
-  dependencies:
-    - build_docker_image
-  only:
-    - master
-=======
     - docker push "$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
   only:
     - master   
@@ -147,4 +92,3 @@ trigger-infra-pipeline:
     - master
   dependencies:
     - build_and_push_docker_image
->>>>>>> 0cfe2429ce014dda76401a116624ceee27b1c5f9
