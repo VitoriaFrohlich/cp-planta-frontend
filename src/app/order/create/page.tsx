@@ -188,7 +188,7 @@ export default function OrderCreate() {
                   />
 
                   <DefaultInput
-                    label="Quantidade esperada"
+                    label="Quantidade Esperada"
                     placeholder="Esse campo mostrará o peso estimado do produto final"
                     disable
                     value={
