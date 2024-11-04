@@ -7,9 +7,12 @@ import DateInput from '@/src/components/common/inputs/DateInput';
 import DynamicBox from '@/src/components/common/DynamicBox';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
 import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
-import BatchListComponent from '@/src/components/order/BatchListComponent';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import DefaultListItems from '@/src/components/common/lists/DefaultListItems';
+import Image from 'next/image';
+import ReturnIcon from '@/src/components/icons/return-icon.svg';
+
 
 export default function CreateBatch() {
   // Mock data
@@ -28,14 +31,14 @@ export default function CreateBatch() {
   return (
     <main className="">
       <Header />
-      <button
-        className=" text-greenHortti pt-10 pl-10"
-        onClick={() => router.back()}
-      >
-        Voltar
-      </button>
       <div className="w-full flex gap-14 py-7 px-14 justify-center">
         <div className="flex flex-col w-full max-w-[603px] gap-y-11 start">
+            <button
+            className=" text-greenHortti return-button "
+            onClick={() => router.push('/home')}
+          >
+                  <Image src={ReturnIcon} alt="Retornar" width={14} height={14} />
+          </button>
           <DynamicBox title="Cadastro de Lote">
             <SelectInput
               label="Matéria Prima"
@@ -49,7 +52,14 @@ export default function CreateBatch() {
             <NumericInput label="Preço custo" placeholder="R$ 0,00" />
           </DynamicBox>
           <DynamicBox title="Lista de Lotes Cadastrados" collapsible>
-            <BatchListComponent itens={items} />
+            <DefaultListItems
+              items={items}
+              columns={[
+                { key: 'batch', type: 'text'},
+                { key: 'rawMaterial', type: 'text'},
+                { key: 'quantity', type: 'text'},
+               ]}
+            />
           </DynamicBox>
         </div>
         <div className="w-[1px] h-auto border border-greenHortti " />

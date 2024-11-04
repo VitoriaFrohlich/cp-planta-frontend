@@ -41,7 +41,7 @@ interface Props<T> {
   }>;
 }
 
-export default function GenericList<T extends { [key: string]: any }>({
+export default function GenericConfig<T extends { [key: string]: any }>({
   columns,
   getItems,
   deleteItem,
@@ -210,16 +210,6 @@ export default function GenericList<T extends { [key: string]: any }>({
           )}
         </div>
 
-        {/* Botão Retornar */}
-        <div className="my-8 float-right">
-          <button
-            className="bg-gray-800 text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center"
-            onClick={() => router.push('/home')}
-          >
-            <Image src={ReturnIcon} alt="Retornar" width={14} height={14} />
-            <span className="ml-2 text-sm">Retornar</span>
-          </button>
-        </div>
       </div>
 
       {/* Modais */}
