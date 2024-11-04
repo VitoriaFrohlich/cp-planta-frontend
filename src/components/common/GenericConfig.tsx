@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 import AddIcon from '@/src/components/icons/white-add-icon.svg';
 import SearchIcon from '@/src/components/icons/search-icon.svg';
 import EditIcon from '@/src/components/icons/edit-icon.svg';
 import DeleteIcon from '@/src/components/icons/delete-icon.svg';
-import ReturnIcon from '@/src/components/icons/return-icon.svg';
 import Toast from './Toast';
 
 interface TableColumn {
@@ -49,7 +47,6 @@ export default function GenericConfig<T extends { [key: string]: any }>({
   EditModal,
   DeleteModal
 }: Props<T>) {
-  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [originalList, setOriginalList] = useState<T[]>([]);
   const [filteredList, setFilteredList] = useState<T[]>([]);
@@ -209,7 +206,6 @@ export default function GenericConfig<T extends { [key: string]: any }>({
             <p className="text-center text-gray-500">Nenhum item encontrado.</p>
           )}
         </div>
-
       </div>
 
       {/* Modais */}

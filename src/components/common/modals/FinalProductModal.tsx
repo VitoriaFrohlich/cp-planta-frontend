@@ -89,7 +89,6 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
           onChange={e => setRawMaterialCategory(e.target.value)}
           options={['batata', 'cenoura']}
         />
-        
       </DynamicBox>
       <DynamicBox extraStyle="mb-5">
         <SelectInput
@@ -116,7 +115,7 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
         </Button>
         <DefaultListItems
           items={categorys}
-          columns={[{ key: 'category', type: 'text'} ]}
+          columns={[{ key: 'category', type: 'text' }]}
           scrollable
           onRemove={handleRemoveCategory}
         />
@@ -146,7 +145,7 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
         </Button>
         <DefaultListItems
           items={stepsType}
-          columns={[{ key: 'step', type: 'text'} ]}
+          columns={[{ key: 'step', type: 'text' }]}
           scrollable
           onRemove={handleRemoveSteps}
         />

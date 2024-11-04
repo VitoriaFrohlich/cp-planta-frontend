@@ -13,7 +13,6 @@ import DefaultListItems from '@/src/components/common/lists/DefaultListItems';
 import Image from 'next/image';
 import ReturnIcon from '@/src/components/icons/return-icon.svg';
 
-
 export default function CreateBatch() {
   // Mock data
   const router = useRouter();
@@ -33,11 +32,11 @@ export default function CreateBatch() {
       <Header />
       <div className="w-full flex gap-14 py-7 px-14 justify-center">
         <div className="flex flex-col w-full max-w-[603px] gap-y-11 start">
-            <button
+          <button
             className=" text-greenHortti return-button "
             onClick={() => router.push('/home')}
           >
-                  <Image src={ReturnIcon} alt="Retornar" width={14} height={14} />
+            <Image src={ReturnIcon} alt="Retornar" width={14} height={14} />
           </button>
           <DynamicBox title="Cadastro de Lote">
             <SelectInput
@@ -55,10 +54,10 @@ export default function CreateBatch() {
             <DefaultListItems
               items={items}
               columns={[
-                { key: 'batch', type: 'text'},
-                { key: 'rawMaterial', type: 'text'},
-                { key: 'quantity', type: 'text'},
-               ]}
+                { key: 'batch', type: 'text' },
+                { key: 'rawMaterial', type: 'text' },
+                { key: 'quantity', type: 'text' }
+              ]}
             />
           </DynamicBox>
         </div>

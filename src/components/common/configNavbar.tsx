@@ -18,12 +18,13 @@ const ConfigNavbar: React.FC<navbarProps> = ({ children }) => {
     <div>
       <nav className="my-8">
         <h1 className="text-black w-full self-start text-2xl font-bold px-5 my-3 mb-3 ml-3">
-        <button
-      className=" text-greenHortti  pr-2 "
-      onClick={() => router.push('/home')}
-    >
+          <button
+            className=" text-greenHortti  pr-2 "
+            onClick={() => router.push('/home')}
+          >
             <Image src={ReturnIcon} alt="Retornar" width={14} height={14} />
-    </button> Painel de Configuração
+          </button>{' '}
+          Painel de Configuração
         </h1>
         <div className="flex flex-row w-full justify-between space-x-4 px-16 my-6">
           <NavbarButtonComponent

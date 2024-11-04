@@ -101,11 +101,11 @@ export default function OrderCreate() {
         <div className="flex items-center justify-center ">
           <div className="w-full max-w-7xl p-8">
             <button
-            className=" text-greenHortti return-button "
-            onClick={() => router.push('/home')}
-          >
-                  <Image src={ReturnIcon} alt="Retornar" width={14} height={14} />
-          </button>
+              className=" text-greenHortti return-button "
+              onClick={() => router.push('/home')}
+            >
+              <Image src={ReturnIcon} alt="Retornar" width={14} height={14} />
+            </button>
             <div className="grid md:grid-cols-7 gap-6 relative">
               <div className="col-span-3">
                 <DynamicBox title="Cadastro Ordem" extraStyle="mb-5">
@@ -159,14 +159,17 @@ export default function OrderCreate() {
 
                   <div className="w-full h-px bg-greenHortti" />
 
-                  
                   <DefaultListItems
                     items={itens}
                     columns={[
-                      { label: 'Lote', key: 'batch', type: 'text'},
-                      { label: 'Matéria Prima', key: 'rawMaterial', type: 'text'},
-                      { label: 'Quantidade', key: 'batch', type: 'text'}
-                       ]}
+                      { label: 'Lote', key: 'batch', type: 'text' },
+                      {
+                        label: 'Matéria Prima',
+                        key: 'rawMaterial',
+                        type: 'text'
+                      },
+                      { label: 'Quantidade', key: 'batch', type: 'text' }
+                    ]}
                     scrollable
                     onRemove={handleRemoveItem}
                   />
