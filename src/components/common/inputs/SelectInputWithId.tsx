@@ -1,4 +1,4 @@
-interface SelectInputProps {
+interface SelectInputWithIdProps {
     label: string;
     placeholder: string;
     options: { label: string; value?: string | number }[];
@@ -7,7 +7,7 @@ interface SelectInputProps {
     error?: string;
   }
   
-  const selectInput: React.FC<SelectInputProps> = ({
+  const selectInputWithId: React.FC<SelectInputWithIdProps> = ({
     label,
     placeholder,
     options,
@@ -44,5 +44,5 @@ interface SelectInputProps {
     );
   };
   
-  export default selectInput;
+  export default selectInputWithId;
   
