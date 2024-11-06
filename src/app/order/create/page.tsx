@@ -4,7 +4,7 @@ import NumericInput from '@/src/components/common/inputs/NumericInput';
 import CancelButton from '@/src/components/buttons/order/CancelButton';
 import Header from '@/src/components/common/header';
 import { Button } from '@headlessui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
 import DefaultModal from '@/src/components/common/modals/DefaultModal';
@@ -12,21 +12,47 @@ import React from 'react';
 import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
 import DynamicBox from '@/src/components/common/DynamicBox';
 import BatchListComponent from '@/src/components/order/BatchListComponent';
+import orderService from '@/src/services/orderService';
+import SelectInputWithId from '@/src/components/common/inputs/SelectInputWithId';
 
 export default function OrderCreate() {
+
   const router = useRouter();
-  const [finalProduct, setFinalProduct] = useState('');
-  const [rawMaterial, setMateriaPrima] = useState('');
+  const [finalProducts, setFinalProducts] = useState<FinalProductDTO[]>([]);
+  const [selectedFinalProductId, setSelectedFinalProductId] = useState<string | null>(null);
+  const [rawMaterials, setRawMaterials] = useState("");
+  const [selectedRawMaterial, setSelectedRawMaterialId] = useState<string | null>(null);
   const [batch, setBatch] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [itens, setItens] = useState([
-    //dados mockados
     { batch: 'BATB2020', rawMaterial: 'Batata Branca Grande', quantity: 80 },
     { batch: 'CEN123193', rawMaterial: 'Cenoura', quantity: 50 },
     { batch: 'MACF63820', rawMaterial: 'Maçã Fuji', quantity: 7 }
   ]);
   const [tax, setTax] = useState<number | null>(null);
   const [line, setLine] = useState('');
+  const [isStepsModalOpen, setIsStepsModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
+  useEffect(() => {
+    fetchFinalProducts();
+  }, []);
+
+  const fetchFinalProducts = async () => {
+    let response = await orderService.getFinalProducts();
+    if (Array.isArray(response)) {
+      setFinalProducts(response);
+    } else {
+      setFinalProducts(response.data);
+    }
+  };
+
+  const handleAddItem = (rawMaterial: string, batch: string, quantity: number) => {
+    setItens([...itens, { batch, rawMaterial, quantity }]);
+    setRawMaterials("");
+    setBatch('');
+    setQuantity(0);
+  };
 
   const handleRemoveItem = (indexToRemove: number) => {
     setItens(itens.filter((_, index) => index !== indexToRemove));
@@ -37,6 +63,16 @@ export default function OrderCreate() {
   const calculateValue = () => {
     if (tax == null || isNaN(tax)) return '';
     return sumQuantity * (tax / 100) + sumQuantity;
+  };
+
+  const openStepsModal = () => setIsStepsModalOpen(true);
+  const closeStepsModal = () => setIsStepsModalOpen(false);
+  const openSuccessModal = () => setIsSuccessModalOpen(true);
+  const closeSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    setSelectedFinalProductId(null);
+    setLine('');
+    setTax(null);
   };
 
   const steps = [
@@ -50,56 +86,19 @@ export default function OrderCreate() {
     'Etapa 1'
   ];
 
-  const [isStepsModalOpen, setIsStepsModalOpen] = React.useState(false);
-
-  const openStepsModal = () => {
-    setIsStepsModalOpen(true);
-  };
-
-  const closeStepsModal = () => {
-    setIsStepsModalOpen(false);
-  };
-
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = React.useState(false);
-
-  const openSuccessModal = () => {
-    setIsSuccessModalOpen(true);
-  };
-
-  const closeSuccessModal = () => {
-    setIsSuccessModalOpen(false);
-    setFinalProduct('');
-    setLine('');
-    setTax(null);
-  };
-
-  const handleAddItem = (
-    rawMaterial: string,
-    batch: string,
-    quantity: number
-  ) => {
-    setItens([...itens, { batch, rawMaterial, quantity }]);
-    setMateriaPrima('');
-    setBatch('');
-    setQuantity(0);
-  }; //TODO: alterar para interfaces quando back tiver pronto
-
-  const isFormValidAdd = rawMaterial && batch && quantity > 0;
+  const isFormValidAdd = rawMaterials && batch && quantity > 0;
   const isFormValidCreate =
     itens.length > 0 &&
     tax != null &&
     !Number.isNaN(tax) &&
     line.length > 0 &&
-    finalProduct.length > 0;
+    selectedFinalProductId;
 
   return (
     <main>
       <Header />
       <div className="min-h-screen bg-white">
-        <button
-          className=" text-greenHortti pt-10 pl-10"
-          onClick={() => router.back()}
-        >
+        <button className="text-greenHortti pt-10 pl-10" onClick={router.back}>
           Voltar
         </button>
         <div className="flex items-center justify-center p-6">
@@ -107,24 +106,23 @@ export default function OrderCreate() {
             <div className="grid md:grid-cols-7 gap-6 relative">
               <div className="col-span-3">
                 <DynamicBox title="Cadastro Ordem" extraStyle="mb-5">
-                  <SelectInput
+                  <SelectInputWithId
                     label="Produto Final"
                     placeholder="Selecione o Produto a ser produzido"
-                    options={[
-                      //dados mockados
-                      'Batata Frita',
-                      'Batata Palito',
-                      'Batata Rústica'
-                    ]}
-                    onChange={e => setFinalProduct(e.target.value)}
+                    options={finalProducts.map(product => ({ label: product.description, value: product.id }))}
+                    onChange={e => {
+                      setSelectedFinalProductId(e.target.value);
+                      console.log(e.target.value);
+                    }}
+                    value={selectedFinalProductId || ''}
                   />
                 </DynamicBox>
                 <DynamicBox>
                   <SelectInput
                     label="Matéria Prima"
                     options={['Batata Inglesa Média', 'Cenoura', 'Tomate']}
-                    value={rawMaterial}
-                    onChange={e => setMateriaPrima(e.target.value)}
+                    value={rawMaterials}
+                    onChange={e => setRawMaterials(e.target.value)}
                     placeholder="Selecione o tipo"
                   />
                   <SelectInput
@@ -144,19 +142,13 @@ export default function OrderCreate() {
                     }}
                   />
                   <Button
-                    className={`border rounded-lg w-full p-2 mt-2 mb-4 ${
-                      isFormValidAdd
-                        ? 'bg-greenHortti text-white'
-                        : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'
-                    }`}
+                    className={`border rounded-lg w-full p-2 mt-2 mb-4 ${isFormValidAdd ? 'bg-greenHortti text-white' : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'}`}
                     disabled={!isFormValidAdd}
-                    onClick={() => handleAddItem(rawMaterial, batch, quantity)}
+                    onClick={() => handleAddItem(rawMaterials, batch, quantity)}
                   >
                     Adicionar
                   </Button>
-
                   <div className="w-full h-px bg-greenHortti" />
-
                   <BatchListComponent
                     itens={itens}
                     header
@@ -191,11 +183,7 @@ export default function OrderCreate() {
                     label="Quantidade Esperada"
                     placeholder="Esse campo mostrará o peso estimado do produto final"
                     disable
-                    value={
-                      calculateValue() == null
-                        ? ''
-                        : calculateValue()!.toString()
-                    }
+                    value={calculateValue() == null ? '' : calculateValue()!.toString()}
                   />
                 </DynamicBox>
                 <Button
@@ -205,9 +193,7 @@ export default function OrderCreate() {
                   Etapas
                 </Button>
                 <DynamicBox title="Nome ordem" extraStyle="mb-5">
-                  <h3 className="text-grayHortti">
-                    Nome gerado automaticamente
-                  </h3>
+                  <h3 className="text-grayHortti">Nome gerado automaticamente</h3>
                   <h2 className="text-xl font-semibold text-black my-4">
                     Ordem X - XXXX
                   </h2>
@@ -215,7 +201,7 @@ export default function OrderCreate() {
                 <div className="w-full h-auto flex space-x-2">
                   <OnClickButton
                     className={`w-full h-auto py-2 px-4 rounded-lg flex items-center justify-items-center 
-                    ${isFormValidCreate ? 'bg-greenHortti text-white  hover:bg-green-700' : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'} `}
+                      ${isFormValidCreate ? 'bg-greenHortti text-white hover:bg-green-700' : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'}`}
                     title="Finalizar"
                     image="/check-icon.svg"
                     disable={!isFormValidCreate}
@@ -232,26 +218,16 @@ export default function OrderCreate() {
           </div>
         </div>
       </div>
-      <DefaultModal
-        isVisible={isStepsModalOpen}
-        onClose={closeStepsModal}
-        title="Etapas"
-      >
-        {steps.map((steps, index) => (
-          <div
-            key={index}
-            className="w-full text-black border-greenHortti border rounded-lg p-2 box mt-3"
-          >
-            {steps}
+
+      <DefaultModal isVisible={isStepsModalOpen} onClose={closeStepsModal} title="Etapas">
+        {steps.map((step, index) => (
+          <div key={index} className="w-full text-black border-greenHortti border rounded-lg p-2 box mt-3">
+            {step}
           </div>
         ))}
       </DefaultModal>
 
-      <DefaultModal
-        isVisible={isSuccessModalOpen}
-        onClose={closeSuccessModal}
-        title="Sucesso!"
-      >
+      <DefaultModal isVisible={isSuccessModalOpen} onClose={closeSuccessModal} title="Sucesso!">
         <div className="w-full">Ordem cadastrada com sucesso!</div>
       </DefaultModal>
     </main>

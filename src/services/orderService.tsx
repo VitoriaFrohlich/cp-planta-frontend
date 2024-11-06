@@ -4,22 +4,23 @@ class OrderService {
 
   constructor() {
     this.api = axios.create({
-      baseURL: process.env.API_URL,
+      baseURL: "http://localhost:3000",
     });
   }
 
-  async getRawMaterials() {
+  
+  async getFinalProducts() {
     try {
-      return this.api.get('/products');
+      return this.api.get('/final_product');
     } catch (error) {
       console.log(error);
       return [];
     }
   }
 
-  async getCompositions() {
+  async getCompositionsById(id: number) {
     try {
-      return this.api.get('/compositions?orderBy=id');
+      return this.api.get(`compositions/${id}`);
     } catch (error) {
       console.log(error);
       return [];
@@ -28,7 +29,7 @@ class OrderService {
 
   async getRawMaterialById(id: number) {
     try {
-      return this.api.get(`products/${id}`);
+      return this.api.get(`raw_product/${id}`);
     } catch (error) {
       console.log(error);
       return {};
@@ -36,7 +37,7 @@ class OrderService {
 
   }
 
-  async createOrder(data: OrderDTO) {
+  async createOrder(data: any) {
     try {
       return this.api.post('/orders', data);
     } catch (error) {
@@ -45,7 +46,14 @@ class OrderService {
     }
   }
 
-  //getEtapas
+  async getStepsById(id: number) {
+    try {
+      return this.api.get(`/steps${id}`);
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  }
 
   //getProductLines ?
 
