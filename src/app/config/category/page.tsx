@@ -1,41 +1,43 @@
 'use client';
 import ConfigNavbarComponent from '@/src/components/common/configNavbar';
-import GenericList from '@/src/components/common/GenericList';
+import GenericListWithId from '@/src/components/common/GenericListWithId';
 import Header from '@/src/components/common/header';
 import CategoryModal from '@/src/components/common/modals/CategoryModal';
-import DeleteModal from '@/src/components/common/modals/DeleteModal';
-import { configService } from '@/src/services/configService';
+import IdDeleteModal from '@/src/components/common/modals/IdDeleteModal';
+import { categoryService } from '@/src/services/categoryService';
+import { useEffect, useState } from 'react';
 
-export default function createCategory() {
-  // Função que retorna os itens da lista
-  
-  const getCategory = async () => [
-    { id: 1, name: 'Verduras', quantity: 2 },
-    { id: 2, name: 'Frutas', quantity: 1 }
-  ];
-  const deleteCategory = async (_id: string) => [
-    //Deletar categoria
-  ];
+const service = new categoryService();
+
+export default function CreateCategory() {
+  const [itens, setItens] = useState<CategoryDTO[]>([]);
+
+  const getCategory = async (): Promise<CategoryDTO[]> => {
+    const response = await service.getAllCategories();
+    setItens(response.data as CategoryDTO[]);
+    return response.data as CategoryDTO[];
+  };
+
+  const deleteCategory = async (id: number) => {
+    await service.deleteCategory(id);
+    setItens((prevItens) => prevItens.filter((item) => item.id !== id)); // Atualiza a lista local
+  };
+
+  useEffect(() => {
+    getCategory();
+  }, []);
 
   return (
     <main>
       <Header />
       <ConfigNavbarComponent>
-        <GenericList
-          columns={[
-            { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/3' },
-            {
-              label: 'Qnt. itens',
-              key: 'quantity',
-              type: 'text',
-              width: 'w-1/3'
-            }
-          ]}
-          getItems={getCategory} // Função que busca os itens
-          deleteItem={deleteCategory} // Função que deleta o item
-          AddModal={CategoryModal} // Abre modal de adicionar
-          EditModal={CategoryModal} // Abre modal de editar
-          DeleteModal={DeleteModal} // Abre modal de deletar
+        <GenericListWithId
+          columns={[{ label: 'Descrição', key: 'description', width: 'w-1/3' }]}
+          getItems={itens} // Passa a função para obter as categorias
+          deleteItem={deleteCategory} // Função de exclusão
+          AddModal={CategoryModal} // Modal de adicionar
+          EditModal={CategoryModal} // Modal de editar
+          DeleteModal={IdDeleteModal} // Modal de deletar
         />
       </ConfigNavbarComponent>
     </main>

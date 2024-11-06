@@ -2,26 +2,30 @@ import { useEffect, useState } from 'react';
 import GenericModal from './GenericModal';
 import DefaultInput from '../inputs/DefaultInput';
 import DynamicBox from '../DynamicBox';
+import { categoryService } from '@/src/services/categoryService';
 
 interface ModalProps {
   onClose: () => void;
-  onConfirm: () => void;
-  item?: { name: string };
+  onConfirm?: () => void;
+  item?: CategoryDTO;
 }
+
+const service = new categoryService();
 
 export default function CategoryModal({
   onClose,
-  onConfirm,
-  item
+  item,
 }: ModalProps) {
   const [descricao, setDescricao] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (item != null) {
-      setDescricao(item?.name ?? '');
+    if (item) {
+      setDescricao(item.description);  
+    } else {
+      setDescricao('');  
     }
-  }, [item]);
+  }, [item]); 
 
   const validateFields = (): boolean => {
     if (descricao.trim() === '') {
@@ -33,11 +37,22 @@ export default function CategoryModal({
     return true;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateFields()) {
       return;
     }
-    onConfirm();
+
+    if (item) {
+      // Edição: Se o item já existe, atualiza a categoria
+      await service.updateCategory(item.id, descricao); // Método para editar a categoria
+      console.log('Categoria atualizada com sucesso: ', descricao);
+    } else {
+      // Criação: Se o item não existe, cria uma nova categoria
+      await service.createCategory(descricao);  // Método para criar a categoria
+      console.log('Categoria criada com sucesso: ', descricao);
+    }
+
+    onClose(); // Fecha o modal após salvar
   };
 
   return (
