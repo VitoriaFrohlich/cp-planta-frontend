@@ -4,9 +4,11 @@ import GenericList from '@/src/components/common/GenericList';
 import Header from '@/src/components/common/header';
 import CategoryModal from '@/src/components/common/modals/CategoryModal';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
+import { configService } from '@/src/services/configService';
 
 export default function createCategory() {
   // Função que retorna os itens da lista
+  
   const getCategory = async () => [
     { id: 1, name: 'Verduras', quantity: 2 },
     { id: 2, name: 'Frutas', quantity: 1 }
