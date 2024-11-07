@@ -8,22 +8,114 @@ import DynamicBox from '@/src/components/common/DynamicBox';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
 import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
 import BatchListComponent from '@/src/components/order/BatchListComponent';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import orderServiceInstance from '@/src/services/order.service';
+import { useForm } from 'react-hook-form';
 
 export default function CreateBatch() {
   // Mock data
   const router = useRouter();
   // const isFormValidBatchCreate = [];
-  const typesMaterials = ['Batata', 'Cenoura', 'Tomate'];
+  const [typesMaterials, setTypesMaterials] = useState<string[]>([]);
   const metrics = ['kg', 'g', 'mg', 'l', 'ml', 'un'];
-  const storageLocations = ['Freezer 1', 'Freezer 2'];
-  const batchId = 'L01/2310';
-  const [items, _] = useState([
-    { batch: 'L01/2301', rawMaterial: 'Batata Branca Grande', quantity: 80 },
-    { batch: 'L01/2304', rawMaterial: 'Cenoura', quantity: 50 },
-    { batch: 'L01/2309', rawMaterial: 'Maçã Fuji', quantity: 7 }
-  ]);
+  const [storageLocations, setStorageLocations] = useState<string[]>([]);
+  const [batchId, _] = useState('L01/2310');
+  const [items, setItems] = useState<
+    { batch: string; rawMaterial: string; quantity: number }[]
+  >([]);
+
+  interface FormData {
+    raw_material: string;
+    dealer: string;
+    measure_unit: string;
+    current_quantity: number;
+    cost_price: number;
+    in_date: string;
+    stock_id: string;
+  }
+
+  const { register, handleSubmit } = useForm<FormData>();
+
+  const fetchStorageLocations = async () => {
+    try {
+      // Consuming the API
+      const response = await orderServiceInstance.api.get('/stock');
+
+      // Iterating over the response data
+      response.data.forEach(location => {
+        setStorageLocations(oldLocations => [
+          ...oldLocations,
+          location.description
+        ]);
+      });
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const fetchTypesMaterials = async () => {
+    try {
+      // Consuming the API
+      const response = await orderServiceInstance.api.get('/raw_product');
+
+      // Iterating over the response data
+      response.data.forEach(material => {
+        setTypesMaterials(oldTypes => [...oldTypes, material.description]);
+      });
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const fetchBatchMaterials = async () => {
+    try {
+      // Consuming the API
+      const response = await orderServiceInstance.api.get('/batch_material');
+
+      // Iterating over the response data
+      response.data.forEach(async batch => {
+        setItems(oldItems => [
+          ...oldItems,
+          {
+            batch: batch.sku,
+            rawMaterial: batch.raw_material,
+            quantity: batch.current_quantity
+          }
+        ]);
+      });
+    } catch (error) {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    fetchStorageLocations();
+    fetchTypesMaterials();
+    fetchBatchMaterials();
+  }, []);
+
+  async function handleFormBatch(data) {
+    try {
+      // Mock data to be sent to the API
+      data.id = '999';
+      data.raw_material_id = '999';
+      data.initial_quantity = Number(data.current_quantity);
+      data.sku = batchId;
+
+      await orderServiceInstance.api.post('/batch_material', data);
+      setItems(oldItems => [
+        ...oldItems,
+        {
+          batch: data.sku,
+          rawMaterial: data.raw_material,
+          quantity: data.current_quantity
+        }
+      ]);
+    } catch (error) {
+      return null;
+    }
+  }
 
   return (
     <main className="">
@@ -34,22 +126,31 @@ export default function CreateBatch() {
       >
         Voltar
       </button>
-      <div className="w-full flex gap-14 py-7 px-14 justify-center">
+      <form
+        className="w-full flex gap-14 py-7 px-14 justify-center"
+        onSubmit={handleSubmit(handleFormBatch)}
+      >
         <div className="flex flex-col w-full max-w-[603px] gap-y-11 start">
           <DynamicBox title="Cadastro de Lote">
             <SelectInput
               label="Matéria Prima"
               placeholder="Selecione o tipo"
               options={typesMaterials}
+              register={register('raw_material')}
             />
             <DefaultInput
               label="Fornecedor"
               placeholder="Digite o nome do fornecedor"
+              register={register('dealer')}
             />
-            <NumericInput label="Preço custo" placeholder="R$ 0,00" />
+            <NumericInput
+              label="Preço custo"
+              placeholder="R$ 0,00"
+              register={register('cost_price')}
+            />
           </DynamicBox>
           <DynamicBox title="Lista de Lotes Cadastrados" collapsible>
-            <BatchListComponent itens={items} />
+            <BatchListComponent itens={items} scrollable />
           </DynamicBox>
         </div>
         <div className="w-[1px] h-auto border border-greenHortti " />
@@ -59,16 +160,23 @@ export default function CreateBatch() {
               label="Unidade de medida"
               placeholder="Selecione a medida"
               options={metrics}
+              register={register('measure_unit')}
             />
             <NumericInput
               label="Quantidade"
               placeholder="Digite a quantidade"
+              register={register('current_quantity')}
             />
-            <DateInput label="Data de entrada" placeholder="Selecione a data" />
+            <DateInput
+              label="Data de entrada"
+              placeholder="Selecione a data"
+              register={register('in_date')}
+            />
             <SelectInput
               label="Local de armazenamento"
               placeholder="Selecione o local"
               options={storageLocations}
+              register={register('stock_id')}
             />
           </DynamicBox>
           <DynamicBox extraStyle="text-center flex flex-col gap-y-6">
@@ -85,6 +193,7 @@ export default function CreateBatch() {
                 }
                 title="Finalizar"
                 image="/check-icon.svg"
+                type="submit"
                 onClick={() => alert('Lote cadastrado com sucesso!')}
               />
               <CancelButton
@@ -93,23 +202,9 @@ export default function CreateBatch() {
                 href="/home"
               />
             </div>
-            {/* <button
-              className="bg-greenHortti text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center w-full justify-center"
-              onClick={() => alert('Lote cadastrado com sucesso!')}
-            >
-              <Image src={checkIcon} alt="Adicionar" width={14} height={14} />
-              <span className="ml-2 text-sm">Finalizar</span>
-            </button>
-            <button
-              className="bg-black text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center w-full justify-center"
-              onClick={() => (window.location.href = '/home')}
-            >
-              <Image src={returnIcon} alt="Adicionar" width={14} height={14} />
-              <span className="ml-2 text-sm">Retornar</span>
-            </button>*/}
           </div>
         </div>
-      </div>
+      </form>
     </main>
   );
 }
