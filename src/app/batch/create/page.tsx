@@ -50,7 +50,7 @@ export default function CreateBatch() {
         ]);
       });
     } catch (error) {
-      throw new Error('Erro ao buscar locais de armazenamento');
+      return null;
     }
   };
 
@@ -64,7 +64,7 @@ export default function CreateBatch() {
         setTypesMaterials(oldTypes => [...oldTypes, material.description]);
       });
     } catch (error) {
-      throw new Error('Erro ao buscar tipos de materiais');
+      return null;
     }
   };
 
@@ -85,7 +85,7 @@ export default function CreateBatch() {
         ]);
       });
     } catch (error) {
-      throw new Error('Erro ao buscar lotes de materiais');
+      return null;
     }
   };
 
@@ -96,21 +96,25 @@ export default function CreateBatch() {
   }, []);
 
   async function handleFormBatch(data) {
-    // Mock data to be sent to the API
-    data.id = '999';
-    data.raw_material_id = '999';
-    data.initial_quantity = Number(data.current_quantity);
-    data.sku = batchId;
+    try {
+      // Mock data to be sent to the API
+      data.id = '999';
+      data.raw_material_id = '999';
+      data.initial_quantity = Number(data.current_quantity);
+      data.sku = batchId;
 
-    await orderServiceInstance.api.post('/batch_material', data);
-    setItems(oldItems => [
-      ...oldItems,
-      {
-        batch: data.sku,
-        rawMaterial: data.raw_material,
-        quantity: data.current_quantity
-      }
-    ]);
+      await orderServiceInstance.api.post('/batch_material', data);
+      setItems(oldItems => [
+        ...oldItems,
+        {
+          batch: data.sku,
+          rawMaterial: data.raw_material,
+          quantity: data.current_quantity
+        }
+      ]);
+    } catch (error) {
+      return null;
+    }
   }
 
   return (
