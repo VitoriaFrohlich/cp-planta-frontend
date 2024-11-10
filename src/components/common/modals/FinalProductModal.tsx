@@ -89,6 +89,8 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
           onChange={e => setRawMaterialCategory(e.target.value)}
           options={['batata', 'cenoura']}
         />
+      </DynamicBox>
+      <DynamicBox extraStyle="mb-5">
         <SelectInput
           label="Tipo de Materia Prima"
           value={category}
@@ -113,8 +115,7 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
         </Button>
         <DefaultListItems
           items={categorys}
-          renderItem={item => <span>{item.category}</span>}
-          editable
+          columns={[{ key: 'category', type: 'text' }]}
           scrollable
           onRemove={handleRemoveCategory}
         />
@@ -144,8 +145,7 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
         </Button>
         <DefaultListItems
           items={stepsType}
-          renderItem={item => <span>{item.step}</span>}
-          editable
+          columns={[{ key: 'step', type: 'text' }]}
           scrollable
           onRemove={handleRemoveSteps}
         />

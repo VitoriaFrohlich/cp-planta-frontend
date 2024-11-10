@@ -1,6 +1,6 @@
 'use client';
 import ConfigNavbarComponent from '@/src/components/common/configNavbar';
-import GenericList from '@/src/components/common/GenericList';
+import GenericConfig from '@/src/components/common/GenericConfig';
 import Header from '@/src/components/common/header';
 import ImageExample from '@/public/config-image-example.svg';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
@@ -21,7 +21,7 @@ export default function createFinalProduct() {
     <main>
       <Header />
       <ConfigNavbarComponent>
-        <GenericList
+        <GenericConfig
           columns={[
             { label: 'Imagem', key: 'image', type: 'image', width: 'w-1/4' },
             { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/4' },

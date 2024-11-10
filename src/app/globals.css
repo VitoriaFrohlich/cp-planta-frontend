@@ -24,6 +24,12 @@ body {
   text-align: -webkit-center;
 }
 
+.return-button {
+  margin-left: -30px;
+  margin-top: 5px;
+  position: absolute;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
