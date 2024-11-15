@@ -6,7 +6,12 @@ export const getAllStockItems = async (): Promise<Stock[]> => {
   return response.data;
 };
 
-export const createStockItem = async (data: CreateStockRequest): Promise<boolean> => {
-  const response = await axiosInstance.post<{ return: boolean }>('/stock', data);
+export const createStockItem = async (
+  data: CreateStockRequest
+): Promise<boolean> => {
+  const response = await axiosInstance.post<{ return: boolean }>(
+    '/stock',
+    data
+  );
   return response.data.return;
 };

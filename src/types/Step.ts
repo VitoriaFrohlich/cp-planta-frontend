@@ -1,9 +1,8 @@
 export interface Step {
-    id: string;
-    description: string;
-  }
-  
-  export interface CreateStepRequest {
-    description: string;
-  }
-  
+  id: string;
+  description: string;
+}
+
+export interface CreateStepRequest {
+  description: string;
+}

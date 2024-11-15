@@ -6,7 +6,12 @@ export const getAllCategories = async (): Promise<Category[]> => {
   return response.data;
 };
 
-export const createCategory = async (data: CreateCategoryRequest): Promise<boolean> => {
-  const response = await axiosInstance.post<{ return: boolean }>('/category', data);
+export const createCategory = async (
+  data: CreateCategoryRequest
+): Promise<boolean> => {
+  const response = await axiosInstance.post<{ return: boolean }>(
+    '/category',
+    data
+  );
   return response.data.return;
 };

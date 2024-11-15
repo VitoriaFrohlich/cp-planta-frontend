@@ -1,10 +1,9 @@
 export interface Stock {
-    id: string;
-    description: string;
-    batch_quantity?: number;
-  }
-  
-  export interface CreateStockRequest {
-    description: string;
-  }
-  
+  id: string;
+  description: string;
+  batch_quantity?: number;
+}
+
+export interface CreateStockRequest {
+  description: string;
+}

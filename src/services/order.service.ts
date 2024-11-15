@@ -6,7 +6,12 @@ export const getAllOrders = async (): Promise<Order[]> => {
   return response.data;
 };
 
-export const createOrder = async (data: CreateOrderRequest): Promise<CreateOrderResponse> => {
-  const response = await axiosInstance.post<CreateOrderResponse>('/order', data);
+export const createOrder = async (
+  data: CreateOrderRequest
+): Promise<CreateOrderResponse> => {
+  const response = await axiosInstance.post<CreateOrderResponse>(
+    '/order',
+    data
+  );
   return response.data;
 };
