@@ -42,7 +42,9 @@ interface Props<T> {
   }>;
 }
 
-export default function GenericListwithId<T extends { id: number; [key: string]: any }>({
+export default function GenericListwithId<
+  T extends { id: number; [key: string]: any }
+>({
   columns,
   getItems,
   deleteItem,
@@ -64,19 +66,19 @@ export default function GenericListwithId<T extends { id: number; [key: string]:
   // Função para carregar os itens
 
   useEffect(() => {
-      setOriginalList(getItems);
-      setFilteredList(getItems);
-}, [getItems]);
+    setOriginalList(getItems);
+    setFilteredList(getItems);
+  }, [getItems]);
 
   // Função de debouncing
-const debounce = (func: () => void, delay: number) => {
-    let timer: NodeJS.Timeout;  // Tipo correto para o timer
+  const debounce = (func: () => void, delay: number) => {
+    let timer: NodeJS.Timeout; // Tipo correto para o timer
     return () => {
-      clearTimeout(timer);  // Limpa o temporizador anterior
-      timer = setTimeout(func, delay);  // Cria um novo temporizador
+      clearTimeout(timer); // Limpa o temporizador anterior
+      timer = setTimeout(func, delay); // Cria um novo temporizador
     };
   };
-  
+
   // Função de pesquisa com debouncing
   useEffect(() => {
     const handleSearch = () => {
@@ -94,14 +96,14 @@ const debounce = (func: () => void, delay: number) => {
         setFilteredList(originalList);
       }
     };
-  
-    const debouncedSearch = debounce(handleSearch, 500);  // Agora debouncedSearch é a função retornada pela debounce
-    debouncedSearch();  // Chama a função imediatamente
-  
+
+    const debouncedSearch = debounce(handleSearch, 500); // Agora debouncedSearch é a função retornada pela debounce
+    debouncedSearch(); // Chama a função imediatamente
+
     // Limpeza do debounce ao desmontar o componente
     return () => clearTimeout(debouncedSearch as unknown as number);
   }, [searchTerm, originalList, columns]);
-  
+
   const handleAddClose = () => {
     setShowAddModal(false);
   };
@@ -160,7 +162,7 @@ const debounce = (func: () => void, delay: number) => {
           </button>
         </div>
 
-        <div className="space-y-4 max max-h-[400px] overflow-y-auto"> 
+        <div className="space-y-4 max max-h-[400px] overflow-y-auto">
           <div className="flex items-center justify-between px-4 pt-3 my-2 text-gray-400 bg-white">
             {columns.map((col, index) => (
               <div key={index} className={`${col.width} text-center`}>
@@ -192,7 +194,12 @@ const debounce = (func: () => void, delay: number) => {
                     className="text-red-600 px-4 font-bold"
                     onClick={() => setShowDeleteModal(item)}
                   >
-                    <Image src={DeleteIcon} alt="Deletar" width={14} height={14} />
+                    <Image
+                      src={DeleteIcon}
+                      alt="Deletar"
+                      width={14}
+                      height={14}
+                    />
                   </button>
                 </div>
               </div>
@@ -237,10 +244,7 @@ const debounce = (func: () => void, delay: number) => {
         />
       )}
       {showToast && (
-        <Toast
-          message={showToast}
-          onClose={() => setShowToast(null)}
-        />
+        <Toast message={showToast} onClose={() => setShowToast(null)} />
       )}
     </main>
   );

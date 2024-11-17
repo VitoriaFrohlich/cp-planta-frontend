@@ -5,8 +5,8 @@ import DynamicBox from '../DynamicBox';
 import { categoryService } from '@/src/services/categoryService';
 
 interface ModalProps {
-  onClose: () => void;  
-  onConfirm:() => Promise<void>;
+  onClose: () => void;
+  onConfirm: () => Promise<void>;
   item?: CategoryDTO;
 }
 
@@ -15,18 +15,18 @@ const service = new categoryService();
 export default function CategoryModal({
   onConfirm,
   onClose,
-  item,
+  item
 }: ModalProps) {
   const [descricao, setDescricao] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (item) {
-      setDescricao(item.description);  
+      setDescricao(item.description);
     } else {
-      setDescricao('');  
+      setDescricao('');
     }
-  }, [item]); 
+  }, [item]);
 
   const validateFields = (): boolean => {
     if (descricao.trim() === '') {
@@ -44,16 +44,15 @@ export default function CategoryModal({
     }
 
     try {
-      
       if (item) {
-        await service.updateCategory(item.id, { 
-          description: descricao.trim(), 
-          active: true 
+        await service.updateCategory(item.id, {
+          description: descricao.trim(),
+          active: true
         });
       } else {
         await service.createCategory(descricao.trim());
       }
-      
+
       onConfirm();
       onClose();
     } catch (error) {

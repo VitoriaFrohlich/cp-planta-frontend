@@ -126,11 +126,7 @@
     {
       "final_product": 1,
       "production_steps": {
-        "steps": [
-          1,
-          2,
-          3
-        ]
+        "steps": [1, 2, 3]
       },
       "composition_items": [
         {

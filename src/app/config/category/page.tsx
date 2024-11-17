@@ -4,7 +4,10 @@ import GenericListWithId from '@/src/components/common/GenericListWithId';
 import Header from '@/src/components/common/header';
 import CategoryModal from '@/src/components/common/modals/CategoryModal';
 import IdDeleteModal from '@/src/components/common/modals/IdDeleteModal';
-import { categoryService, UpdateCategoryDTO } from '@/src/services/categoryService';
+import {
+  categoryService,
+  UpdateCategoryDTO
+} from '@/src/services/categoryService';
 import { useEffect, useState } from 'react';
 
 const service = new categoryService();
@@ -23,20 +26,20 @@ export default function CreateCategory() {
 
   const deleteCategory = async (id: number) => {
     await service.deleteCategory(id);
-    setItens((prevItens) => prevItens.filter((item) => item.id !== id)); // Atualiza a lista local
+    setItens(prevItens => prevItens.filter(item => item.id !== id)); // Atualiza a lista local
   };
 
   const editCategory = async (id: number, body: UpdateCategoryDTO) => {
     await service.updateCategory(id, body);
-    setItens((prevItens) =>
-      prevItens.map((item) => {
+    setItens(prevItens =>
+      prevItens.map(item => {
         if (item.id === id) {
           return { ...item, ...body };
         }
         return item;
       })
     );
-  }
+  };
 
   const refreshList = () => {
     getCategory();
