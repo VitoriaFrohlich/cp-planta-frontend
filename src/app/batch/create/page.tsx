@@ -35,13 +35,15 @@ interface PostData {
     batch_expiration: string;
     supplier: number;
     stock_location_id: number;
-  }
+  };
 }
 
 export default function CreateBatch() {
   const router = useRouter();
   const [typesMaterials, setTypesMaterials] = useState<SelectInputProps[]>([]);
-  const [storageLocations, setStorageLocations] = useState<SelectInputProps[]>([]);
+  const [storageLocations, setStorageLocations] = useState<SelectInputProps[]>(
+    []
+  );
   const [batchId, setBatchId] = useState<string>('');
   const [batchMaterial, setBatchMaterial] = useState<BatchMaterial[]>([]);
   const { register, handleSubmit } = useForm<PostData>();
@@ -49,14 +51,13 @@ export default function CreateBatch() {
   const fetchStorageLocations = async () => {
     try {
       // Consuming the API
-      const stocks: SelectInputProps[] = (await orderServiceInstance.api.get('/stock-locations')).data.data;
+      const stocks: SelectInputProps[] = (
+        await orderServiceInstance.api.get('/stock-locations')
+      ).data.data;
 
       // Iterating over the response data
       stocks.forEach(stock => {
-        setStorageLocations(oldLocations => [
-          ...oldLocations,
-          stock
-        ]);
+        setStorageLocations(oldLocations => [...oldLocations, stock]);
       });
     } catch (error) {
       return null;
@@ -66,13 +67,13 @@ export default function CreateBatch() {
   const fetchTypesMaterials = async () => {
     try {
       // Consuming the API
-      const typesMaterials: SelectInputProps[] = (await orderServiceInstance.api.get('/products/raw-material-short')).data.data;
+      const typesMaterials: SelectInputProps[] = (
+        await orderServiceInstance.api.get('/products/raw-material-short')
+      ).data.data;
 
       // Iterating over the response data
       typesMaterials.forEach(material => {
-        setTypesMaterials(oldTypes => [
-          ...oldTypes,
-          material]);
+        setTypesMaterials(oldTypes => [...oldTypes, material]);
       });
     } catch (error) {
       return null;
@@ -82,27 +83,24 @@ export default function CreateBatch() {
   const fetchBatchMaterials = async () => {
     try {
       // Consuming the API
-      const batchs: BatchMaterial[] = (await orderServiceInstance.api.get('/stock/batchs-raw')).data.data;
+      const batchs: BatchMaterial[] = (
+        await orderServiceInstance.api.get('/stock/batchs-raw')
+      ).data.data;
       console.log(batchs);
       const quantityOfDisplayBatchs = 4;
 
       const batchLength = batchs.length + 1;
 
       setBatchId(`L01/${batchLength}`);
-      
+
       // suffle my array of batchs
       const shuffledBatchs = batchs.sort(() => Math.random() - 0.5);
       const newerBatchs = shuffledBatchs.slice(-quantityOfDisplayBatchs);
 
       // Iterating over the response data
       newerBatchs.forEach(async batch => {
-        setBatchMaterial(oldBatchs => [
-          ...oldBatchs,
-          batch
-        ]);
+        setBatchMaterial(oldBatchs => [...oldBatchs, batch]);
       });
-
-
     } catch (error) {
       return null;
     }
@@ -116,24 +114,24 @@ export default function CreateBatch() {
 
   async function handleFormBatch(data: PostData) {
     try {
-      data.stock_moviment = "INPUT";
+      data.stock_moviment = 'INPUT';
       data.stock_items.sku = batchId;
       // Mocking the data to be sent
       data.stock_items.batch = batchId;
       data.stock_items.supplier = 1;
-      
+
       const request = prepareRequest(data);
       const response = await orderServiceInstance.api.post('/stock', request);
-      
+
       const newBatchMaterial: BatchMaterial = {
         sku: data.stock_items.sku,
-        raw_material_description: await typesMaterials.find(material => material.id == data.stock_items.product_id)?.description ?? 'não achei',
-        quantity: data.stock_items.quantity,
+        raw_material_description:
+          (await typesMaterials.find(
+            material => material.id == data.stock_items.product_id
+          )?.description) ?? 'não achei',
+        quantity: data.stock_items.quantity
       };
-      setBatchMaterial(oldItems => [
-        ...oldItems,
-        newBatchMaterial
-      ]);
+      setBatchMaterial(oldItems => [...oldItems, newBatchMaterial]);
 
       window.location.reload();
     } catch (error) {
@@ -145,17 +143,19 @@ export default function CreateBatch() {
   function prepareRequest(data: PostData) {
     return {
       stock_moviment: data.stock_moviment,
-      stock_items: [{
-        product_id: Number(data.stock_items.product_id),
-        quantity: Number(data.stock_items.quantity),
-        unit_price: Number(data.stock_items.unit_price),
-        batch: data.stock_items.batch,
-        sku: data.stock_items.sku,
-        batch_expiration: new Date(data.stock_items.batch_expiration),
-        supplier: Number(data.stock_items.supplier),
-        stock_location_id: Number(data.stock_items.stock_location_id)
-      }]
-    }
+      stock_items: [
+        {
+          product_id: Number(data.stock_items.product_id),
+          quantity: Number(data.stock_items.quantity),
+          unit_price: Number(data.stock_items.unit_price),
+          batch: data.stock_items.batch,
+          sku: data.stock_items.sku,
+          batch_expiration: new Date(data.stock_items.batch_expiration),
+          supplier: Number(data.stock_items.supplier),
+          stock_location_id: Number(data.stock_items.stock_location_id)
+        }
+      ]
+    };
   }
 
   return (

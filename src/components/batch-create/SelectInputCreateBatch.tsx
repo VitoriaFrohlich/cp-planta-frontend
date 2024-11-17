@@ -1,8 +1,8 @@
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface Option {
-    id: string | number;
-    description: string;
+  id: string | number;
+  description: string;
 }
 
 interface SelectInputProps {
@@ -39,7 +39,11 @@ const selectInput: React.FC<SelectInputProps> = ({
           </option>
         )}
         {options.map((option, index) => (
-          <option className="text-[#1e1e1e] w-full" key={index} value={option.id}>
+          <option
+            className="text-[#1e1e1e] w-full"
+            key={index}
+            value={option.id}
+          >
             {option.description}
           </option>
         ))}
