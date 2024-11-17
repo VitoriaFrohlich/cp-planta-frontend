@@ -1,52 +1,61 @@
 'use client';
 import Header from '@/src/components/common/header';
-import SelectInput from '@/src/components/common/inputs/SelectInput';
 import CancelButton from '@/src/components/buttons/order/CancelButton';
 import NumericInput from '@/src/components/common/inputs/NumericInput';
 import DateInput from '@/src/components/common/inputs/DateInput';
 import DynamicBox from '@/src/components/common/DynamicBox';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
 import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
-import BatchListComponent from '@/src/components/order/BatchListComponent';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import orderServiceInstance from '@/src/services/order.service';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
+import SelectInputCreateBatch from '@/src/components/batch-create/SelectInputCreateBatch';
+import BatchListComponentCreateBatch from '@/src/components/batch-create/BatchListComponentCreateBatch';
+
+interface SelectInputProps {
+  id: number;
+  description: string;
+}
+
+interface BatchMaterial {
+  sku: string;
+  raw_material_description: string;
+  quantity: number;
+}
+
+interface PostData {
+  stock_moviment: string;
+  stock_items: {
+    product_id: number;
+    quantity: number;
+    unit_price: number;
+    batch: string;
+    sku: string;
+    batch_expiration: string;
+    supplier: number;
+    stock_location_id: number;
+  }
+}
 
 export default function CreateBatch() {
-  // Mock data
   const router = useRouter();
-  // const isFormValidBatchCreate = [];
-  const [typesMaterials, setTypesMaterials] = useState<string[]>([]);
-  const metrics = ['kg', 'g', 'mg', 'l', 'ml', 'un'];
-  const [storageLocations, setStorageLocations] = useState<string[]>([]);
-  const [batchId, _] = useState('L01/2310');
-  const [items, setItems] = useState<
-    { batch: string; rawMaterial: string; quantity: number }[]
-  >([]);
-
-  interface FormData {
-    raw_material: string;
-    dealer: string;
-    measure_unit: string;
-    current_quantity: number;
-    cost_price: number;
-    in_date: string;
-    stock_id: string;
-  }
-
-  const { register, handleSubmit } = useForm<FormData>();
+  const [typesMaterials, setTypesMaterials] = useState<SelectInputProps[]>([]);
+  const [storageLocations, setStorageLocations] = useState<SelectInputProps[]>([]);
+  const [batchId, setBatchId] = useState<string>('');
+  const [batchMaterial, setBatchMaterial] = useState<BatchMaterial[]>([]);
+  const { register, handleSubmit } = useForm<PostData>();
 
   const fetchStorageLocations = async () => {
     try {
       // Consuming the API
-      const response = await orderServiceInstance.api.get('/stock');
+      const stocks: SelectInputProps[] = (await orderServiceInstance.api.get('/stock-locations')).data.data;
 
       // Iterating over the response data
-      response.data.forEach(location => {
+      stocks.forEach(stock => {
         setStorageLocations(oldLocations => [
           ...oldLocations,
-          location.description
+          stock
         ]);
       });
     } catch (error) {
@@ -57,11 +66,13 @@ export default function CreateBatch() {
   const fetchTypesMaterials = async () => {
     try {
       // Consuming the API
-      const response = await orderServiceInstance.api.get('/raw_product');
+      const typesMaterials: SelectInputProps[] = (await orderServiceInstance.api.get('/products/raw-material-short')).data.data;
 
       // Iterating over the response data
-      response.data.forEach(material => {
-        setTypesMaterials(oldTypes => [...oldTypes, material.description]);
+      typesMaterials.forEach(material => {
+        setTypesMaterials(oldTypes => [
+          ...oldTypes,
+          material]);
       });
     } catch (error) {
       return null;
@@ -71,19 +82,27 @@ export default function CreateBatch() {
   const fetchBatchMaterials = async () => {
     try {
       // Consuming the API
-      const response = await orderServiceInstance.api.get('/batch_material');
+      const batchs: BatchMaterial[] = (await orderServiceInstance.api.get('/stock/batchs-raw')).data.data;
+      console.log(batchs);
+      const quantityOfDisplayBatchs = 4;
+
+      const batchLength = batchs.length + 1;
+
+      setBatchId(`L01/${batchLength}`);
+      
+      // suffle my array of batchs
+      const shuffledBatchs = batchs.sort(() => Math.random() - 0.5);
+      const newerBatchs = shuffledBatchs.slice(-quantityOfDisplayBatchs);
 
       // Iterating over the response data
-      response.data.forEach(async batch => {
-        setItems(oldItems => [
-          ...oldItems,
-          {
-            batch: batch.sku,
-            rawMaterial: batch.raw_material,
-            quantity: batch.current_quantity
-          }
+      newerBatchs.forEach(async batch => {
+        setBatchMaterial(oldBatchs => [
+          ...oldBatchs,
+          batch
         ]);
       });
+
+
     } catch (error) {
       return null;
     }
@@ -95,25 +114,47 @@ export default function CreateBatch() {
     fetchBatchMaterials();
   }, []);
 
-  async function handleFormBatch(data) {
+  async function handleFormBatch(data: PostData) {
     try {
-      // Mock data to be sent to the API
-      data.id = '999';
-      data.raw_material_id = '999';
-      data.initial_quantity = Number(data.current_quantity);
-      data.sku = batchId;
-
-      await orderServiceInstance.api.post('/batch_material', data);
-      setItems(oldItems => [
+      data.stock_moviment = "INPUT";
+      data.stock_items.sku = batchId;
+      // Mocking the data to be sent
+      data.stock_items.batch = batchId;
+      data.stock_items.supplier = 1;
+      
+      const request = prepareRequest(data);
+      const response = await orderServiceInstance.api.post('/stock', request);
+      
+      const newBatchMaterial: BatchMaterial = {
+        sku: data.stock_items.sku,
+        raw_material_description: await typesMaterials.find(material => material.id == data.stock_items.product_id)?.description ?? 'não achei',
+        quantity: data.stock_items.quantity,
+      };
+      setBatchMaterial(oldItems => [
         ...oldItems,
-        {
-          batch: data.sku,
-          rawMaterial: data.raw_material,
-          quantity: data.current_quantity
-        }
+        newBatchMaterial
       ]);
+
+      window.location.reload();
     } catch (error) {
+      console.error('Error posting data:', error);
       return null;
+    }
+  }
+
+  function prepareRequest(data: PostData) {
+    return {
+      stock_moviment: data.stock_moviment,
+      stock_items: [{
+        product_id: Number(data.stock_items.product_id),
+        quantity: Number(data.stock_items.quantity),
+        unit_price: Number(data.stock_items.unit_price),
+        batch: data.stock_items.batch,
+        sku: data.stock_items.sku,
+        batch_expiration: new Date(data.stock_items.batch_expiration),
+        supplier: Number(data.stock_items.supplier),
+        stock_location_id: Number(data.stock_items.stock_location_id)
+      }]
     }
   }
 
@@ -132,51 +173,45 @@ export default function CreateBatch() {
       >
         <div className="flex flex-col w-full max-w-[603px] gap-y-11 start">
           <DynamicBox title="Cadastro de Lote">
-            <SelectInput
+            <SelectInputCreateBatch
               label="Matéria Prima"
               placeholder="Selecione o tipo"
               options={typesMaterials}
-              register={register('raw_material')}
+              register={register('stock_items.product_id')}
             />
             <DefaultInput
               label="Fornecedor"
               placeholder="Digite o nome do fornecedor"
-              register={register('dealer')}
+              register={register('stock_items.supplier')}
             />
             <NumericInput
               label="Preço custo"
               placeholder="R$ 0,00"
-              register={register('cost_price')}
+              register={register('stock_items.unit_price')}
             />
           </DynamicBox>
-          <DynamicBox title="Lista de Lotes Cadastrados" collapsible>
-            <BatchListComponent itens={items} scrollable />
+          <DynamicBox title="Últimos Lotes Cadastrados">
+            <BatchListComponentCreateBatch itens={batchMaterial} scrollable />
           </DynamicBox>
         </div>
         <div className="w-[1px] h-auto border border-greenHortti " />
         <div className="flex flex-col gap-y-16 w-full max-w-[603px]">
           <DynamicBox title=" ">
-            <SelectInput
-              label="Unidade de medida"
-              placeholder="Selecione a medida"
-              options={metrics}
-              register={register('measure_unit')}
-            />
             <NumericInput
               label="Quantidade"
               placeholder="Digite a quantidade"
-              register={register('current_quantity')}
+              register={register('stock_items.quantity')}
             />
             <DateInput
               label="Data de entrada"
               placeholder="Selecione a data"
-              register={register('in_date')}
+              register={register('stock_items.batch_expiration')}
             />
-            <SelectInput
+            <SelectInputCreateBatch
               label="Local de armazenamento"
               placeholder="Selecione o local"
               options={storageLocations}
-              register={register('stock_id')}
+              register={register('stock_items.stock_location_id')}
             />
           </DynamicBox>
           <DynamicBox extraStyle="text-center flex flex-col gap-y-6">
