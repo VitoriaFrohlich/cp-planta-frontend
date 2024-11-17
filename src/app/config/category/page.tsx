@@ -4,7 +4,7 @@ import GenericListWithId from '@/src/components/common/GenericListWithId';
 import Header from '@/src/components/common/header';
 import CategoryModal from '@/src/components/common/modals/CategoryModal';
 import IdDeleteModal from '@/src/components/common/modals/IdDeleteModal';
-import { categoryService } from '@/src/services/categoryService';
+import { categoryService, UpdateCategoryDTO } from '@/src/services/categoryService';
 import { useEffect, useState } from 'react';
 
 const service = new categoryService();
@@ -26,6 +26,22 @@ export default function CreateCategory() {
     setItens((prevItens) => prevItens.filter((item) => item.id !== id)); // Atualiza a lista local
   };
 
+  const editCategory = async (id: number, body: UpdateCategoryDTO) => {
+    await service.updateCategory(id, body);
+    setItens((prevItens) =>
+      prevItens.map((item) => {
+        if (item.id === id) {
+          return { ...item, ...body };
+        }
+        return item;
+      })
+    );
+  }
+
+  const refreshList = () => {
+    getCategory();
+  };
+
   useEffect(() => {
     getCategory();
   }, []);
@@ -35,12 +51,13 @@ export default function CreateCategory() {
       <Header />
       <ConfigNavbarComponent>
         <GenericListWithId
-          columns={[{ label: 'Descrição', key: 'description', width: 'w-1/3' }]}
+          columns={[{ label: 'Nome', key: 'description', width: 'w-1/3' }]}
           getItems={itens} // Passa a função para obter as categorias
           deleteItem={deleteCategory} // Função de exclusão
           AddModal={CategoryModal} // Modal de adicionar
           EditModal={CategoryModal} // Modal de editar
           DeleteModal={IdDeleteModal} // Modal de deletar
+          refreshList={refreshList} // Função para atualizar a lista
         />
       </ConfigNavbarComponent>
     </main>

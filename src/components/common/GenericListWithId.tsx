@@ -20,6 +20,7 @@ interface Props<T> {
   columns: TableColumn[];
   getItems: T[];
   deleteItem: (id: number) => Promise<void>;
+  refreshList: () => void;
   AddModal: React.FC<{
     onClose: () => void;
     onConfirm: () => void;
@@ -47,7 +48,8 @@ export default function GenericListwithId<T extends { id: number; [key: string]:
   deleteItem,
   AddModal,
   EditModal,
-  DeleteModal
+  DeleteModal,
+  refreshList
 }: Props<T>) {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,16 +60,13 @@ export default function GenericListwithId<T extends { id: number; [key: string]:
   const [showEditModal, setShowEditModal] = useState<T | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState<T | null>(null);
   const [showToast, setShowToast] = useState<string | null>(null);
-  const [itens, setItens] = useState<T[]>([]);
 
   // Função para carregar os itens
 
   useEffect(() => {
-    setItens(getItems);
-    console.log('Itens carregados', itens);
-    setOriginalList(itens);
-    setFilteredList(itens);
-  }, [getItems]);
+      setOriginalList(getItems);
+      setFilteredList(getItems);
+}, [getItems]);
 
   // Função de debouncing
 const debounce = (func: () => void, delay: number) => {
@@ -118,13 +117,13 @@ const debounce = (func: () => void, delay: number) => {
   const handleAddConfirm = () => {
     setShowAddModal(false);
     setShowToast('Adicionado com sucesso!');
-    window.location.reload();
+    refreshList();
   };
 
   const handleEditConfirm = () => {
     setShowEditModal(null);
     setShowToast('Editado com sucesso!');
-    window.location.reload();
+    refreshList();
   };
 
   const handleDeleteConfirm = () => {
@@ -132,7 +131,7 @@ const debounce = (func: () => void, delay: number) => {
       deleteItem(showDeleteModal.id);
       setShowDeleteModal(null);
       setShowToast('Deletado com sucesso!');
-      window.location.reload();
+      refreshList();
     }
   };
 
@@ -161,7 +160,7 @@ const debounce = (func: () => void, delay: number) => {
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 max max-h-[400px] overflow-y-auto"> 
           <div className="flex items-center justify-between px-4 pt-3 my-2 text-gray-400 bg-white">
             {columns.map((col, index) => (
               <div key={index} className={`${col.width} text-center`}>
@@ -234,6 +233,7 @@ const debounce = (func: () => void, delay: number) => {
           item={showDeleteModal}
           onClose={handleDeleteClose}
           onConfirm={handleDeleteConfirm}
+          displayField={columns[0].key}
         />
       )}
       {showToast && (

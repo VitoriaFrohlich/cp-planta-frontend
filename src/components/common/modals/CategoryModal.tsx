@@ -5,14 +5,15 @@ import DynamicBox from '../DynamicBox';
 import { categoryService } from '@/src/services/categoryService';
 
 interface ModalProps {
-  onClose: () => void;
-  onConfirm?: () => void;
+  onClose: () => void;  
+  onConfirm:() => Promise<void>;
   item?: CategoryDTO;
 }
 
 const service = new categoryService();
 
 export default function CategoryModal({
+  onConfirm,
   onClose,
   item,
 }: ModalProps) {
@@ -42,17 +43,23 @@ export default function CategoryModal({
       return;
     }
 
-    if (item) {
-      // Edição: Se o item já existe, atualiza a categoria
-      await service.updateCategory(item.id, { description: descricao, active: true }); // Método para editar a categoria
-      console.log('Categoria atualizada com sucesso: ', descricao);
-    } else {
-      // Criação: Se o item não existe, cria uma nova categoria
-      await service.createCategory(descricao);  // Método para criar a categoria
-      console.log('Categoria criada com sucesso: ', descricao);
+    try {
+      
+      if (item) {
+        await service.updateCategory(item.id, { 
+          description: descricao.trim(), 
+          active: true 
+        });
+      } else {
+        await service.createCategory(descricao.trim());
+      }
+      
+      onConfirm();
+      onClose();
+    } catch (error) {
+      console.error('Erro ao salvar categoria:', error);
+      setError('Erro ao salvar a categoria');
     }
-
-    onClose(); // Fecha o modal após salvar
   };
 
   return (
