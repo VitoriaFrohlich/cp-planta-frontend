@@ -44,7 +44,7 @@ export default function CategoryModal({
 
     if (item) {
       // Edição: Se o item já existe, atualiza a categoria
-      await service.updateCategory(item.id, descricao); // Método para editar a categoria
+      await service.updateCategory(item.id, { description: descricao, active: true }); // Método para editar a categoria
       console.log('Categoria atualizada com sucesso: ', descricao);
     } else {
       // Criação: Se o item não existe, cria uma nova categoria

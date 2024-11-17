@@ -41,7 +41,7 @@ interface Props<T> {
   }>;
 }
 
-export default function GenericList<T extends { id: number; [key: string]: any }>({
+export default function GenericListwithId<T extends { id: number; [key: string]: any }>({
   columns,
   getItems,
   deleteItem,
@@ -61,13 +61,12 @@ export default function GenericList<T extends { id: number; [key: string]: any }
   const [itens, setItens] = useState<T[]>([]);
 
   // Função para carregar os itens
-  const loadItems = () => {
+
+  useEffect(() => {
     setItens(getItems);
+    console.log('Itens carregados', itens);
     setOriginalList(itens);
     setFilteredList(itens);
-  };
-  useEffect(() => {
-    loadItems();
   }, [getItems]);
 
   // Função de debouncing
@@ -106,29 +105,24 @@ const debounce = (func: () => void, delay: number) => {
   
   const handleAddClose = () => {
     setShowAddModal(false);
-    loadItems();
   };
 
   const handleEditClose = () => {
     setShowEditModal(null);
-    loadItems();
   };
 
   const handleDeleteClose = () => {
     setShowDeleteModal(null);
-    loadItems();
   };
 
   const handleAddConfirm = () => {
     setShowAddModal(false);
-    loadItems();
     setShowToast('Adicionado com sucesso!');
     window.location.reload();
   };
 
   const handleEditConfirm = () => {
     setShowEditModal(null);
-    loadItems();
     setShowToast('Editado com sucesso!');
     window.location.reload();
   };
@@ -137,7 +131,6 @@ const debounce = (func: () => void, delay: number) => {
     if (showDeleteModal) {
       deleteItem(showDeleteModal.id);
       setShowDeleteModal(null);
-      loadItems();
       setShowToast('Deletado com sucesso!');
       window.location.reload();
     }

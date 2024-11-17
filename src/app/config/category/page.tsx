@@ -14,8 +14,11 @@ export default function CreateCategory() {
 
   const getCategory = async (): Promise<CategoryDTO[]> => {
     const response = await service.getAllCategories();
-    setItens(response.data as CategoryDTO[]);
-    return response.data as CategoryDTO[];
+    if (response.data.data) {
+      setItens(response.data.data);
+      return response.data.data;
+    }
+    return [];
   };
 
   const deleteCategory = async (id: number) => {

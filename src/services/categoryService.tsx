@@ -1,16 +1,21 @@
 import axios, { AxiosInstance } from "axios";
 
+interface UpdateCategoryDTO {
+    description: string;
+    active: boolean;
+}
+
 export class categoryService {
     api: AxiosInstance;
 
     constructor() {
         this.api = axios.create({
-            baseURL: "http://localhost:3000"
+            baseURL: "http://3.135.202.176:3000",
         });
     }
 
     getAllCategories = async () => {
-        return this.api.get("/categories");
+        return this.api.get("/categories?orderBy=id");
     }
     
     getCategoryById = async (id: number) => {
@@ -21,8 +26,8 @@ export class categoryService {
         return this.api.post("/categories", {description});
     }
 
-    updateCategory = async (id: number, description: string) => {
-        return this.api.put(`/categories/${id}`, {description});
+    updateCategory = async (id: number, body: UpdateCategoryDTO) => {
+        return this.api.put(`/categories/${id}`, {body});
     }
 
     deleteCategory = async (id: number) => {
