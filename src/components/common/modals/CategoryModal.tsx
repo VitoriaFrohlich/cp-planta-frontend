@@ -2,24 +2,30 @@ import { useEffect, useState } from 'react';
 import GenericModal from './GenericModal';
 import DefaultInput from '../inputs/DefaultInput';
 import DynamicBox from '../DynamicBox';
+import { categoryService } from '@/src/services/categoryService';
+import { CategoryDTO } from '@/src/interfaces/CategoryDTO';
 
 interface ModalProps {
   onClose: () => void;
   onConfirm: () => void;
-  item?: { name: string };
+  item?: CategoryDTO;
 }
 
+const service = new categoryService();
+
 export default function CategoryModal({
-  onClose,
   onConfirm,
+  onClose,
   item
 }: ModalProps) {
   const [descricao, setDescricao] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (item != null) {
-      setDescricao(item?.name ?? '');
+    if (item) {
+      setDescricao(item.description);
+    } else {
+      setDescricao('');
     }
   }, [item]);
 
@@ -33,11 +39,27 @@ export default function CategoryModal({
     return true;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateFields()) {
       return;
     }
-    onConfirm();
+
+    try {
+      if (item) {
+        await service.updateCategory(item.id, {
+          description: descricao.trim(),
+          active: true
+        });
+      } else {
+        await service.createCategory(descricao.trim());
+      }
+
+      onConfirm();
+      onClose();
+    } catch (error) {
+      console.error('Erro ao salvar categoria:', error);
+      setError('Erro ao salvar a categoria');
+    }
   };
 
   return (
