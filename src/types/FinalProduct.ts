@@ -31,11 +31,11 @@ export interface FinalProductList {
 
 export interface CreateFinalProductRequest {
   description: string;
-  category_id: number;
+  category_id?: number;
   code?: string;
-  image: string;
-  raw_materials: RawMaterial[];
-  steps: Step[];
+  image?: string;
+  raw_materials?: RawMaterial[];
+  steps?: Step[];
   id?: string;
 }
 

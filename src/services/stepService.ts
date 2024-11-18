@@ -1,9 +1,13 @@
 import axiosInstance from './axiosInstance';
 import { Step, CreateStepRequest } from '../types/Step';
+import { response } from '../types/Default';
 
-export const getAllSteps = async (): Promise<Step[]> => {
-  const response = await axiosInstance.get<Step[]>('/step/getAll');
-  return response.data;
+export const getSteps = async (): Promise<Step[]> => {
+  const response = await axiosInstance.get<response>(
+    '/steps/'
+  );
+
+  return response.data.data;
 };
 
 export const createStep = async (data: CreateStepRequest): Promise<boolean> => {

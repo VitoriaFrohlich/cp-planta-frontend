@@ -8,6 +8,8 @@ import DefaultListItems from '../lists/DefaultListItems';
 import Image from 'next/image';
 import { getCategories } from '@/src/services/categoryService';
 import { getListRawMaterial, getSelectRawMaterial } from '@/src/services/rawMaterialService';
+import { getSteps } from '@/src/services/stepService';
+import { createFinalProduct, patchFinalProduct } from '@/src/services/finalProductService';
 
 interface Props {
   onClose: () => void;
@@ -19,15 +21,16 @@ interface Props {
 }
 
 export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
-  const [descricao, setDescricao] = useState('');
+  const [description, setDescription] = useState('');
   const [rawMateriaCategory, setRawMaterialCategory] = useState('');
   const [rawMaterialSelected, setRawMaterialSelected] = useState('');
   const [category, setCategory] = useState('');
-  const [step, setSteps] = useState('');
+  const [stepSelected, setStepSelected] = useState('');
+  const [stepSelectList, setStepSelectList] = useState<{ id: string; description: string }[]>([]);
   const [categorySelectList, setCategorySelectList] = useState<{ id: string; description: string }[]>([]);
-  const [rawMaterials, setRawMaterials] = useState<{ description: string }[]>([]);
+  const [rawMaterials, setRawMaterials] = useState<{ id: string; description: string }[]>([]);
   const [rawMaterialSelectList, setRawMaterialSelectList] = useState<{ id: string; description: string }[]>([]);
-  const [stepsType, setStepsType] = useState<{ step: string }[]>([]);
+  const [steps, setSteps] = useState<{ id: string; description: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,20 +38,16 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
       try {
         const data = await getCategories();
         setCategorySelectList(data); // Armazene as categorias no estado
-      
-        // Se houver um item, preencha os campos de descrição e categoria
-        if (item != null) {
-          setDescricao(item.description ?? '');
-          console.log(data)
-          setCategory(data.find(x => x.description == item?.category)?.id ?? '');
-        }
 
         const raw = await getSelectRawMaterial();
         setRawMaterialSelectList(raw); // Armazene as categorias no estado
       
+        const step = await getSteps();
+        setStepSelectList(step); // Armazene as categorias no estado
+
         // Se houver um item, preencha os campos de descrição e categoria
         if (item != null) {
-          setDescricao(item.description ?? '');
+          setDescription(item.description ?? '');
           console.log(data)
           setCategory(data.find(x => x.description == item?.category)?.id ?? '');
         }
@@ -62,7 +61,7 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
   }, [item]);
 
   const validateFields = (): boolean => {
-    if (descricao.trim() === '') {
+    if (description.trim() === '') {
       setError('O campo descrição é obrigatório.');
       return false;
     }
@@ -71,31 +70,48 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
     return true;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateFields()) {
       return;
+    }
+    if (item == null)
+    {
+      item = { description : description, category_id: Number(category) }
+      await createFinalProduct(item);
+    }
+    else
+    {
+      item.description = description;
+      item.category_id = Number(category);
+
+      await patchFinalProduct(item);
     }
     onConfirm();
   };
   const isFormValidAddType = rawMaterialSelected != '';
-  const isFormValidAddSteps = step != '';
+  const isFormValidAddSteps = stepSelected != '';
 
-  const handleAddRawMaterial = (description: string) => {
-    setRawMaterials([...rawMaterials, { description: description }]);
+  const handleAddRawMaterial = (id: string) => {
+    
+    setRawMaterials([...rawMaterials, { id: id ,description: (rawMaterialSelectList.find(x => x.id == id)?.description ?? "") }]);
+    setRawMaterialSelectList(rawMaterialSelectList.filter(x => x.id != id))
     setRawMaterialSelected('');
   };
 
-  const handleAddSteps = (step: string) => {
-    setStepsType([...stepsType, { step }]);
-    setSteps('');
+  const handleAddSteps = (id: string) => {
+    setSteps([...steps, { id: id ,description: (stepSelectList.find(x => x.id == id)?.description ?? "") }]);
+    setStepSelectList(stepSelectList.filter(x => x.id != id))
+    setStepSelected('');
   };
 
-  const handleRemoveCategory = (indexToRemove: number) => {
+  const handleRemoveRawMaterial = (indexToRemove: number) => {
+    setRawMaterialSelectList([...rawMaterialSelectList, rawMaterials.find((_, index) => index == indexToRemove) ?? {id:"" , description: ""}]);
     setRawMaterials(rawMaterials.filter((_, index) => index !== indexToRemove));
   };
 
   const handleRemoveSteps = (indexToRemove: number) => {
-    setStepsType(stepsType.filter((_, index) => index !== indexToRemove));
+    setStepSelectList([...stepSelectList, steps.find((_, index) => index == indexToRemove) ?? {id:"" , description: ""}]);
+    setSteps(steps.filter((_, index) => index !== indexToRemove));
   };
   return (
     <GenericModal
@@ -106,8 +122,8 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
       <DynamicBox extraStyle="mb-5">
         <DefaultInput
           placeholder="Descrição"
-          value={descricao}
-          onChange={e => setDescricao(e.target.value)}
+          value={description}
+          onChange={e => setDescription(e.target.value)}
           label="Descrição"
           error={error}
         />
@@ -140,23 +156,18 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
         </Button>
         <DefaultListItems
           items={rawMaterials}
-          renderItem={item => <span>{item.description}</span>}
-          editable
+          columns={[{ key: 'description', type: 'text' }]}
           scrollable
-          onRemove={handleRemoveCategory}
+          onRemove={handleRemoveRawMaterial}
         />
       </DynamicBox>
       <DynamicBox title='Processo de produção' extraStyle="mb-5">
         <SelectInput
           label="Etapa"
-          value={step}
-          onChange={e => setSteps(e.target.value)}
+          value={stepSelected}
+          onChange={e => setStepSelected(e.target.value)}
           placeholder="Selecione a etapa"
-          options={[
-            'Batata Inglesa Media',
-            'Batata Inglesa Pequena',
-            'Batata Inglesa Grande'
-          ]}
+          options={stepSelectList.map(cat => ({ value: cat.id, label: cat.description }))}
         />
         <Button
           className={`border rounded-lg w-full p-2 mt-2 mb-4 ${
@@ -165,14 +176,13 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
               : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'
           }`}
           disabled={!isFormValidAddSteps}
-          onClick={() => handleAddSteps(step)}
+          onClick={() => handleAddSteps(stepSelected)}
         >
           Adicionar
         </Button>
         <DefaultListItems
-          items={stepsType}
-          renderItem={item => <span>{item.step}</span>}
-          editable
+          items={steps}
+          columns={[{ key: 'description', type: 'text' }]}
           scrollable
           onRemove={handleRemoveSteps}
         />

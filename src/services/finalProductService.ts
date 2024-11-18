@@ -39,13 +39,13 @@ export const createFinalProduct = async (
 ): Promise<boolean> => {
   data.code = (Math.random() * 1000).toFixed(0).toString();
   const response = await axiosInstance.post<response >(
-    '/products/raw',
+    '/products/made',
     data
   );
   return response.data.sucess;
 };
 
-export const patchRawMaterial = async (
+export const patchFinalProduct = async (
   data: CreateFinalProductRequest
 ): Promise<boolean> => {
   const response = await axiosInstance.patch<response >(
