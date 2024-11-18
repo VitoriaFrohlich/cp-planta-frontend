@@ -1,3 +1,5 @@
+import { UseFormRegisterReturn } from 'react-hook-form';
+
 interface SelectInputProps {
   label: string;
   placeholder: string;
@@ -5,6 +7,7 @@ interface SelectInputProps {
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   value?: string | number;
   error?: string;
+  register?: UseFormRegisterReturn;
 }
 
 const selectInput: React.FC<SelectInputProps> = ({
@@ -13,7 +16,8 @@ const selectInput: React.FC<SelectInputProps> = ({
   options,
   onChange,
   error,
-  value
+  value,
+  register
 }) => {
   return (
     <div className="mb-4">
@@ -22,6 +26,7 @@ const selectInput: React.FC<SelectInputProps> = ({
         className="w-full text-black mt-1 border border-greenHortti rounded-lg p-2 box"
         onChange={onChange}
         value={value}
+        {...register}
       >
         {placeholder && (
           <option className="text-[#1e1e1e] w-full" value="">

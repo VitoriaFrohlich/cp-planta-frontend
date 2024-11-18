@@ -7,6 +7,7 @@ interface OnClickButtonProps {
   onClick: () => void;
   className: string;
   disable?: boolean;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 const OnClickButton: React.FC<OnClickButtonProps> = ({
@@ -14,7 +15,8 @@ const OnClickButton: React.FC<OnClickButtonProps> = ({
   image,
   onClick,
   className,
-  disable
+  disable,
+  type
 }) => {
   return (
     <div className={className}>
@@ -22,6 +24,7 @@ const OnClickButton: React.FC<OnClickButtonProps> = ({
         onClick={onClick}
         className="flex items-center justify-center gap-2 w-full"
         disabled={disable === undefined ? false : disable}
+        type={type}
       >
         <Image
           className="w-6 h-6 "

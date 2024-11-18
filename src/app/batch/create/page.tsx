@@ -1,29 +1,161 @@
 'use client';
 import Header from '@/src/components/common/header';
-import SelectInput from '@/src/components/common/inputs/SelectInput';
 import CancelButton from '@/src/components/buttons/order/CancelButton';
 import NumericInput from '@/src/components/common/inputs/NumericInput';
 import DateInput from '@/src/components/common/inputs/DateInput';
 import DynamicBox from '@/src/components/common/DynamicBox';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
 import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
-import BatchListComponent from '@/src/components/order/BatchListComponent';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import orderServiceInstance from '@/src/services/order.service';
+import { useForm } from 'react-hook-form';
+import SelectInputCreateBatch from '@/src/components/batch-create/SelectInputCreateBatch';
+import BatchListComponentCreateBatch from '@/src/components/batch-create/BatchListComponentCreateBatch';
+
+interface SelectInputProps {
+  id: number;
+  description: string;
+}
+
+interface BatchMaterial {
+  sku: string;
+  raw_material_description: string;
+  quantity: number;
+}
+
+interface PostData {
+  stock_moviment: string;
+  stock_items: {
+    product_id: number;
+    quantity: number;
+    unit_price: number;
+    batch: string;
+    sku: string;
+    batch_expiration: string;
+    supplier: number;
+    stock_location_id: number;
+  };
+}
 
 export default function CreateBatch() {
-  // Mock data
   const router = useRouter();
-  // const isFormValidBatchCreate = [];
-  const typesMaterials = ['Batata', 'Cenoura', 'Tomate'];
-  const metrics = ['kg', 'g', 'mg', 'l', 'ml', 'un'];
-  const storageLocations = ['Freezer 1', 'Freezer 2'];
-  const batchId = 'L01/2310';
-  const [items, _] = useState([
-    { batch: 'L01/2301', rawMaterial: 'Batata Branca Grande', quantity: 80 },
-    { batch: 'L01/2304', rawMaterial: 'Cenoura', quantity: 50 },
-    { batch: 'L01/2309', rawMaterial: 'Maçã Fuji', quantity: 7 }
-  ]);
+  const [typesMaterials, setTypesMaterials] = useState<SelectInputProps[]>([]);
+  const [storageLocations, setStorageLocations] = useState<SelectInputProps[]>(
+    []
+  );
+  const [batchId, setBatchId] = useState<string>('');
+  const [batchMaterial, setBatchMaterial] = useState<BatchMaterial[]>([]);
+  const { register, handleSubmit } = useForm<PostData>();
+
+  const fetchStorageLocations = async () => {
+    try {
+      // Consuming the API
+      const stocks: SelectInputProps[] = (
+        await orderServiceInstance.api.get('/stock-locations')
+      ).data.data;
+
+      // Iterating over the response data
+      stocks.forEach(stock => {
+        setStorageLocations(oldLocations => [...oldLocations, stock]);
+      });
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const fetchTypesMaterials = async () => {
+    try {
+      // Consuming the API
+      const typesMaterials: SelectInputProps[] = (
+        await orderServiceInstance.api.get('/products/raw-material-short')
+      ).data.data;
+
+      // Iterating over the response data
+      typesMaterials.forEach(material => {
+        setTypesMaterials(oldTypes => [...oldTypes, material]);
+      });
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const fetchBatchMaterials = async () => {
+    try {
+      // Consuming the API
+      const batchs: BatchMaterial[] = (
+        await orderServiceInstance.api.get('/stock/batchs-raw')
+      ).data.data;
+      const quantityOfDisplayBatchs = 4;
+
+      const batchLength = batchs.length + 1;
+
+      setBatchId(`L01/${batchLength}`);
+
+      // suffle my array of batchs
+      const shuffledBatchs = batchs.sort(() => Math.random() - 0.5);
+      const newerBatchs = shuffledBatchs.slice(-quantityOfDisplayBatchs);
+
+      // Iterating over the response data
+      newerBatchs.forEach(async batch => {
+        setBatchMaterial(oldBatchs => [...oldBatchs, batch]);
+      });
+    } catch (error) {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    fetchStorageLocations();
+    fetchTypesMaterials();
+    fetchBatchMaterials();
+  }, []);
+
+  async function handleFormBatch(data: PostData) {
+    try {
+      data.stock_moviment = 'INPUT';
+      data.stock_items.sku = batchId;
+      // Mocking the data to be sent
+      data.stock_items.batch = batchId;
+      data.stock_items.supplier = 1;
+
+      // const request = prepareRequest(data);
+      // const response = await orderServiceInstance.api.post('/stock', request);
+
+      const newBatchMaterial: BatchMaterial = {
+        sku: data.stock_items.sku,
+        raw_material_description:
+          (await typesMaterials.find(
+            material => material.id == data.stock_items.product_id
+          )?.description) ?? 'não achei',
+        quantity: data.stock_items.quantity
+      };
+      setBatchMaterial(oldItems => [...oldItems, newBatchMaterial]);
+
+      window.location.reload();
+    } catch (error) {
+      console.error('Error posting data:', error);
+      return null;
+    }
+  }
+
+  // function prepareRequest(data: PostData) {
+  //   return {
+  //     stock_moviment: data.stock_moviment,
+  //     stock_items: [
+  //       {
+  //         product_id: Number(data.stock_items.product_id),
+  //         quantity: Number(data.stock_items.quantity),
+  //         unit_price: Number(data.stock_items.unit_price),
+  //         batch: data.stock_items.batch,
+  //         sku: data.stock_items.sku,
+  //         batch_expiration: new Date(data.stock_items.batch_expiration),
+  //         supplier: Number(data.stock_items.supplier),
+  //         stock_location_id: Number(data.stock_items.stock_location_id)
+  //       }
+  //     ]
+  //   };
+  // }
 
   return (
     <main className="">
@@ -34,41 +166,51 @@ export default function CreateBatch() {
       >
         Voltar
       </button>
-      <div className="w-full flex gap-14 py-7 px-14 justify-center">
+      <form
+        className="w-full flex gap-14 py-7 px-14 justify-center"
+        onSubmit={handleSubmit(handleFormBatch)}
+      >
         <div className="flex flex-col w-full max-w-[603px] gap-y-11 start">
           <DynamicBox title="Cadastro de Lote">
-            <SelectInput
+            <SelectInputCreateBatch
               label="Matéria Prima"
               placeholder="Selecione o tipo"
               options={typesMaterials}
+              register={register('stock_items.product_id')}
             />
             <DefaultInput
               label="Fornecedor"
               placeholder="Digite o nome do fornecedor"
+              register={register('stock_items.supplier')}
             />
-            <NumericInput label="Preço custo" placeholder="R$ 0,00" />
+            <NumericInput
+              label="Preço custo"
+              placeholder="R$ 0,00"
+              register={register('stock_items.unit_price')}
+            />
           </DynamicBox>
-          <DynamicBox title="Lista de Lotes Cadastrados" collapsible>
-            <BatchListComponent itens={items} />
+          <DynamicBox title="Últimos Lotes Cadastrados">
+            <BatchListComponentCreateBatch itens={batchMaterial} scrollable />
           </DynamicBox>
         </div>
         <div className="w-[1px] h-auto border border-greenHortti " />
         <div className="flex flex-col gap-y-16 w-full max-w-[603px]">
           <DynamicBox title=" ">
-            <SelectInput
-              label="Unidade de medida"
-              placeholder="Selecione a medida"
-              options={metrics}
-            />
             <NumericInput
               label="Quantidade"
               placeholder="Digite a quantidade"
+              register={register('stock_items.quantity')}
             />
-            <DateInput label="Data de entrada" placeholder="Selecione a data" />
-            <SelectInput
+            <DateInput
+              label="Data de entrada"
+              placeholder="Selecione a data"
+              register={register('stock_items.batch_expiration')}
+            />
+            <SelectInputCreateBatch
               label="Local de armazenamento"
               placeholder="Selecione o local"
               options={storageLocations}
+              register={register('stock_items.stock_location_id')}
             />
           </DynamicBox>
           <DynamicBox extraStyle="text-center flex flex-col gap-y-6">
@@ -85,6 +227,7 @@ export default function CreateBatch() {
                 }
                 title="Finalizar"
                 image="/check-icon.svg"
+                type="submit"
                 onClick={() => alert('Lote cadastrado com sucesso!')}
               />
               <CancelButton
@@ -93,23 +236,9 @@ export default function CreateBatch() {
                 href="/home"
               />
             </div>
-            {/* <button
-              className="bg-greenHortti text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center w-full justify-center"
-              onClick={() => alert('Lote cadastrado com sucesso!')}
-            >
-              <Image src={checkIcon} alt="Adicionar" width={14} height={14} />
-              <span className="ml-2 text-sm">Finalizar</span>
-            </button>
-            <button
-              className="bg-black text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center w-full justify-center"
-              onClick={() => (window.location.href = '/home')}
-            >
-              <Image src={returnIcon} alt="Adicionar" width={14} height={14} />
-              <span className="ml-2 text-sm">Retornar</span>
-            </button>*/}
           </div>
         </div>
-      </div>
+      </form>
     </main>
   );
 }

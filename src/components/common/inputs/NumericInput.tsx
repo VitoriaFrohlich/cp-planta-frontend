@@ -1,3 +1,5 @@
+import { UseFormRegisterReturn } from 'react-hook-form';
+
 interface NumericInputProps {
   label: string;
   placeholder: string;
@@ -5,6 +7,7 @@ interface NumericInputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: number;
   error?: string;
+  register?: UseFormRegisterReturn;
 }
 
 const numericInput: React.FC<NumericInputProps> = ({
@@ -13,7 +16,8 @@ const numericInput: React.FC<NumericInputProps> = ({
   disable,
   onChange,
   error,
-  value
+  value,
+  register
 }) => {
   return (
     <div className="mb-4">
@@ -25,6 +29,7 @@ const numericInput: React.FC<NumericInputProps> = ({
         disabled={disable === undefined ? false : disable}
         value={value}
         onChange={onChange}
+        {...register}
       />
       {/* Exibe o erro se houver */}
       {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
