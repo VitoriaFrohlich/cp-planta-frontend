@@ -5,14 +5,14 @@ import GenericConfig from '@/src/components/common/GenericConfig';
 import Header from '@/src/components/common/header';
 import CategoryModal from '@/src/components/common/modals/CategoryModal';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
-import { CategoryDTO } from '@/src/interfaces/CategoryDTO';
 import { deleteCategory, getAllCategories } from '@/src/services/categoryService';
+import { Category } from '@/src/types/Category';
 import { useEffect, useState } from 'react';
 
 
 export default function CreateCategory() {
 
-  const getCategory = async (): Promise<CategoryDTO[]> => {
+  const getCategory = async (): Promise<Category[]> => {
     const response = await getAllCategories();
     if (response.data.data) {
       return response.data.data;
