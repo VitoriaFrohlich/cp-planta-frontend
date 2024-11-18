@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
 import AddIcon from '@/src/components/icons/white-add-icon.svg';
 import SearchIcon from '@/src/components/icons/search-icon.svg';
 import EditIcon from '@/src/components/icons/edit-icon.svg';

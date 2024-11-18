@@ -20,8 +20,6 @@ export class categoryService {
 
   updateCategory = async (id: number, data: UpdateCategoryDTO) => {
     const response = axiosInstance.patch(`/categories/${id}`, data);
-    console.log('Dados enviados:', data);
-    console.log('Resposta da API:', (await response).data.data);
     return response;
   };
 

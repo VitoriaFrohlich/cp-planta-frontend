@@ -1,4 +1,5 @@
-interface CategoryDTO {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export interface CategoryDTO {
   id: number;
   description: string;
   active: boolean;

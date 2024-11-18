@@ -3,10 +3,11 @@ import GenericModal from './GenericModal';
 import DefaultInput from '../inputs/DefaultInput';
 import DynamicBox from '../DynamicBox';
 import { categoryService } from '@/src/services/categoryService';
+import { CategoryDTO } from '@/src/interfaces/CategoryDTO';
 
 interface ModalProps {
   onClose: () => void;
-  onConfirm: () => Promise<void>;
+  onConfirm: () => void;
   item?: CategoryDTO;
 }
 
