@@ -2,29 +2,31 @@ import { useEffect, useState } from 'react';
 import GenericModal from './GenericModal';
 import DefaultInput from '../inputs/DefaultInput';
 import DynamicBox from '../DynamicBox';
+import { createCategory, patchCategory } from '@/src/services/categoryService';
 
 interface ModalProps {
   onClose: () => void;
   onConfirm: () => void;
-  item?: { name: string };
+  item?: {id?: string, description: string };
 }
 
+
 export default function CategoryModal({
-  onClose,
   onConfirm,
+  onClose,
   item
 }: ModalProps) {
-  const [descricao, setDescricao] = useState('');
+  const [description, setDescription] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (item != null) {
-      setDescricao(item?.name ?? '');
+    if (item) {
+      setDescription(item.description);
     }
   }, [item]);
 
   const validateFields = (): boolean => {
-    if (descricao.trim() === '') {
+    if (description.trim() === '') {
       setError('O campo descrição é obrigatório.');
       return false;
     }
@@ -33,9 +35,20 @@ export default function CategoryModal({
     return true;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateFields()) {
       return;
+    }
+    if (item == null)
+    {
+      item = { description : description }
+      await createCategory(item);
+    }
+    else
+    {
+      item.description = description;
+
+      await patchCategory(item);
     }
     onConfirm();
   };
@@ -50,8 +63,8 @@ export default function CategoryModal({
         <form className="flex flex-col gap-4">
           <DefaultInput
             placeholder="Descrição"
-            value={descricao}
-            onChange={e => setDescricao(e.target.value)}
+            value={description}
+            onChange={e => setDescription(e.target.value)}
             label="Descrição"
             error={error}
           />

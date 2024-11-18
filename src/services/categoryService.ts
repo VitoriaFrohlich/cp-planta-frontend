@@ -10,9 +10,34 @@ export const getCategories = async (): Promise<Category[]> => {
 export const createCategory = async (
   data: CreateCategoryRequest
 ): Promise<boolean> => {
-  const response = await axiosInstance.post<{ return: boolean }>(
+  const response = await axiosInstance.post<response >(
     '/categories',
     data
   );
-  return response.data.return;
+  return response.data.sucess;
 };
+
+export const patchCategory = async (
+  data: CreateCategoryRequest
+): Promise<boolean> => {
+  const response = await axiosInstance.patch<response >(
+    '/categories/' + data.id,
+    { 
+      description: data.description
+    }
+  );
+  return response.data.sucess;
+};
+
+export const getAllCategories = async () => {
+    return axiosInstance.get('/categories?orderBy=id');
+  };
+
+  export const getCategoryById = async (id: number) => {
+    return axiosInstance.get(`/categories/${id}`);
+  };
+
+
+  export const deleteCategory = async (id: string) => {
+    return axiosInstance.delete(`/categories/${id}`);
+  };
