@@ -5,17 +5,21 @@ import ImageExample from '@/public/config-image-example.svg';
 import GenericList from '@/src/components/common/GenericList';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
 import RawMaterialModal from '@/src/components/common/modals/RawMaterialModal';
+import { deleteRawMaterial, getListRawMaterial } from '@/src/services/rawMaterialService';
 
 export default function RawMaterialConfig() {
   // Função que retorna os itens da lista
-  const getRawMaterials = async () => [
-    { id: 1, image: ImageExample, name: 'Batata Branca', quantity: 8 },
-    { id: 2, image: ImageExample, name: 'Cenoura', quantity: 5 },
-    { id: 3, image: ImageExample, name: 'Maçã Fuji', quantity: 7 }
-  ];
-  const deleteRawMaterial = async (_id: string) => [
-    //Deletar materia prima
-  ];
+  const getList = async () => {
+    try {
+        return await getListRawMaterial();
+
+    } catch (error) {
+      return [];
+    }
+  };
+  const deleteItem = async (_id: string) => {
+    const success = await deleteRawMaterial(_id);
+  };
 
   return (
     <main>
@@ -23,17 +27,17 @@ export default function RawMaterialConfig() {
       <ConfigNavbarComponent>
         <GenericList
           columns={[
-            { label: 'Imagem', key: 'image', type: 'image', width: 'w-1/4' },
-            { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/4' },
+            { label: 'Descrição', key: 'description', type: 'text', width: 'w-1/4' },
+            { label: 'Categoria', key: 'category', type: 'text', width: 'w-1/4' },
             {
               label: 'Qnt. lotes',
-              key: 'quantity',
+              key: 'batch_quantity',
               type: 'text',
               width: 'w-1/4'
             }
           ]}
-          getItems={getRawMaterials} // Função que busca os itens
-          deleteItem={deleteRawMaterial} // Função que deleta o item
+          getItems={getList} // Função que busca os itens
+          deleteItem={deleteItem} // Função que deleta o item
           AddModal={RawMaterialModal} // Abre modal de adicionar
           EditModal={RawMaterialModal} // Abre modal de editar
           DeleteModal={DeleteModal} // Abre modal de deletar

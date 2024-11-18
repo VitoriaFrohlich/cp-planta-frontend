@@ -5,17 +5,21 @@ import Header from '@/src/components/common/header';
 import ImageExample from '@/public/config-image-example.svg';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
 import FinalProductModal from '@/src/components/common/modals/FinalProductModal';
+import { deleteFinalProduct, getListFinalProduct } from '@/src/services/finalProductService';
 
 export default function createFinalProduct() {
   // Função que retorna os itens da lista
-  const getFinalProduct = async () => [
-    { id: 1, image: ImageExample, name: 'Batata palito', quantity: 4 },
-    { id: 2, image: ImageExample, name: 'Cenoura Fatiada', quantity: 2 },
-    { id: 3, image: ImageExample, name: 'Maçã Fuji em Cubos', quantity: 9 }
-  ];
-  const deleteFinalProduct = async (_id: string) => [
-    //Deletar produto final
-  ];
+  const getList = async () => {
+    try {
+        return await getListFinalProduct();
+
+    } catch (error) {
+      return [];
+    }
+  };
+  const deleteItem = async (_id: string) => { 
+    const success = await deleteFinalProduct(_id);
+  };
 
   return (
     <main>
@@ -23,17 +27,17 @@ export default function createFinalProduct() {
       <ConfigNavbarComponent>
         <GenericList
           columns={[
-            { label: 'Imagem', key: 'image', type: 'image', width: 'w-1/4' },
-            { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/4' },
+            { label: 'Descrição', key: 'description', type: 'text', width: 'w-1/4' },
+            { label: 'Categoria', key: 'category', type: 'text', width: 'w-1/4' },
             {
               label: 'Qnt. lotes',
-              key: 'quantity',
+              key: 'batch_quantity',
               type: 'text',
               width: 'w-1/4'
             }
           ]}
-          getItems={getFinalProduct} // Função que busca os itens
-          deleteItem={deleteFinalProduct} // Função que deleta o item
+          getItems={getList} // Função que busca os itens
+          deleteItem={deleteItem} // Função que deleta o item
           AddModal={FinalProductModal} // Abre modal de adicionar
           EditModal={FinalProductModal} // Abre modal de editar
           DeleteModal={DeleteModal} // Abre modal de deletar

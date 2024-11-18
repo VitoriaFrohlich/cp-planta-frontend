@@ -21,12 +21,22 @@ export interface ProductMaterial {
   raw_material: RawMaterial;
 }
 
+export interface FinalProductList {
+  id: number
+  description: string
+  category: string
+  batch_quantity: number
+}
+
+
 export interface CreateFinalProductRequest {
   description: string;
-  category_id: string;
+  category_id: number;
+  code?: string;
   image: string;
   raw_materials: RawMaterial[];
   steps: Step[];
+  id?: string;
 }
 
 export interface BatchProduct {

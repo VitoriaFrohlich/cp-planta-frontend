@@ -8,13 +8,23 @@ export interface RawMaterial {
   batch_quantity: number;
 }
 
-export interface CreateRawMaterialRequest {
-  description: string;
-  category_id: string;
-  image: string;
+export interface RawMaterialList {
+  id: number
+  description: string
+  category: string
+  batch_quantity: number
 }
 
-export interface RawMaterialList {
-  id: string;
-  description: string;
+export interface RawMaterialSelect {
+  id: string
+  description: string
 }
+
+export interface CreateRawMaterialRequest {
+  id?:string;
+  description: string;
+  code?: string;
+  category_id: number;
+  image?: string;
+}
+

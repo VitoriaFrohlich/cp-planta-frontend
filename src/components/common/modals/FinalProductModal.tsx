@@ -6,30 +6,59 @@ import DynamicBox from '../DynamicBox';
 import SelectInput from '../inputs/SelectInput';
 import DefaultListItems from '../lists/DefaultListItems';
 import Image from 'next/image';
+import { getCategories } from '@/src/services/categoryService';
+import { getListRawMaterial, getSelectRawMaterial } from '@/src/services/rawMaterialService';
 
 interface Props {
   onClose: () => void;
   onConfirm: () => void;
-  item?: {
-    name: string;
-  };
+  item?: {id?: string,
+     description: string ,
+      category_id: number ,
+       category?: string};
 }
 
 export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
   const [descricao, setDescricao] = useState('');
   const [rawMateriaCategory, setRawMaterialCategory] = useState('');
+  const [rawMaterialSelected, setRawMaterialSelected] = useState('');
   const [category, setCategory] = useState('');
   const [step, setSteps] = useState('');
-
-  const [categorys, setCategorys] = useState<{ category: string }[]>([]);
+  const [categorySelectList, setCategorySelectList] = useState<{ id: string; description: string }[]>([]);
+  const [rawMaterials, setRawMaterials] = useState<{ description: string }[]>([]);
+  const [rawMaterialSelectList, setRawMaterialSelectList] = useState<{ id: string; description: string }[]>([]);
   const [stepsType, setStepsType] = useState<{ step: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (item != null) {
-      setDescricao(item?.name ?? '');
-      //Adicionar campos do item para carregar na edicao
-    }
+    const loadItem = async () => {
+      try {
+        const data = await getCategories();
+        setCategorySelectList(data); // Armazene as categorias no estado
+      
+        // Se houver um item, preencha os campos de descrição e categoria
+        if (item != null) {
+          setDescricao(item.description ?? '');
+          console.log(data)
+          setCategory(data.find(x => x.description == item?.category)?.id ?? '');
+        }
+
+        const raw = await getSelectRawMaterial();
+        setRawMaterialSelectList(raw); // Armazene as categorias no estado
+      
+        // Se houver um item, preencha os campos de descrição e categoria
+        if (item != null) {
+          setDescricao(item.description ?? '');
+          console.log(data)
+          setCategory(data.find(x => x.description == item?.category)?.id ?? '');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar categorias:', error);
+      }
+    };
+  
+    loadItem();
+  
   }, [item]);
 
   const validateFields = (): boolean => {
@@ -48,12 +77,12 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
     }
     onConfirm();
   };
-  const isFormValidAddType = category != '';
+  const isFormValidAddType = rawMaterialSelected != '';
   const isFormValidAddSteps = step != '';
 
-  const handleAddCategory = (category: string) => {
-    setCategorys([...categorys, { category }]);
-    setCategory('');
+  const handleAddRawMaterial = (description: string) => {
+    setRawMaterials([...rawMaterials, { description: description }]);
+    setRawMaterialSelected('');
   };
 
   const handleAddSteps = (step: string) => {
@@ -62,7 +91,7 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
   };
 
   const handleRemoveCategory = (indexToRemove: number) => {
-    setCategorys(categorys.filter((_, index) => index !== indexToRemove));
+    setRawMaterials(rawMaterials.filter((_, index) => index !== indexToRemove));
   };
 
   const handleRemoveSteps = (indexToRemove: number) => {
@@ -84,21 +113,19 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
         />
         <SelectInput
           label="Categoria"
-          value={rawMateriaCategory}
-          placeholder="Selecione a categoria"
-          onChange={e => setRawMaterialCategory(e.target.value)}
-          options={['batata', 'cenoura']}
-        />
-        <SelectInput
-          label="Tipo de Materia Prima"
           value={category}
+          placeholder="Selecione a categoria"
           onChange={e => setCategory(e.target.value)}
+          options={categorySelectList.map(cat => ({ value: cat.id, label: cat.description }))}
+        />
+      </DynamicBox>
+      <DynamicBox title='Composição' extraStyle="mb-5">
+        <SelectInput
+          label="Materia Prima"
+          value={rawMaterialSelected}
+          onChange={e => setRawMaterialSelected(e.target.value)}
           placeholder="Selecione o tipo"
-          options={[
-            'Batata Inglesa Media',
-            'Batata Inglesa Pequena',
-            'Batata Inglesa Grande'
-          ]}
+          options={rawMaterialSelectList.map(cat => ({ value: cat.id, label: cat.description }))}
         />
         <Button
           className={`border rounded-lg w-full p-2 mt-2 mb-4 ${
@@ -107,19 +134,19 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
               : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'
           }`}
           disabled={!isFormValidAddType}
-          onClick={() => handleAddCategory(category)}
+          onClick={() => handleAddRawMaterial(rawMaterialSelected)}
         >
           Adicionar
         </Button>
         <DefaultListItems
-          items={categorys}
-          renderItem={item => <span>{item.category}</span>}
+          items={rawMaterials}
+          renderItem={item => <span>{item.description}</span>}
           editable
           scrollable
           onRemove={handleRemoveCategory}
         />
       </DynamicBox>
-      <DynamicBox extraStyle="mb-5">
+      <DynamicBox title='Processo de produção' extraStyle="mb-5">
         <SelectInput
           label="Etapa"
           value={step}
