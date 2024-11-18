@@ -11,7 +11,9 @@ import DefaultModal from '@/src/components/common/modals/DefaultModal';
 import React from 'react';
 import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
 import DynamicBox from '@/src/components/common/DynamicBox';
-import BatchListComponent from '@/src/components/order/BatchListComponent';
+import DefaultListItems from '@/src/components/common/lists/DefaultListItems';
+import Image from 'next/image';
+import ReturnIcon from '@/src/components/icons/return-icon.svg';
 
 export default function OrderCreate() {
   const router = useRouter();
@@ -96,14 +98,14 @@ export default function OrderCreate() {
     <main>
       <Header />
       <div className="min-h-screen bg-white">
-        <button
-          className=" text-greenHortti pt-10 pl-10"
-          onClick={() => router.back()}
-        >
-          Voltar
-        </button>
-        <div className="flex items-center justify-center p-6">
+        <div className="flex items-center justify-center ">
           <div className="w-full max-w-7xl p-8">
+            <button
+              className=" text-greenHortti return-button "
+              onClick={() => router.push('/home')}
+            >
+              <Image src={ReturnIcon} alt="Retornar" width={14} height={14} />
+            </button>
             <div className="grid md:grid-cols-7 gap-6 relative">
               <div className="col-span-3">
                 <DynamicBox title="Cadastro Ordem" extraStyle="mb-5">
@@ -157,10 +159,17 @@ export default function OrderCreate() {
 
                   <div className="w-full h-px bg-greenHortti" />
 
-                  <BatchListComponent
-                    itens={itens}
-                    header
-                    editable
+                  <DefaultListItems
+                    items={itens}
+                    columns={[
+                      { label: 'Lote', key: 'batch', type: 'text' },
+                      {
+                        label: 'Matéria Prima',
+                        key: 'rawMaterial',
+                        type: 'text'
+                      },
+                      { label: 'Quantidade', key: 'batch', type: 'text' }
+                    ]}
                     scrollable
                     onRemove={handleRemoveItem}
                   />
@@ -188,7 +197,7 @@ export default function OrderCreate() {
                   />
 
                   <DefaultInput
-                    label="Quantidade esperada"
+                    label="Quantidade Esperada"
                     placeholder="Esse campo mostrará o peso estimado do produto final"
                     disable
                     value={

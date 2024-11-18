@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 import AddIcon from '@/src/components/icons/white-add-icon.svg';
 import SearchIcon from '@/src/components/icons/search-icon.svg';
 import EditIcon from '@/src/components/icons/edit-icon.svg';
 import DeleteIcon from '@/src/components/icons/delete-icon.svg';
-import ReturnIcon from '@/src/components/icons/return-icon.svg';
 import Toast from './Toast';
 
 interface TableColumn {
@@ -19,8 +17,8 @@ interface TableColumn {
 
 interface Props<T> {
   columns: TableColumn[];
-  getItems: () => Promise<T[]>;
-  deleteItem: (item: string) => Promise<T[]>;
+  getItems: () => Promise<any[]>;
+  deleteItem: (item: string) => void;
   AddModal: React.FC<{
     onClose: () => void;
     onConfirm: () => void;
@@ -36,12 +34,12 @@ interface Props<T> {
   DeleteModal: React.FC<{
     onClose: () => void;
     onConfirm: () => void;
-    item?: T;
+    item?: string;
     actionType?: number;
   }>;
 }
 
-export default function GenericList<T extends { [key: string]: any }>({
+export default function GenericConfig<T extends { [key: string]: any }>({
   columns,
   getItems,
   deleteItem,
@@ -49,7 +47,6 @@ export default function GenericList<T extends { [key: string]: any }>({
   EditModal,
   DeleteModal
 }: Props<T>) {
-  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [originalList, setOriginalList] = useState<T[]>([]);
   const [filteredList, setFilteredList] = useState<T[]>([]);
@@ -114,11 +111,11 @@ export default function GenericList<T extends { [key: string]: any }>({
     setShowToast('Editado com sucesso!');
   };
 
-  const handleDeleteConfirm = () => {
-    deleteItem(showDeleteModal?.id);
+  const handleDeleteConfirm = async () => {
+    await deleteItem(showDeleteModal?.id);
     setShowDeleteModal(null);
-    loadItems();
     setShowToast('Deletado com sucesso!');
+    loadItems();
   };
 
   return (
@@ -209,17 +206,6 @@ export default function GenericList<T extends { [key: string]: any }>({
             <p className="text-center text-gray-500">Nenhum item encontrado.</p>
           )}
         </div>
-
-        {/* Botão Retornar */}
-        <div className="my-8 float-right">
-          <button
-            className="bg-gray-800 text-white px-20 py-2 rounded-lg hover:bg-green-700 flex items-center"
-            onClick={() => router.push('/home')}
-          >
-            <Image src={ReturnIcon} alt="Retornar" width={14} height={14} />
-            <span className="ml-2 text-sm">Retornar</span>
-          </button>
-        </div>
       </div>
 
       {/* Modais */}
@@ -240,7 +226,7 @@ export default function GenericList<T extends { [key: string]: any }>({
       )}
       {showDeleteModal && (
         <DeleteModal
-          item={showDeleteModal}
+          item={showDeleteModal.description}
           onClose={handleDeleteClose}
           onConfirm={handleDeleteConfirm}
         />
