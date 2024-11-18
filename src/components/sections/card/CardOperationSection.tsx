@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import CardOperation from '../../cards/operation/CardOperation';
 import { getOrders } from '@/src/services/order.service';
 
-
 export default function OrdersPage() {
   const [orders, setOrders] = useState<
     { id: string; description: string; Production_Status: string }[]
@@ -14,8 +13,7 @@ export default function OrdersPage() {
     // Função para carregar as ordens
     const fetchOrders = async () => {
       const response = await getOrders();
-        setOrders(response);
-
+      setOrders(response);
     };
 
     fetchOrders();
@@ -31,7 +29,8 @@ export default function OrdersPage() {
         {orders
           .filter(
             order =>
-              order.Production_Status === 'IN_PROGRESS' || order.Production_Status === 'FINISHED'
+              order.Production_Status === 'IN_PROGRESS' ||
+              order.Production_Status === 'FINISHED'
           )
           .map(order => (
             <div
@@ -45,7 +44,9 @@ export default function OrdersPage() {
               <CardOperation
                 title={order.description}
                 type={
-                  order.Production_Status === 'IN_PROGRESS' ? 'inProgress' : 'finished'
+                  order.Production_Status === 'IN_PROGRESS'
+                    ? 'inProgress'
+                    : 'finished'
                 }
               />
             </div>

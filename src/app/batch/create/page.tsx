@@ -13,7 +13,6 @@ import Image from 'next/image';
 import ReturnIcon from '@/src/components/icons/return-icon.svg';
 import { useForm } from 'react-hook-form';
 import SelectInputCreateBatch from '@/src/components/batch-create/SelectInputCreateBatch';
-import BatchListComponentCreateBatch from '@/src/components/batch-create/BatchListComponentCreateBatch';
 import axiosInstance from '@/src/services/axiosInstance';
 
 interface SelectInputProps {

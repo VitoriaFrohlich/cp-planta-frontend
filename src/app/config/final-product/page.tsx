@@ -2,23 +2,24 @@
 import ConfigNavbarComponent from '@/src/components/common/configNavbar';
 import GenericConfig from '@/src/components/common/GenericConfig';
 import Header from '@/src/components/common/header';
-import ImageExample from '@/public/config-image-example.svg';
 import DeleteModal from '@/src/components/common/modals/DeleteModal';
 import FinalProductModal from '@/src/components/common/modals/FinalProductModal';
-import { deleteFinalProduct, getListFinalProduct } from '@/src/services/finalProductService';
+import {
+  deleteFinalProduct,
+  getListFinalProduct
+} from '@/src/services/finalProductService';
 
 export default function createFinalProduct() {
   // Função que retorna os itens da lista
   const getList = async () => {
     try {
-        return await getListFinalProduct();
-
+      return await getListFinalProduct();
     } catch (error) {
       return [];
     }
   };
-  const deleteItem = async (_id: string) => { 
-    const success = await deleteFinalProduct(_id);
+  const deleteItem = async (_id: string) => {
+    await deleteFinalProduct(_id);
   };
 
   return (
@@ -27,8 +28,18 @@ export default function createFinalProduct() {
       <ConfigNavbarComponent>
         <GenericConfig
           columns={[
-            { label: 'Descrição', key: 'description', type: 'text', width: 'w-1/4' },
-            { label: 'Categoria', key: 'category', type: 'text', width: 'w-1/4' },
+            {
+              label: 'Descrição',
+              key: 'description',
+              type: 'text',
+              width: 'w-1/4'
+            },
+            {
+              label: 'Categoria',
+              key: 'category',
+              type: 'text',
+              width: 'w-1/4'
+            },
             {
               label: 'Qnt. lotes',
               key: 'batch_quantity',

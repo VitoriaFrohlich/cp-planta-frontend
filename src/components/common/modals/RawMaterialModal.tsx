@@ -4,43 +4,51 @@ import DefaultInput from '../inputs/DefaultInput';
 import DynamicBox from '../DynamicBox';
 import Image from 'next/image';
 import SelectInput from '../inputs/SelectInput';
-import { createRawMaterial, patchRawMaterial } from '@/src/services/rawMaterialService';
+import {
+  createRawMaterial,
+  patchRawMaterial
+} from '@/src/services/rawMaterialService';
 import { getCategories } from '@/src/services/categoryService';
 
 interface Props {
   onClose: () => void;
   onConfirm: () => void;
-  item?: {id?: string, description: string , category_id: number , category?: string};
+  item?: {
+    id?: string;
+    description: string;
+    category_id: number;
+    category?: string;
+  };
 }
 
 export default function RawMaterialModal({ onClose, onConfirm, item }: Props) {
   const [description, setDescricao] = useState('');
   const [category, setCategory] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [categorySelectList, setCategorySelectList] = useState<{ id: string; description: string }[]>([]);
+  const [categorySelectList, setCategorySelectList] = useState<
+    { id: string; description: string }[]
+  >([]);
 
   useEffect(() => {
     const loadItem = async () => {
       try {
         const data = await getCategories();
         setCategorySelectList(data); // Armazene as categorias no estado
-      
+
         // Se houver um item, preencha os campos de descrição e categoria
         if (item != null) {
           setDescricao(item.description ?? '');
-          console.log(data)
-          setCategory(data.find(x => x.description == item?.category)?.id ?? '');
+          setCategory(
+            data.find(x => x.description == item?.category)?.id ?? ''
+          );
         }
-
       } catch (error) {
         console.error('Erro ao buscar categorias:', error);
       }
     };
-  
+
     loadItem();
-  
   }, [item]);
-  
 
   const validateFields = (): boolean => {
     if (description.trim() === '') {
@@ -56,13 +64,10 @@ export default function RawMaterialModal({ onClose, onConfirm, item }: Props) {
     if (!validateFields()) {
       return;
     }
-    if (item == null)
-    {
-      item = { description : description, category_id: Number(category) }
+    if (item == null) {
+      item = { description: description, category_id: Number(category) };
       await createRawMaterial(item);
-    }
-    else
-    {
+    } else {
       item.description = description;
       item.category_id = Number(category);
 
@@ -71,7 +76,6 @@ export default function RawMaterialModal({ onClose, onConfirm, item }: Props) {
     onConfirm();
   };
 
-  
   return (
     <GenericModal
       title={(item == null ? 'Cadastro' : 'Edição') + ' de Matéria prima'}
@@ -91,7 +95,10 @@ export default function RawMaterialModal({ onClose, onConfirm, item }: Props) {
           value={category}
           placeholder="Selecione a categoria"
           onChange={e => setCategory(e.target.value)}
-          options={categorySelectList.map(cat => ({ value: cat.id, label: cat.description }))}
+          options={categorySelectList.map(cat => ({
+            value: cat.id,
+            label: cat.description
+          }))}
         />
       </DynamicBox>
       <DynamicBox extraStyle="mb-5">

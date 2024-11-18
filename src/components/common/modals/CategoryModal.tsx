@@ -7,9 +7,8 @@ import { createCategory, patchCategory } from '@/src/services/categoryService';
 interface ModalProps {
   onClose: () => void;
   onConfirm: () => void;
-  item?: {id?: string, description: string };
+  item?: { id?: string; description: string };
 }
-
 
 export default function CategoryModal({
   onConfirm,
@@ -39,13 +38,10 @@ export default function CategoryModal({
     if (!validateFields()) {
       return;
     }
-    if (item == null)
-    {
-      item = { description : description }
+    if (item == null) {
+      item = { description: description };
       await createCategory(item);
-    }
-    else
-    {
+    } else {
       item.description = description;
 
       await patchCategory(item);

@@ -7,29 +7,41 @@ import SelectInput from '../inputs/SelectInput';
 import DefaultListItems from '../lists/DefaultListItems';
 import Image from 'next/image';
 import { getCategories } from '@/src/services/categoryService';
-import { getListRawMaterial, getSelectRawMaterial } from '@/src/services/rawMaterialService';
+import { getSelectRawMaterial } from '@/src/services/rawMaterialService';
 import { getSteps } from '@/src/services/stepService';
-import { createFinalProduct, patchFinalProduct } from '@/src/services/finalProductService';
+import {
+  createFinalProduct,
+  patchFinalProduct
+} from '@/src/services/finalProductService';
 
 interface Props {
   onClose: () => void;
   onConfirm: () => void;
-  item?: {id?: string,
-     description: string ,
-      category_id: number ,
-       category?: string};
+  item?: {
+    id?: string;
+    description: string;
+    category_id: number;
+    category?: string;
+  };
 }
 
 export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
   const [description, setDescription] = useState('');
-  const [rawMateriaCategory, setRawMaterialCategory] = useState('');
   const [rawMaterialSelected, setRawMaterialSelected] = useState('');
   const [category, setCategory] = useState('');
   const [stepSelected, setStepSelected] = useState('');
-  const [stepSelectList, setStepSelectList] = useState<{ id: string; description: string }[]>([]);
-  const [categorySelectList, setCategorySelectList] = useState<{ id: string; description: string }[]>([]);
-  const [rawMaterials, setRawMaterials] = useState<{ id: string; description: string }[]>([]);
-  const [rawMaterialSelectList, setRawMaterialSelectList] = useState<{ id: string; description: string }[]>([]);
+  const [stepSelectList, setStepSelectList] = useState<
+    { id: string; description: string }[]
+  >([]);
+  const [categorySelectList, setCategorySelectList] = useState<
+    { id: string; description: string }[]
+  >([]);
+  const [rawMaterials, setRawMaterials] = useState<
+    { id: string; description: string }[]
+  >([]);
+  const [rawMaterialSelectList, setRawMaterialSelectList] = useState<
+    { id: string; description: string }[]
+  >([]);
   const [steps, setSteps] = useState<{ id: string; description: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,23 +53,23 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
 
         const raw = await getSelectRawMaterial();
         setRawMaterialSelectList(raw); // Armazene as categorias no estado
-      
+
         const step = await getSteps();
         setStepSelectList(step); // Armazene as categorias no estado
 
         // Se houver um item, preencha os campos de descrição e categoria
         if (item != null) {
           setDescription(item.description ?? '');
-          console.log(data)
-          setCategory(data.find(x => x.description == item?.category)?.id ?? '');
+          setCategory(
+            data.find(x => x.description == item?.category)?.id ?? ''
+          );
         }
       } catch (error) {
         console.error('Erro ao buscar categorias:', error);
       }
     };
-  
+
     loadItem();
-  
   }, [item]);
 
   const validateFields = (): boolean => {
@@ -74,13 +86,10 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
     if (!validateFields()) {
       return;
     }
-    if (item == null)
-    {
-      item = { description : description, category_id: Number(category) }
+    if (item == null) {
+      item = { description: description, category_id: Number(category) };
       await createFinalProduct(item);
-    }
-    else
-    {
+    } else {
       item.description = description;
       item.category_id = Number(category);
 
@@ -92,25 +101,49 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
   const isFormValidAddSteps = stepSelected != '';
 
   const handleAddRawMaterial = (id: string) => {
-    
-    setRawMaterials([...rawMaterials, { id: id ,description: (rawMaterialSelectList.find(x => x.id == id)?.description ?? "") }]);
-    setRawMaterialSelectList(rawMaterialSelectList.filter(x => x.id != id))
+    setRawMaterials([
+      ...rawMaterials,
+      {
+        id: id,
+        description:
+          rawMaterialSelectList.find(x => x.id == id)?.description ?? ''
+      }
+    ]);
+    setRawMaterialSelectList(rawMaterialSelectList.filter(x => x.id != id));
     setRawMaterialSelected('');
   };
 
   const handleAddSteps = (id: string) => {
-    setSteps([...steps, { id: id ,description: (stepSelectList.find(x => x.id == id)?.description ?? "") }]);
-    setStepSelectList(stepSelectList.filter(x => x.id != id))
+    setSteps([
+      ...steps,
+      {
+        id: id,
+        description: stepSelectList.find(x => x.id == id)?.description ?? ''
+      }
+    ]);
+    setStepSelectList(stepSelectList.filter(x => x.id != id));
     setStepSelected('');
   };
 
   const handleRemoveRawMaterial = (indexToRemove: number) => {
-    setRawMaterialSelectList([...rawMaterialSelectList, rawMaterials.find((_, index) => index == indexToRemove) ?? {id:"" , description: ""}]);
+    setRawMaterialSelectList([
+      ...rawMaterialSelectList,
+      rawMaterials.find((_, index) => index == indexToRemove) ?? {
+        id: '',
+        description: ''
+      }
+    ]);
     setRawMaterials(rawMaterials.filter((_, index) => index !== indexToRemove));
   };
 
   const handleRemoveSteps = (indexToRemove: number) => {
-    setStepSelectList([...stepSelectList, steps.find((_, index) => index == indexToRemove) ?? {id:"" , description: ""}]);
+    setStepSelectList([
+      ...stepSelectList,
+      steps.find((_, index) => index == indexToRemove) ?? {
+        id: '',
+        description: ''
+      }
+    ]);
     setSteps(steps.filter((_, index) => index !== indexToRemove));
   };
   return (
@@ -132,16 +165,22 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
           value={category}
           placeholder="Selecione a categoria"
           onChange={e => setCategory(e.target.value)}
-          options={categorySelectList.map(cat => ({ value: cat.id, label: cat.description }))}
+          options={categorySelectList.map(cat => ({
+            value: cat.id,
+            label: cat.description
+          }))}
         />
       </DynamicBox>
-      <DynamicBox title='Composição' extraStyle="mb-5">
+      <DynamicBox title="Composição" extraStyle="mb-5">
         <SelectInput
           label="Materia Prima"
           value={rawMaterialSelected}
           onChange={e => setRawMaterialSelected(e.target.value)}
           placeholder="Selecione o tipo"
-          options={rawMaterialSelectList.map(cat => ({ value: cat.id, label: cat.description }))}
+          options={rawMaterialSelectList.map(cat => ({
+            value: cat.id,
+            label: cat.description
+          }))}
         />
         <Button
           className={`border rounded-lg w-full p-2 mt-2 mb-4 ${
@@ -161,13 +200,16 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
           onRemove={handleRemoveRawMaterial}
         />
       </DynamicBox>
-      <DynamicBox title='Processo de produção' extraStyle="mb-5">
+      <DynamicBox title="Processo de produção" extraStyle="mb-5">
         <SelectInput
           label="Etapa"
           value={stepSelected}
           onChange={e => setStepSelected(e.target.value)}
           placeholder="Selecione a etapa"
-          options={stepSelectList.map(cat => ({ value: cat.id, label: cat.description }))}
+          options={stepSelectList.map(cat => ({
+            value: cat.id,
+            label: cat.description
+          }))}
         />
         <Button
           className={`border rounded-lg w-full p-2 mt-2 mb-4 ${

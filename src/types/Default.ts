@@ -1,6 +1,5 @@
-
 export interface response {
-    sucess: boolean
-    message: string
-    data: []
-  }
+  sucess: boolean;
+  message: string;
+  data: [];
+}

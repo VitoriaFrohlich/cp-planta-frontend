@@ -5,7 +5,6 @@ export interface Category {
 }
 
 export interface CreateCategoryRequest {
-  id?:string;
+  id?: string;
   description: string;
 }
-

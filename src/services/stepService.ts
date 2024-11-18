@@ -3,9 +3,7 @@ import { Step, CreateStepRequest } from '../types/Step';
 import { response } from '../types/Default';
 
 export const getSteps = async (): Promise<Step[]> => {
-  const response = await axiosInstance.get<response>(
-    '/steps/'
-  );
+  const response = await axiosInstance.get<response>('/steps/');
 
   return response.data.data;
 };

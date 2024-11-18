@@ -10,8 +10,7 @@ export const getAllOrders = async (): Promise<Order[]> => {
 export const getOrders = async (): Promise<Order[]> => {
   try {
     const response = await axiosInstance.get<response>('/orders');
-    if(!response.data.sucess)
-    {
+    if (!response.data.sucess) {
       throw response.data.message;
     }
     return response.data.data;
@@ -23,7 +22,7 @@ export const getOrders = async (): Promise<Order[]> => {
     );
     return [];
   }
-}
+};
 
 export const createOrder = async (
   data: CreateOrderRequest

@@ -22,12 +22,11 @@ export interface ProductMaterial {
 }
 
 export interface FinalProductList {
-  id: number
-  description: string
-  category: string
-  batch_quantity: number
+  id: number;
+  description: string;
+  category: string;
+  batch_quantity: number;
 }
-
 
 export interface CreateFinalProductRequest {
   description: string;

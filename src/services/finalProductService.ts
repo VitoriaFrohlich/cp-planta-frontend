@@ -9,8 +9,6 @@ import {
 } from '../types/FinalProduct';
 import { response } from '../types/Default';
 
-
-
 export const getAllFinalProducts = async (): Promise<FinalProduct[]> => {
   const response = await axiosInstance.get<FinalProduct[]>(
     '/FinalProduct/getAll'
@@ -19,17 +17,13 @@ export const getAllFinalProducts = async (): Promise<FinalProduct[]> => {
 };
 
 export const getListFinalProduct = async (): Promise<FinalProductList[]> => {
-  const response = await axiosInstance.get<response>(
-    '/stock/made-short-list/'
-  );
+  const response = await axiosInstance.get<response>('/stock/made-short-list/');
 
   return response.data.data;
 };
 
 export const deleteFinalProduct = async (id: string): Promise<boolean> => {
-  const response = await axiosInstance.delete<response>(
-    '/products/' + id
-  );
+  const response = await axiosInstance.delete<response>('/products/' + id);
 
   return response.data.sucess;
 };
@@ -38,22 +32,17 @@ export const createFinalProduct = async (
   data: CreateFinalProductRequest
 ): Promise<boolean> => {
   data.code = (Math.random() * 1000).toFixed(0).toString();
-  const response = await axiosInstance.post<response >(
-    '/products/made',
-    data
-  );
+  const response = await axiosInstance.post<response>('/products/made', data);
   return response.data.sucess;
 };
 
 export const patchFinalProduct = async (
   data: CreateFinalProductRequest
 ): Promise<boolean> => {
-  const response = await axiosInstance.patch<response >(
-    '/products/' + data.id,
-    { category_id: data.category_id,
-      description: data.description
-    }
-  );
+  const response = await axiosInstance.patch<response>('/products/' + data.id, {
+    category_id: data.category_id,
+    description: data.description
+  });
   return response.data.sucess;
 };
 

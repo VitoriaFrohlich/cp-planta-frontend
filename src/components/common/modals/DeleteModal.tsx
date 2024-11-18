@@ -10,8 +10,8 @@ export default function DeleteModal({ onClose, onConfirm, item }: ModalProps) {
       <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 text-black text-center">
         <h2 className="text-xl font-bold mb-4">{'Deletar: ' + item}</h2>
         <p>
-          Tem certeza de que deseja deletar o item: {item}? Esta ação não
-          pode ser desfeita.
+          Tem certeza de que deseja deletar o item: {item}? Esta ação não pode
+          ser desfeita.
         </p>
         <div className="flex justify-center mt-4 space-x-4">
           <button

@@ -38,13 +38,21 @@ const SelectInput: React.FC<SelectInputProps> = ({
             // Verifica se o option é um objeto ou uma string simples
             if (typeof option === 'string') {
               return (
-                <option className="text-[#1e1e1e] w-full" key={index} value={option}>
+                <option
+                  className="text-[#1e1e1e] w-full"
+                  key={index}
+                  value={option}
+                >
                   {option}
                 </option>
               );
             } else {
               return (
-                <option className="text-[#1e1e1e] w-full" key={index} value={option.value}>
+                <option
+                  className="text-[#1e1e1e] w-full"
+                  key={index}
+                  value={option.value}
+                >
                   {option.label}
                 </option>
               );
