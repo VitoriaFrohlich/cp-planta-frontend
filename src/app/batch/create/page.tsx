@@ -9,7 +9,7 @@ import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import orderServiceInstance from '@/src/services/order.service';
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import SelectInputCreateBatch from '@/src/components/batch-create/SelectInputCreateBatch';
 import BatchListComponentCreateBatch from '@/src/components/batch-create/BatchListComponentCreateBatch';
 
@@ -86,7 +86,6 @@ export default function CreateBatch() {
       const batchs: BatchMaterial[] = (
         await orderServiceInstance.api.get('/stock/batchs-raw')
       ).data.data;
-      console.log(batchs);
       const quantityOfDisplayBatchs = 4;
 
       const batchLength = batchs.length + 1;
@@ -120,8 +119,8 @@ export default function CreateBatch() {
       data.stock_items.batch = batchId;
       data.stock_items.supplier = 1;
 
-      const request = prepareRequest(data);
-      const response = await orderServiceInstance.api.post('/stock', request);
+      // const request = prepareRequest(data);
+      // const response = await orderServiceInstance.api.post('/stock', request);
 
       const newBatchMaterial: BatchMaterial = {
         sku: data.stock_items.sku,
@@ -140,23 +139,23 @@ export default function CreateBatch() {
     }
   }
 
-  function prepareRequest(data: PostData) {
-    return {
-      stock_moviment: data.stock_moviment,
-      stock_items: [
-        {
-          product_id: Number(data.stock_items.product_id),
-          quantity: Number(data.stock_items.quantity),
-          unit_price: Number(data.stock_items.unit_price),
-          batch: data.stock_items.batch,
-          sku: data.stock_items.sku,
-          batch_expiration: new Date(data.stock_items.batch_expiration),
-          supplier: Number(data.stock_items.supplier),
-          stock_location_id: Number(data.stock_items.stock_location_id)
-        }
-      ]
-    };
-  }
+  // function prepareRequest(data: PostData) {
+  //   return {
+  //     stock_moviment: data.stock_moviment,
+  //     stock_items: [
+  //       {
+  //         product_id: Number(data.stock_items.product_id),
+  //         quantity: Number(data.stock_items.quantity),
+  //         unit_price: Number(data.stock_items.unit_price),
+  //         batch: data.stock_items.batch,
+  //         sku: data.stock_items.sku,
+  //         batch_expiration: new Date(data.stock_items.batch_expiration),
+  //         supplier: Number(data.stock_items.supplier),
+  //         stock_location_id: Number(data.stock_items.stock_location_id)
+  //       }
+  //     ]
+  //   };
+  // }
 
   return (
     <main className="">
