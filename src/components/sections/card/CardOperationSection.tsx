@@ -2,40 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import CardOperation from '../../cards/operation/CardOperation';
-import homeServiceInstance from '../../../services/home.service';
+import { getOrders } from '@/src/services/order.service';
 
-interface Order {
-  id: number;
-  description: string;
-  Production_Status: string;
-}
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<
-    { id: number; description: string; status: string }[]
+    { id: string; description: string; Production_Status: string }[]
   >([]);
 
   useEffect(() => {
     // Função para carregar as ordens
     const fetchOrders = async () => {
-      const response = await homeServiceInstance.getOrders();
+      const response = await getOrders();
+        setOrders(response);
 
-      // Checa se a resposta foi bem-sucedida e extrai o data
-      if (response.sucess && response.data) {
-        const formattedOrders = response.data.map((order: Order) => ({
-          id: order.id,
-          description: order.description,
-          status: order.Production_Status // Usando o campo Production_Status
-        }));
-
-        setOrders(formattedOrders);
-
-        // eslint-disable-next-line no-console
-        console.log('Ordens formatadas:', formattedOrders);
-      } else {
-        // eslint-disable-next-line no-console
-        console.error('Erro ao carregar as ordens:', response.message);
-      }
     };
 
     fetchOrders();
@@ -51,13 +31,13 @@ export default function OrdersPage() {
         {orders
           .filter(
             order =>
-              order.status === 'IN_PROGRESS' || order.status === 'FINISHED'
+              order.Production_Status === 'IN_PROGRESS' || order.Production_Status === 'FINISHED'
           )
           .map(order => (
             <div
               key={order.id}
               className={
-                order.status === 'IN_PROGRESS'
+                order.Production_Status === 'IN_PROGRESS'
                   ? 'order-last sm:order-first'
                   : 'order-first sm:order-last'
               }
@@ -65,7 +45,7 @@ export default function OrdersPage() {
               <CardOperation
                 title={order.description}
                 type={
-                  order.status === 'IN_PROGRESS' ? 'inProgress' : 'finished'
+                  order.Production_Status === 'IN_PROGRESS' ? 'inProgress' : 'finished'
                 }
               />
             </div>

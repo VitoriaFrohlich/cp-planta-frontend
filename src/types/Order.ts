@@ -1,7 +1,7 @@
 export interface Order {
   id: string;
   description: string;
-  status: string;
+  Production_Status: string;
 }
 
 export interface OrderBatchMaterial {
