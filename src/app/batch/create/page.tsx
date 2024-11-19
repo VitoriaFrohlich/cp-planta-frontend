@@ -100,19 +100,19 @@ export default function CreateBatch() {
       const batchs: BatchMaterial[] = (
         await axiosInstance.get('/stock/batchs-raw')
       ).data.data;
-  
+
       // Criar um objeto para rastrear o último lote de cada item
       const latestBatchByDescription: { [key: string]: BatchMaterial } = {};
-  
+
       // Iterar sobre os lotes e armazenar o mais recente de cada descrição
-      batchs.forEach((batch) => {
+      batchs.forEach(batch => {
         const description = batch.raw_material_description;
         latestBatchByDescription[description] = batch;
       });
-  
+
       // Extrair os valores do objeto para obter a lista de lotes mais recentes
       const uniqueLatestBatches = Object.values(latestBatchByDescription);
-  
+
       // Ajustar o batchId e pegar os primeiros 5 itens, se necessário
       const batchLength = uniqueLatestBatches.length + 1;
       setBatchId(`L01/${batchLength}`);
@@ -121,7 +121,6 @@ export default function CreateBatch() {
       return null;
     }
   };
-  
 
   useEffect(() => {
     fetchStorageLocations();
@@ -137,8 +136,8 @@ export default function CreateBatch() {
       data.stock_items.batch = batchId;
       data.stock_items.supplier = 1;
 
-       const request = prepareRequest(data);
-       await axiosInstance.post('/stock', request);
+      const request = prepareRequest(data);
+      await axiosInstance.post('/stock', request);
 
       const newBatchMaterial: BatchMaterial = {
         sku: data.stock_items.sku,
@@ -207,13 +206,17 @@ export default function CreateBatch() {
               register={register('stock_items.unit_price')}
             />
           </DynamicBox>
-          <DynamicBox title="Últimos Lotes Cadastrados" extraStyle='ip-2'>
+          <DynamicBox title="Últimos Lotes Cadastrados" extraStyle="ip-2">
             <DefaultListItems
               items={batchMaterial}
               columns={[
                 // { key: 'sku', type: 'text' },
-                { label:'Materia Prima', key: 'raw_material_description', type: 'text' },
-                { label:'Quantidade', key: 'quantity', type: 'text' }
+                {
+                  label: 'Materia Prima',
+                  key: 'raw_material_description',
+                  type: 'text'
+                },
+                { label: 'Quantidade', key: 'quantity', type: 'text' }
               ]}
             />
           </DynamicBox>
