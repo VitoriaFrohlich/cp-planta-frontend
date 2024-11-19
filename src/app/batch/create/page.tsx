@@ -78,22 +78,6 @@ export default function CreateBatch() {
     }
   };
 
-  // const fetchBatchMaterials = async () => {
-  //   try {
-  //     // Consuming the API
-  //     const batchs: BatchMaterial[] = (
-  //       await axiosInstance.get('/stock/batchs-raw')
-  //     ).data.data;
-
-  //     const batchLength = batchs.length + 1;
-
-  //     setBatchId(`L01/${batchLength}`);
-  //     setBatchMaterial(batchs.slice(0,5))
-  //   } catch (error) {
-  //     return null;
-  //   }
-  // };
-
   const fetchBatchMaterials = async () => {
     try {
       // Consumindo a API
@@ -114,7 +98,7 @@ export default function CreateBatch() {
       const uniqueLatestBatches = Object.values(latestBatchByDescription);
 
       // Ajustar o batchId e pegar os primeiros 5 itens, se necessário
-      const batchLength = uniqueLatestBatches.length + 1;
+      const batchLength = batchs.length + 1;
       setBatchId(`L01/${batchLength}`);
       setBatchMaterial(uniqueLatestBatches.slice(0, 5));
     } catch (error) {
