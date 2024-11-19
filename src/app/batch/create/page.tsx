@@ -78,30 +78,50 @@ export default function CreateBatch() {
     }
   };
 
+  // const fetchBatchMaterials = async () => {
+  //   try {
+  //     // Consuming the API
+  //     const batchs: BatchMaterial[] = (
+  //       await axiosInstance.get('/stock/batchs-raw')
+  //     ).data.data;
+
+  //     const batchLength = batchs.length + 1;
+
+  //     setBatchId(`L01/${batchLength}`);
+  //     setBatchMaterial(batchs.slice(0,5))
+  //   } catch (error) {
+  //     return null;
+  //   }
+  // };
+
   const fetchBatchMaterials = async () => {
     try {
-      // Consuming the API
+      // Consumindo a API
       const batchs: BatchMaterial[] = (
         await axiosInstance.get('/stock/batchs-raw')
       ).data.data;
-      const quantityOfDisplayBatchs = 4;
-
-      const batchLength = batchs.length + 1;
-
-      setBatchId(`L01/${batchLength}`);
-
-      // suffle my array of batchs
-      const shuffledBatchs = batchs.sort(() => Math.random() - 0.5);
-      const newerBatchs = shuffledBatchs.slice(-quantityOfDisplayBatchs);
-
-      // Iterating over the response data
-      newerBatchs.forEach(async batch => {
-        setBatchMaterial(oldBatchs => [...oldBatchs, batch]);
+  
+      // Criar um objeto para rastrear o último lote de cada item
+      const latestBatchByDescription: { [key: string]: BatchMaterial } = {};
+  
+      // Iterar sobre os lotes e armazenar o mais recente de cada descrição
+      batchs.forEach((batch) => {
+        const description = batch.raw_material_description;
+        latestBatchByDescription[description] = batch;
       });
+  
+      // Extrair os valores do objeto para obter a lista de lotes mais recentes
+      const uniqueLatestBatches = Object.values(latestBatchByDescription);
+  
+      // Ajustar o batchId e pegar os primeiros 5 itens, se necessário
+      const batchLength = uniqueLatestBatches.length + 1;
+      setBatchId(`L01/${batchLength}`);
+      setBatchMaterial(uniqueLatestBatches.slice(0, 5));
     } catch (error) {
       return null;
     }
   };
+  
 
   useEffect(() => {
     fetchStorageLocations();
@@ -117,8 +137,8 @@ export default function CreateBatch() {
       data.stock_items.batch = batchId;
       data.stock_items.supplier = 1;
 
-      // const request = prepareRequest(data);
-      // const response = await orderServiceInstance.api.post('/stock', request);
+       const request = prepareRequest(data);
+       await axiosInstance.post('/stock', request);
 
       const newBatchMaterial: BatchMaterial = {
         sku: data.stock_items.sku,
@@ -137,23 +157,23 @@ export default function CreateBatch() {
     }
   }
 
-  // function prepareRequest(data: PostData) {
-  //   return {
-  //     stock_moviment: data.stock_moviment,
-  //     stock_items: [
-  //       {
-  //         product_id: Number(data.stock_items.product_id),
-  //         quantity: Number(data.stock_items.quantity),
-  //         unit_price: Number(data.stock_items.unit_price),
-  //         batch: data.stock_items.batch,
-  //         sku: data.stock_items.sku,
-  //         batch_expiration: new Date(data.stock_items.batch_expiration),
-  //         supplier: Number(data.stock_items.supplier),
-  //         stock_location_id: Number(data.stock_items.stock_location_id)
-  //       }
-  //     ]
-  //   };
-  // }
+  function prepareRequest(data: PostData) {
+    return {
+      stock_moviment: data.stock_moviment,
+      stock_items: [
+        {
+          product_id: Number(data.stock_items.product_id),
+          quantity: Number(data.stock_items.quantity),
+          unit_price: Number(data.stock_items.unit_price),
+          batch: data.stock_items.batch,
+          sku: data.stock_items.sku,
+          batch_expiration: new Date(data.stock_items.batch_expiration),
+          supplier: Number(data.stock_items.supplier),
+          stock_location_id: Number(data.stock_items.stock_location_id)
+        }
+      ]
+    };
+  }
 
   return (
     <main className="">
@@ -187,13 +207,13 @@ export default function CreateBatch() {
               register={register('stock_items.unit_price')}
             />
           </DynamicBox>
-          <DynamicBox title="Últimos Lotes Cadastrados">
+          <DynamicBox title="Últimos Lotes Cadastrados" extraStyle='ip-2'>
             <DefaultListItems
               items={batchMaterial}
               columns={[
-                { key: 'sku', type: 'text' },
-                { key: 'raw_material_description', type: 'text' },
-                { key: 'quantity', type: 'text' }
+                // { key: 'sku', type: 'text' },
+                { label:'Materia Prima', key: 'raw_material_description', type: 'text' },
+                { label:'Quantidade', key: 'quantity', type: 'text' }
               ]}
             />
           </DynamicBox>

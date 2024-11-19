@@ -52,7 +52,7 @@ export default function DynamicBox({
       )}
       {(isVisible || !collapsible) && (
         <div
-          className={`w-auto h-auto border-2 rounded-lg border-greenHortti p-5 ${extraStyle}`}
+          className={`w-auto h-auto border-2 rounded-lg border-greenHortti ${extraStyle?.includes("ip-") ? extraStyle.replace('i','') : extraStyle + " p-5"}`}
         >
           {children}
         </div>
