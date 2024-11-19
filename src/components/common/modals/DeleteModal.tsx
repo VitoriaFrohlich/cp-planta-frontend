@@ -1,17 +1,17 @@
 interface ModalProps {
   onClose?: () => void; // Função chamada para fechar o modal
   onConfirm?: () => void; // Função chamada ao confirmar a ação
-  item?: { name: string }; // Item opcional para exibição ou manipulação
+  item?: string; // Item opcional para exibição ou manipulação
 }
 
 export default function DeleteModal({ onClose, onConfirm, item }: ModalProps) {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 text-black text-center">
-        <h2 className="text-xl font-bold mb-4">{'Deletar: ' + item?.name}</h2>
+        <h2 className="text-xl font-bold mb-4">{'Deletar: ' + item}</h2>
         <p>
-          Tem certeza de que deseja deletar o item: {item?.name}? Esta ação não
-          pode ser desfeita.
+          Tem certeza de que deseja deletar o item: {item}? Esta ação não pode
+          ser desfeita.
         </p>
         <div className="flex justify-center mt-4 space-x-4">
           <button

@@ -6,34 +6,74 @@ import DynamicBox from '../DynamicBox';
 import SelectInput from '../inputs/SelectInput';
 import DefaultListItems from '../lists/DefaultListItems';
 import Image from 'next/image';
+import { getCategories } from '@/src/services/categoryService';
+import { getSelectRawMaterial } from '@/src/services/rawMaterialService';
+import { getSteps } from '@/src/services/stepService';
+import {
+  createFinalProduct,
+  patchFinalProduct
+} from '@/src/services/finalProductService';
 
 interface Props {
   onClose: () => void;
   onConfirm: () => void;
   item?: {
-    name: string;
+    id?: string;
+    description: string;
+    category_id: number;
+    category?: string;
   };
 }
 
 export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
-  const [descricao, setDescricao] = useState('');
-  const [rawMateriaCategory, setRawMaterialCategory] = useState('');
+  const [description, setDescription] = useState('');
+  const [rawMaterialSelected, setRawMaterialSelected] = useState('');
   const [category, setCategory] = useState('');
-  const [step, setSteps] = useState('');
-
-  const [categorys, setCategorys] = useState<{ category: string }[]>([]);
-  const [stepsType, setStepsType] = useState<{ step: string }[]>([]);
+  const [stepSelected, setStepSelected] = useState('');
+  const [stepSelectList, setStepSelectList] = useState<
+    { id: string; description: string }[]
+  >([]);
+  const [categorySelectList, setCategorySelectList] = useState<
+    { id: string; description: string }[]
+  >([]);
+  const [rawMaterials, setRawMaterials] = useState<
+    { id: string; description: string }[]
+  >([]);
+  const [rawMaterialSelectList, setRawMaterialSelectList] = useState<
+    { id: string; description: string }[]
+  >([]);
+  const [steps, setSteps] = useState<{ id: string; description: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (item != null) {
-      setDescricao(item?.name ?? '');
-      //Adicionar campos do item para carregar na edicao
-    }
+    const loadItem = async () => {
+      try {
+        const data = await getCategories();
+        setCategorySelectList(data); // Armazene as categorias no estado
+
+        const raw = await getSelectRawMaterial();
+        setRawMaterialSelectList(raw); // Armazene as categorias no estado
+
+        const step = await getSteps();
+        setStepSelectList(step); // Armazene as categorias no estado
+
+        // Se houver um item, preencha os campos de descrição e categoria
+        if (item != null) {
+          setDescription(item.description ?? '');
+          setCategory(
+            data.find(x => x.description == item?.category)?.id ?? ''
+          );
+        }
+      } catch (error) {
+        console.error('Erro ao buscar categorias:', error);
+      }
+    };
+
+    loadItem();
   }, [item]);
 
   const validateFields = (): boolean => {
-    if (descricao.trim() === '') {
+    if (description.trim() === '') {
       setError('O campo descrição é obrigatório.');
       return false;
     }
@@ -42,31 +82,69 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
     return true;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateFields()) {
       return;
     }
+    if (item == null) {
+      item = { description: description, category_id: Number(category) };
+      await createFinalProduct(item);
+    } else {
+      item.description = description;
+      item.category_id = Number(category);
+
+      await patchFinalProduct(item);
+    }
     onConfirm();
   };
-  const isFormValidAddType = category != '';
-  const isFormValidAddSteps = step != '';
+  const isFormValidAddType = rawMaterialSelected != '';
+  const isFormValidAddSteps = stepSelected != '';
 
-  const handleAddCategory = (category: string) => {
-    setCategorys([...categorys, { category }]);
-    setCategory('');
+  const handleAddRawMaterial = (id: string) => {
+    setRawMaterials([
+      ...rawMaterials,
+      {
+        id: id,
+        description:
+          rawMaterialSelectList.find(x => x.id == id)?.description ?? ''
+      }
+    ]);
+    setRawMaterialSelectList(rawMaterialSelectList.filter(x => x.id != id));
+    setRawMaterialSelected('');
   };
 
-  const handleAddSteps = (step: string) => {
-    setStepsType([...stepsType, { step }]);
-    setSteps('');
+  const handleAddSteps = (id: string) => {
+    setSteps([
+      ...steps,
+      {
+        id: id,
+        description: stepSelectList.find(x => x.id == id)?.description ?? ''
+      }
+    ]);
+    setStepSelectList(stepSelectList.filter(x => x.id != id));
+    setStepSelected('');
   };
 
-  const handleRemoveCategory = (indexToRemove: number) => {
-    setCategorys(categorys.filter((_, index) => index !== indexToRemove));
+  const handleRemoveRawMaterial = (indexToRemove: number) => {
+    setRawMaterialSelectList([
+      ...rawMaterialSelectList,
+      rawMaterials.find((_, index) => index == indexToRemove) ?? {
+        id: '',
+        description: ''
+      }
+    ]);
+    setRawMaterials(rawMaterials.filter((_, index) => index !== indexToRemove));
   };
 
   const handleRemoveSteps = (indexToRemove: number) => {
-    setStepsType(stepsType.filter((_, index) => index !== indexToRemove));
+    setStepSelectList([
+      ...stepSelectList,
+      steps.find((_, index) => index == indexToRemove) ?? {
+        id: '',
+        description: ''
+      }
+    ]);
+    setSteps(steps.filter((_, index) => index !== indexToRemove));
   };
   return (
     <GenericModal
@@ -77,28 +155,32 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
       <DynamicBox extraStyle="mb-5">
         <DefaultInput
           placeholder="Descrição"
-          value={descricao}
-          onChange={e => setDescricao(e.target.value)}
+          value={description}
+          onChange={e => setDescription(e.target.value)}
           label="Descrição"
           error={error}
         />
         <SelectInput
           label="Categoria"
-          value={rawMateriaCategory}
-          placeholder="Selecione a categoria"
-          onChange={e => setRawMaterialCategory(e.target.value)}
-          options={['batata', 'cenoura']}
-        />
-        <SelectInput
-          label="Tipo de Materia Prima"
           value={category}
+          placeholder="Selecione a categoria"
           onChange={e => setCategory(e.target.value)}
+          options={categorySelectList.map(cat => ({
+            value: cat.id,
+            label: cat.description
+          }))}
+        />
+      </DynamicBox>
+      <DynamicBox title="Composição" extraStyle="mb-5">
+        <SelectInput
+          label="Materia Prima"
+          value={rawMaterialSelected}
+          onChange={e => setRawMaterialSelected(e.target.value)}
           placeholder="Selecione o tipo"
-          options={[
-            'Batata Inglesa Media',
-            'Batata Inglesa Pequena',
-            'Batata Inglesa Grande'
-          ]}
+          options={rawMaterialSelectList.map(cat => ({
+            value: cat.id,
+            label: cat.description
+          }))}
         />
         <Button
           className={`border rounded-lg w-full p-2 mt-2 mb-4 ${
@@ -107,29 +189,27 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
               : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'
           }`}
           disabled={!isFormValidAddType}
-          onClick={() => handleAddCategory(category)}
+          onClick={() => handleAddRawMaterial(rawMaterialSelected)}
         >
           Adicionar
         </Button>
         <DefaultListItems
-          items={categorys}
-          renderItem={item => <span>{item.category}</span>}
-          editable
+          items={rawMaterials}
+          columns={[{ key: 'description', type: 'text' }]}
           scrollable
-          onRemove={handleRemoveCategory}
+          onRemove={handleRemoveRawMaterial}
         />
       </DynamicBox>
-      <DynamicBox extraStyle="mb-5">
+      <DynamicBox title="Processo de produção" extraStyle="mb-5">
         <SelectInput
           label="Etapa"
-          value={step}
-          onChange={e => setSteps(e.target.value)}
+          value={stepSelected}
+          onChange={e => setStepSelected(e.target.value)}
           placeholder="Selecione a etapa"
-          options={[
-            'Batata Inglesa Media',
-            'Batata Inglesa Pequena',
-            'Batata Inglesa Grande'
-          ]}
+          options={stepSelectList.map(cat => ({
+            value: cat.id,
+            label: cat.description
+          }))}
         />
         <Button
           className={`border rounded-lg w-full p-2 mt-2 mb-4 ${
@@ -138,14 +218,13 @@ export default function FinalProductModal({ onClose, onConfirm, item }: Props) {
               : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'
           }`}
           disabled={!isFormValidAddSteps}
-          onClick={() => handleAddSteps(step)}
+          onClick={() => handleAddSteps(stepSelected)}
         >
           Adicionar
         </Button>
         <DefaultListItems
-          items={stepsType}
-          renderItem={item => <span>{item.step}</span>}
-          editable
+          items={steps}
+          columns={[{ key: 'description', type: 'text' }]}
           scrollable
           onRemove={handleRemoveSteps}
         />
