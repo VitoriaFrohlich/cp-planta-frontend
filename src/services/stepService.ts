@@ -3,12 +3,30 @@ import { Step, CreateStepRequest } from '../types/Step';
 import { response } from '../types/Default';
 
 export const getSteps = async (): Promise<Step[]> => {
-  const response = await axiosInstance.get<response>('/steps/');
-
+  const response = await axiosInstance.get<response>('/steps');
   return response.data.data;
 };
 
 export const createStep = async (data: CreateStepRequest): Promise<boolean> => {
-  const response = await axiosInstance.post<{ return: boolean }>('/step', data);
-  return response.data.return;
+  const response = await axiosInstance.post<response>('/steps', data);
+  return response.data.sucess;
+};
+
+export const patchStep = async (data: CreateStepRequest): Promise<boolean> => {
+  const response = await axiosInstance.patch<response>('/steps/' + data.id, {
+    description: data.description
+  });
+  return response.data.sucess;
+};
+
+export const getAllSteps = async () => {
+  return axiosInstance.get('/steps?orderBy=id');
+};
+
+export const getStepById = async (id: number) => {
+  return axiosInstance.get(`/steps/${id}`);
+};
+
+export const deleteStep = async (id: string) => {
+  return axiosInstance.delete(`/steps/${id}`);
 };

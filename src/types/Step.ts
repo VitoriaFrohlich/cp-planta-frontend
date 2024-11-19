@@ -4,5 +4,6 @@ export interface Step {
 }
 
 export interface CreateStepRequest {
+  id?: string;
   description: string;
 }

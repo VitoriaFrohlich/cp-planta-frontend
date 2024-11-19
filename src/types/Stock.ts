@@ -5,5 +5,6 @@ export interface Stock {
 }
 
 export interface CreateStockRequest {
+  id?: string;
   description: string;
 }

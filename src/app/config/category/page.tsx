@@ -25,10 +25,6 @@ export default function CreateCategory() {
     const success = await deleteCategory(id);
   };
 
-  const refreshList = () => {
-    getCategory();
-  };
-
   useEffect(() => {
     getCategory();
   }, []);
