@@ -1,3 +1,5 @@
+import { UseFormRegisterReturn } from 'react-hook-form';
+
 interface DefaultInputProps {
   label: string;
   placeholder: string;
@@ -5,6 +7,7 @@ interface DefaultInputProps {
   value?: string;
   error?: string | null;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  register?: UseFormRegisterReturn;
 }
 
 const DefaultInput: React.FC<DefaultInputProps> = ({
@@ -13,7 +16,8 @@ const DefaultInput: React.FC<DefaultInputProps> = ({
   disable,
   value,
   error,
-  onChange
+  onChange,
+  register
 }) => {
   return (
     <div className="mb-4">
@@ -24,6 +28,7 @@ const DefaultInput: React.FC<DefaultInputProps> = ({
         disabled={disable === undefined ? false : disable}
         value={value}
         onChange={onChange}
+        {...register}
       />
       {/* Exibe o erro se houver */}
       {error && <p className="text-red-600 text-sm mt-1">{error}</p>}

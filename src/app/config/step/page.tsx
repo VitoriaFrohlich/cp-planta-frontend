@@ -1,35 +1,46 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import ConfigNavbarComponent from '@/src/components/common/configNavbar';
-import GenericList from '@/src/components/common/GenericList';
+import GenericConfig from '@/src/components/common/GenericConfig';
 import Header from '@/src/components/common/header';
-import DeleteModal from '@/src/components/common/modals/DeleteModal';
 import StepModal from '@/src/components/common/modals/StepModal';
+import DeleteModal from '@/src/components/common/modals/DeleteModal';
+import { deleteStep, getAllSteps } from '@/src/services/stepService';
+import { Step } from '@/src/types/Step';
+import { useEffect, useState } from 'react';
 
-export default function createStep() {
-  // Função que retorna os itens da lista
-  // Mock-data
-  const getSteps = async () => [
-    { id: 1, name: 'Lavar' },
-    { id: 2, name: 'Descascar' },
-    { id: 3, name: 'Fatiar' },
-    { id: 4, name: 'Embalar' },
-    { id: 5, name: 'Rotular' }
-  ];
+export default function CreateStep() {
+  const getStep = async (): Promise<Step[]> => {
+    const response = await getAllSteps();
+    if (response.data.data) {
+      return response.data.data;
+    }
+    return [];
+  };
 
-  const deleteStep = async (_id: string) => [
-    //Deletar Etapa
-  ];
+  const deleteItem = async (id: string) => {
+    const success = await deleteStep(id);
+  };
+
+  useEffect(() => {
+    getStep();
+  }, []);
 
   return (
     <main>
       <Header />
       <ConfigNavbarComponent>
-        <GenericList
+        <GenericConfig
           columns={[
-            { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/2' }
+            {
+              label: 'Descrição',
+              key: 'description',
+              type: 'text',
+              width: 'w-1/3'
+            }
           ]}
-          getItems={getSteps} // Função que busca os itens
-          deleteItem={deleteStep} // Função que deleta o item
+          getItems={getStep} // Função que busca os itens
+          deleteItem={deleteItem} // Função que deleta o item
           AddModal={StepModal} // Abre modal de adicionar
           EditModal={StepModal} // Abre modal de editar
           DeleteModal={DeleteModal} // Abre modal de deletar

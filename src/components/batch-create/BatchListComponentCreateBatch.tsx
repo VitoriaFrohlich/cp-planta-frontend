@@ -1,7 +1,7 @@
 type Props = {
   itens: {
-    batch: string;
-    rawMaterial: string;
+    sku: string;
+    raw_material_description: string;
     quantity: number;
   }[];
   editable?: boolean;
@@ -62,17 +62,15 @@ export default function BatchListComponent({
                 <div className="text-black font-semibold w-full grid grid-cols-9">
                   <div
                     className="col-span-3 text-center truncate"
-                    title={item.batch}
+                    title={item.sku}
                   >
-                    {' '}
-                    {item.batch}
+                    {item.sku}
                   </div>
                   <div
                     className="col-span-4 text-center truncate"
-                    title={item.rawMaterial}
+                    title={item.raw_material_description}
                   >
-                    {' '}
-                    {item.rawMaterial}
+                    {item.raw_material_description}
                   </div>
                   <div className="col-span-2 text-center mr-3">
                     {item.quantity}
@@ -99,11 +97,14 @@ export default function BatchListComponent({
           {itens.map((item, index) => (
             <div key={index} className="mb-4 border-b pb-2 w-full">
               <div className="flex justify-between items-center text-black font-semibold w-full">
-                <div className="truncate w-1/3 text-center" title={item.batch}>
-                  {item.batch}
+                <div className="truncate w-1/3 text-center" title={item.sku}>
+                  {item.sku}
                 </div>
-                <div className="truncate w-1/3" title={item.rawMaterial}>
-                  {item.rawMaterial}
+                <div
+                  className="truncate w-1/3"
+                  title={item.raw_material_description}
+                >
+                  {item.raw_material_description}
                 </div>
                 <div className="w-1/6 text-right mr-3">{item.quantity}</div>
               </div>

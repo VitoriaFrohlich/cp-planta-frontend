@@ -1,38 +1,46 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import ConfigNavbarComponent from '@/src/components/common/configNavbar';
-import GenericList from '@/src/components/common/GenericList';
+import GenericConfig from '@/src/components/common/GenericConfig';
 import Header from '@/src/components/common/header';
-import DeleteModal from '@/src/components/common/modals/DeleteModal';
 import StockModal from '@/src/components/common/modals/StockModal';
+import DeleteModal from '@/src/components/common/modals/DeleteModal';
+import { deleteStock, getAllStocks } from '@/src/services/stockService';
+import { Stock } from '@/src/types/Stock';
+import { useEffect, useState } from 'react';
 
-export default function createStock() {
-  // Função que retorna os itens da lista
-  const getStocks = async () => [
-    { id: 1, name: 'Frezzer', quantity: 8 },
-    { id: 2, name: 'Geladeira', quantity: 5 },
-    { id: 3, name: 'Armário 1', quantity: 7 },
-    { id: 4, name: 'Armário 2', quantity: 7 }
-  ];
+export default function CreateStock() {
+  const getStock = async (): Promise<Stock[]> => {
+    const response = await getAllStocks();
+    if (response.data.data) {
+      return response.data.data;
+    }
+    return [];
+  };
 
-  const deleteStock = async (_id: string) => [
-    //Deletar estoque
-  ];
+  const deleteItem = async (id: string) => {
+    const success = await deleteStock(id);
+  };
+
+  useEffect(() => {
+    getStock();
+  }, []);
+
   return (
     <main>
       <Header />
       <ConfigNavbarComponent>
-        <GenericList
+        <GenericConfig
           columns={[
-            { label: 'Descrição', key: 'name', type: 'text', width: 'w-1/3' },
             {
-              label: 'Qnt. lotes',
-              key: 'quantity',
+              label: 'Descrição',
+              key: 'description',
               type: 'text',
               width: 'w-1/3'
             }
           ]}
-          getItems={getStocks} // Função que busca os itens
-          deleteItem={deleteStock} // Função que deleta o item
+          getItems={getStock} // Função que busca os itens
+          deleteItem={deleteItem} // Função que deleta o item
           AddModal={StockModal} // Abre modal de adicionar
           EditModal={StockModal} // Abre modal de editar
           DeleteModal={DeleteModal} // Abre modal de deletar

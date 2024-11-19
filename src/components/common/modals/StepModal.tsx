@@ -2,25 +2,26 @@ import { useEffect, useState } from 'react';
 import GenericModal from './GenericModal';
 import DefaultInput from '../inputs/DefaultInput';
 import DynamicBox from '../DynamicBox';
+import { createStep, patchStep } from '@/src/services/stepService';
 
-interface Props {
+interface ModalProps {
   onClose: () => void;
   onConfirm: () => void;
-  item?: { name: string };
+  item?: { id?: string; description: string };
 }
 
-export default function StepModal({ onClose, onConfirm, item }: Props) {
-  const [descricao, setDescricao] = useState('');
+export default function StepModal({ onConfirm, onClose, item }: ModalProps) {
+  const [description, setDescription] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (item != null) {
-      setDescricao(item?.name ?? '');
+    if (item) {
+      setDescription(item.description);
     }
   }, [item]);
 
   const validateFields = (): boolean => {
-    if (descricao.trim() === '') {
+    if (description.trim() === '') {
       setError('O campo descrição é obrigatório.');
       return false;
     }
@@ -29,16 +30,24 @@ export default function StepModal({ onClose, onConfirm, item }: Props) {
     return true;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateFields()) {
       return;
+    }
+    if (item == null) {
+      item = { description: description };
+      await createStep(item);
+    } else {
+      item.description = description;
+
+      await patchStep(item);
     }
     onConfirm();
   };
 
   return (
     <GenericModal
-      title={(item == null ? 'Cadastro' : 'Edição') + ' de Etapa'}
+      title={(item == null ? 'Cadastro' : 'Edição') + ' de Categoria'}
       onClose={onClose}
       onConfirm={handleSave}
     >
@@ -46,8 +55,8 @@ export default function StepModal({ onClose, onConfirm, item }: Props) {
         <form className="flex flex-col gap-4">
           <DefaultInput
             placeholder="Descrição"
-            value={descricao}
-            onChange={e => setDescricao(e.target.value)}
+            value={description}
+            onChange={e => setDescription(e.target.value)}
             label="Descrição"
             error={error}
           />
