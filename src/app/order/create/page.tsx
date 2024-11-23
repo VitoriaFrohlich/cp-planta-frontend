@@ -14,10 +14,15 @@ import DynamicBox from '@/src/components/common/DynamicBox';
 import DefaultListItems from '@/src/components/common/lists/DefaultListItems';
 import Image from 'next/image';
 import ReturnIcon from '@/src/components/icons/return-icon.svg';
+import { getAllFinalProductSelect } from '@/src/services/createOrderService';
+import { FinalProduct } from '@/src/types/FinalProduct';
+import { set } from 'zod';
 
 export default function OrderCreate() {
   const router = useRouter();
-  const [finalProduct, setFinalProduct] = useState('');
+  const [finalProduct, setFinalProduct] = useState<FinalProduct[]>([]);
+  const [selectedFinalProduct, setSelectedFinalProduct] = useState<FinalProduct | undefined>();
+  const [selectedFinalProductId, setSelectedFinalProductId] = useState<string | null>(null);
   const [rawMaterial, setMateriaPrima] = useState('');
   const [batch, setBatch] = useState('');
   const [quantity, setQuantity] = useState(0);
@@ -70,9 +75,30 @@ export default function OrderCreate() {
 
   const closeSuccessModal = () => {
     setIsSuccessModalOpen(false);
-    setFinalProduct('');
+    setFinalProduct([]);
     setLine('');
     setTax(null);
+  };
+
+  React.useEffect(() => {
+    getAllFinalProducts();
+  }, []);
+
+  const getAllFinalProducts = async () => {
+    try {
+      const reponse = await getAllFinalProductSelect();
+      setFinalProduct(reponse);
+    }
+    catch (error) {
+      console.log(error);
+      setFinalProduct([]);
+    }
+  };
+
+  const handleProductChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = finalProduct.find(p => p.description === e.target.value);
+    setSelectedFinalProduct(selected);
+    console.log(selectedFinalProduct);
   };
 
   const handleAddItem = (
@@ -112,13 +138,9 @@ export default function OrderCreate() {
                   <SelectInput
                     label="Produto Final"
                     placeholder="Selecione o Produto a ser produzido"
-                    options={[
-                      //dados mockados
-                      'Batata Frita',
-                      'Batata Palito',
-                      'Batata Rústica'
-                    ]}
-                    onChange={e => setFinalProduct(e.target.value)}
+                    options={finalProduct.map(product => product.description)}
+                    onChange={handleProductChange}
+                    value={selectedFinalProduct?.description || ''}
                   />
                 </DynamicBox>
                 <DynamicBox>
