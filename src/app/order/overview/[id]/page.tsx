@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import DynamicBox from '@/src/components/common/DynamicBox';
@@ -8,12 +9,15 @@ import { useEffect, useState } from 'react';
 import Header from '@/src/components/common/header';
 import { stepsByProductId } from '@/src/services/stepService';
 import { getOrderById } from '@/src/services/order.service';
+import ReturnIcon from '@/src/components/icons/return-icon.svg';
+import Image from 'next/image';
 
 export default function OrderOverview() {
   const router = useRouter();
   const { id } = useParams();
   const idString = Array.isArray(id) ? id[0] : id;
   const [productId, setProductId] = useState('');
+  const [orderName, setOrderName] = useState('');
   const [steps, setSteps] = useState<Step[]>([]);
 
   const mockSteps = {
@@ -33,6 +37,7 @@ export default function OrderOverview() {
 
   const orderById = async (id: string) => {
     const resp = await getOrderById(id);
+    setOrderName(resp.description);
     setProductId(resp.final_product_id);
   };
 
@@ -62,8 +67,17 @@ export default function OrderOverview() {
   return (
     <main>
       <Header />
+      <button
+        className=" text-greenHortti  pr-2 mt-2.5 ml-2.5"
+        onClick={() => router.push('/home')}
+      >
+        <Image src={ReturnIcon} alt="Retornar" width={14} height={14} />
+      </button>
       <div className="w-full h-full p-2.5">
-        <DynamicBox title={`Ordem selecionada: ${id}`} extraStyle="w-full">
+        <DynamicBox
+          title={`Ordem selecionada: ${orderName}`}
+          extraStyle="w-full"
+        >
           <p className="text-gray-400">Selecione a etapa</p>
           <div className="flex gap-4 h-96 max-sm:flex-col">
             {steps.map(step => (
