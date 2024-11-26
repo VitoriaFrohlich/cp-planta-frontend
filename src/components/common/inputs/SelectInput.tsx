@@ -29,7 +29,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
         {...register}
       >
         {placeholder && (
-          <option className="text-[#1e1e1e] w-full" value="" disabled>
+          <option className="text-[#1e1e1e] w-full" value="" disabled hidden>
             {placeholder}
           </option>
         )}

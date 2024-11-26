@@ -4,7 +4,7 @@ import NumericInput from '@/src/components/common/inputs/NumericInput';
 import CancelButton from '@/src/components/buttons/order/CancelButton';
 import Header from '@/src/components/common/header';
 import { Button } from '@headlessui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
 import DefaultModal from '@/src/components/common/modals/DefaultModal';
@@ -14,16 +14,25 @@ import DynamicBox from '@/src/components/common/DynamicBox';
 import DefaultListItems from '@/src/components/common/lists/DefaultListItems';
 import Image from 'next/image';
 import ReturnIcon from '@/src/components/icons/return-icon.svg';
-import { getAllFinalProductSelect } from '@/src/services/createOrderService';
+import {
+  getAllFinalProductSelect,
+  getCompositionById,
+  getStepsByProductId
+} from '@/src/services/createOrderService';
 import { FinalProduct } from '@/src/types/FinalProduct';
-import { set } from 'zod';
+import { RawMaterial } from '@/src/types/RawMaterial';
+import { Step } from '@/src/types/Step';
 
 export default function OrderCreate() {
   const router = useRouter();
   const [finalProduct, setFinalProduct] = useState<FinalProduct[]>([]);
-  const [selectedFinalProduct, setSelectedFinalProduct] = useState<FinalProduct | undefined>();
-  const [selectedFinalProductId, setSelectedFinalProductId] = useState<string | null>(null);
-  const [rawMaterial, setMateriaPrima] = useState('');
+  const [selectedFinalProduct, setSelectedFinalProduct] = useState<
+    FinalProduct | undefined
+  >();
+  const [rawMaterial, setRawMaterial] = useState<RawMaterial[]>([]);
+  const [selectedRawMaterial, setSelectedRawMaterial] = useState<
+    RawMaterial | undefined
+  >();
   const [batch, setBatch] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [itens, setItens] = useState([
@@ -34,6 +43,7 @@ export default function OrderCreate() {
   ]);
   const [tax, setTax] = useState<number | null>(null);
   const [line, setLine] = useState('');
+  const [steps, setSteps] = useState<Step[]>([]);
 
   const handleRemoveItem = (indexToRemove: number) => {
     setItens(itens.filter((_, index) => index !== indexToRemove));
@@ -46,16 +56,14 @@ export default function OrderCreate() {
     return sumQuantity * (tax / 100) + sumQuantity;
   };
 
-  const steps = [
-    //dados mockados
-    'Etapa 1',
-    'Etapa 2',
-    'Etapa 3',
-    'Etapa 1',
-    'Etapa 2',
-    'Etapa 3',
-    'Etapa 1'
-  ];
+  const handleGetSteps = async (id: string) => {
+    try {
+      const steps = await getStepsByProductId(id);
+      setSteps(steps);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const [isStepsModalOpen, setIsStepsModalOpen] = React.useState(false);
 
@@ -80,6 +88,24 @@ export default function OrderCreate() {
     setTax(null);
   };
 
+  const getRawMaterial = async (id: string) => {
+    try {
+      const resp = await getCompositionById(id);
+      console.log(resp.composition_items);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedFinalProduct?.id) {
+      const idString = selectedFinalProduct.id.toString();
+      getRawMaterial('2');
+      handleGetSteps(idString);
+      console.log(steps);
+    }
+  }, [selectedFinalProduct]);
+
   React.useEffect(() => {
     getAllFinalProducts();
   }, []);
@@ -88,17 +114,22 @@ export default function OrderCreate() {
     try {
       const reponse = await getAllFinalProductSelect();
       setFinalProduct(reponse);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
       setFinalProduct([]);
     }
   };
 
-  const handleProductChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleFinalProductChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const selected = finalProduct.find(p => p.description === e.target.value);
     setSelectedFinalProduct(selected);
-    console.log(selectedFinalProduct);
+  };
+
+  const handleRawMaterialChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = rawMaterial.find(p => p.description === e.target.value);
+    setSelectedRawMaterial(selected);
   };
 
   const handleAddItem = (
@@ -107,7 +138,7 @@ export default function OrderCreate() {
     quantity: number
   ) => {
     setItens([...itens, { batch, rawMaterial, quantity }]);
-    setMateriaPrima('');
+    setRawMaterial([]);
     setBatch('');
     setQuantity(0);
   }; //TODO: alterar para interfaces quando back tiver pronto
@@ -139,16 +170,16 @@ export default function OrderCreate() {
                     label="Produto Final"
                     placeholder="Selecione o Produto a ser produzido"
                     options={finalProduct.map(product => product.description)}
-                    onChange={handleProductChange}
+                    onChange={handleFinalProductChange}
                     value={selectedFinalProduct?.description || ''}
                   />
                 </DynamicBox>
                 <DynamicBox>
                   <SelectInput
                     label="Matéria Prima"
-                    options={['Batata Inglesa Média', 'Cenoura', 'Tomate']}
-                    value={rawMaterial}
-                    onChange={e => setMateriaPrima(e.target.value)}
+                    options={rawMaterial.map(product => product.description)}
+                    value={selectedRawMaterial?.description || ''}
+                    onChange={handleRawMaterialChange}
                     placeholder="Selecione o tipo"
                   />
                   <SelectInput
@@ -174,7 +205,13 @@ export default function OrderCreate() {
                         : 'bg-gray-100 text-black cursor-not-allowed border-x-gray-300'
                     }`}
                     disabled={!isFormValidAdd}
-                    onClick={() => handleAddItem(rawMaterial, batch, quantity)}
+                    onClick={() =>
+                      handleAddItem(
+                        selectedRawMaterial!.description,
+                        batch,
+                        quantity
+                      )
+                    }
                   >
                     Adicionar
                   </Button>
@@ -268,12 +305,12 @@ export default function OrderCreate() {
         onClose={closeStepsModal}
         title="Etapas"
       >
-        {steps.map((steps, index) => (
+        {Object.entries(steps).map(([key, step]) => (
           <div
-            key={index}
+            key={key}
             className="w-full text-black border-greenHortti border rounded-lg p-2 box mt-3"
           >
-            {steps}
+            {step.description}
           </div>
         ))}
       </DefaultModal>
