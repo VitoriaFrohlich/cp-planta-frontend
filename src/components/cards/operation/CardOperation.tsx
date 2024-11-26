@@ -30,7 +30,7 @@ export default function CardOperationInProgress({ title, type, id }: Props) {
 
   const handleRedirect = () => {
     router.push(`/order/overview/${id}`);
-  }
+  };
 
   return (
     <div className={style} onClick={() => handleRedirect()}>
