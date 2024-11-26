@@ -84,7 +84,11 @@ export default function OrderOverview() {
               <StepButton
                 key={step.id}
                 step={step} // Passa o Step completo
-                onClick={() => router.push(`/order/overview/${id}/${step.id}`)}
+                onClick={() =>
+                  router.push(
+                    `/order/overview/${id}/${step.id}?steps=${encodeURIComponent(JSON.stringify(steps))}`
+                  )
+                }
               />
             ))}
           </div>
