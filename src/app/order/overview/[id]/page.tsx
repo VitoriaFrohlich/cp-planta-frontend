@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
@@ -44,7 +45,6 @@ export default function OrderOverview() {
   const getStepsByProductId = async (id: string) => {
     // Converte o objeto em um array de Steps
     const resp = await stepsByProductId(id);
-    console.log(resp);
     const stepsArray: Step[] = Object.entries(mockSteps).map(
       ([key, value]) => ({
         id: key,
