@@ -16,11 +16,12 @@ import Image from 'next/image';
 import ReturnIcon from '@/src/components/icons/return-icon.svg';
 import {
   getAllFinalProductSelect,
-  getCompositionById,
-  getStepsByProductId
+  getStepsByProductId,
+  getAllCompositions,
+  getAllBatchsByRawMaterial
 } from '@/src/services/createOrderService';
 import { FinalProduct } from '@/src/types/FinalProduct';
-import { RawMaterial } from '@/src/types/RawMaterial';
+import { RawMaterialSelect } from '@/src/types/RawMaterial';
 import { Step } from '@/src/types/Step';
 
 export default function OrderCreate() {
@@ -29,9 +30,9 @@ export default function OrderCreate() {
   const [selectedFinalProduct, setSelectedFinalProduct] = useState<
     FinalProduct | undefined
   >();
-  const [rawMaterial, setRawMaterial] = useState<RawMaterial[]>([]);
+  const [rawMaterials, setRawMaterials] = useState<RawMaterialSelect[]>([]);
   const [selectedRawMaterial, setSelectedRawMaterial] = useState<
-    RawMaterial | undefined
+    RawMaterialSelect | undefined
   >();
   const [batch, setBatch] = useState('');
   const [quantity, setQuantity] = useState(0);
@@ -44,6 +45,7 @@ export default function OrderCreate() {
   const [tax, setTax] = useState<number | null>(null);
   const [line, setLine] = useState('');
   const [steps, setSteps] = useState<Step[]>([]);
+  const [composition, setComposition] = useState(null);
 
   const handleRemoveItem = (indexToRemove: number) => {
     setItens(itens.filter((_, index) => index !== indexToRemove));
@@ -59,7 +61,7 @@ export default function OrderCreate() {
   const handleGetSteps = async (id: string) => {
     try {
       const steps = await getStepsByProductId(id);
-      setSteps(steps);
+      setSteps(steps.production_steps);
     } catch (error) {
       console.log(error);
     }
@@ -88,23 +90,63 @@ export default function OrderCreate() {
     setTax(null);
   };
 
-  const getRawMaterial = async (id: string) => {
+  const getSelectedComposition = async () => {
     try {
-      const resp = await getCompositionById(id);
-      console.log(resp.composition_items);
+      const allCompositions = await getAllCompositions();
+      if (selectedFinalProduct) {
+        // Filtrar as composições pelo ID do produto final selecionado
+        const filteredCompositions = allCompositions.find(
+          composition => composition.final_product === selectedFinalProduct.id
+        );
+        setComposition(filteredCompositions); // Atualizar o estado com as composições filtradas
+      } else {
+        console.log('Produto final sem composição');
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleSetRawMaterials = () => {
+    if (!composition || !composition.composition_items) {
+      console.log('No composition selected or no items found');
+      return;
+    }
+
+    // Transformar composition_items em RawMaterialSelect[]
+    const rawMaterials = composition.composition_items.map(item => ({
+      id: item.id.toString(), // Convertendo para string se necessário
+      description: item.description
+    }));
+
+    setRawMaterials(rawMaterials); // Exibe o array transformado
+  };
+
+  const handleGetBatchs = async (id: string) => {
+    const resp = await getAllBatchsByRawMaterial(id);
+    console.log(resp);
+  };
+
   useEffect(() => {
     if (selectedFinalProduct?.id) {
       const idString = selectedFinalProduct.id.toString();
-      getRawMaterial('2');
       handleGetSteps(idString);
-      console.log(steps);
+      getSelectedComposition(); // Atualiza 'composition'
     }
   }, [selectedFinalProduct]);
+
+  // Novo useEffect para monitorar 'composition'
+  useEffect(() => {
+    if (composition) {
+      handleSetRawMaterials(); // Executa após 'composition' ser atualizado
+    }
+  }, [composition]);
+
+  useEffect(() => {
+    if (selectedRawMaterial) {
+      handleGetBatchs(selectedRawMaterial.id);
+    }
+  }, [selectedRawMaterial]);
 
   React.useEffect(() => {
     getAllFinalProducts();
@@ -128,7 +170,7 @@ export default function OrderCreate() {
   };
 
   const handleRawMaterialChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = rawMaterial.find(p => p.description === e.target.value);
+    const selected = rawMaterials.find(p => p.description === e.target.value);
     setSelectedRawMaterial(selected);
   };
 
@@ -138,12 +180,12 @@ export default function OrderCreate() {
     quantity: number
   ) => {
     setItens([...itens, { batch, rawMaterial, quantity }]);
-    setRawMaterial([]);
+    setRawMaterials([]);
     setBatch('');
     setQuantity(0);
   }; //TODO: alterar para interfaces quando back tiver pronto
 
-  const isFormValidAdd = rawMaterial && batch && quantity > 0;
+  const isFormValidAdd = rawMaterials && batch && quantity > 0;
   const isFormValidCreate =
     itens.length > 0 &&
     tax != null &&
@@ -177,7 +219,7 @@ export default function OrderCreate() {
                 <DynamicBox>
                   <SelectInput
                     label="Matéria Prima"
-                    options={rawMaterial.map(product => product.description)}
+                    options={rawMaterials.map(product => product.description)}
                     value={selectedRawMaterial?.description || ''}
                     onChange={handleRawMaterialChange}
                     placeholder="Selecione o tipo"

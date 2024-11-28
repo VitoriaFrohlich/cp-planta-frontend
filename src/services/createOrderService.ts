@@ -12,11 +12,6 @@ export const getAllBatchsByRawMaterial = async (id: string) => {
   return response.data.data;
 };
 
-export const getCompositionById = async (id: string) => {
-  const response = await axiosInstance.get<response>('/compositions/' + id);
-  return response.data.data;
-};
-
 export const getStepsByProductId = async (id: string) => {
   const response = await axiosInstance.get<response>(
     '/compositions/steps-by-product/' + id
@@ -26,5 +21,10 @@ export const getStepsByProductId = async (id: string) => {
 
 export const getAllFinalProductSelect = async () => {
   const response = await axiosInstance.get<response>('/products/made-short');
+  return response.data.data;
+};
+
+export const getAllCompositions = async () => {
+  const response = await axiosInstance.get<response>('/compositions');
   return response.data.data;
 };
