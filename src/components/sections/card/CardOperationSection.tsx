@@ -48,6 +48,7 @@ export default function OrdersPage() {
                     ? 'inProgress'
                     : 'finished'
                 }
+                id={order.id}
               />
             </div>
           ))}

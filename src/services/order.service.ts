@@ -33,3 +33,12 @@ export const createOrder = async (
   );
   return response.data;
 };
+
+export const getOrderById = async (id: string) => {
+  try {
+    const response = await axiosInstance.get<response>(`orders/${id}`);
+    return response.data.data;
+  } catch (error) {
+    return [];
+  }
+};
