@@ -4,16 +4,16 @@ import NumericInput from '@/src/components/common/inputs/NumericInput';
 import CancelButton from '@/src/components/buttons/order/CancelButton';
 import Header from '@/src/components/common/header';
 import { Button } from '@headlessui/react';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
 import DefaultModal from '@/src/components/common/modals/DefaultModal';
-import React from 'react';
 import OnClickButton from '@/src/components/buttons/OnClickButton/DefaultOnClick';
 import DynamicBox from '@/src/components/common/DynamicBox';
 import DefaultListItems from '@/src/components/common/lists/DefaultListItems';
 import Image from 'next/image';
 import ReturnIcon from '@/src/components/icons/return-icon.svg';
+import Toast from '@/src/components/common/Toast';
+import React, { useState, useEffect } from 'react';
 
 export default function OrderCreate() {
   const router = useRouter();
@@ -93,6 +93,17 @@ export default function OrderCreate() {
     !Number.isNaN(tax) &&
     line.length > 0 &&
     finalProduct.length > 0;
+
+  useEffect(() => {
+    if (isSuccessModalOpen) {
+      const timer = setTimeout(() => {
+        closeSuccessModal();
+      }, 1000); // 1 segundo
+
+      // Limpa o temporizador se o componente for desmontado ou se `isSuccessModalOpen` mudar
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccessModalOpen]);
 
   return (
     <main>
@@ -256,13 +267,7 @@ export default function OrderCreate() {
         ))}
       </DefaultModal>
 
-      <DefaultModal
-        isVisible={isSuccessModalOpen}
-        onClose={closeSuccessModal}
-        title="Sucesso!"
-      >
-        <div className="w-full">Ordem cadastrada com sucesso!</div>
-      </DefaultModal>
+      {isSuccessModalOpen && <Toast message="Adicionado com sucesso" />}
     </main>
   );
 }
