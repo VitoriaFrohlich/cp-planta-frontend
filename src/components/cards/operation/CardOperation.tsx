@@ -1,13 +1,16 @@
 import TrendingIcon from '../../icons/trending-icon.svg';
 import FinishedIcon from '../../icons/finished-icon.svg';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 type Props = {
+  id: string;
   title: string;
   type: 'inProgress' | 'finished';
 };
 
-export default function CardOperationInProgress({ title, type }: Props) {
+export default function CardOperationInProgress({ title, type, id }: Props) {
+  const router = useRouter();
   const typeConfig = {
     inProgress: {
       description: 'Em andamento',
@@ -25,8 +28,12 @@ export default function CardOperationInProgress({ title, type }: Props) {
 
   const { description, iconSrc, style } = typeConfig[type];
 
+  const handleRedirect = () => {
+    router.push(`/order/overview/${id}`);
+  };
+
   return (
-    <div className={style}>
+    <div className={style} onClick={() => handleRedirect()}>
       <Image src={iconSrc} alt="" width={30} height={0} />
       <div className="flex flex-col text-start gap-y-1">
         <h3 className="text-xl font-bold text-[#1c4060]">{title}</h3>
