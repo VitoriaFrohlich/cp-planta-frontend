@@ -4,7 +4,6 @@
 'use client';
 import DynamicBox from '@/src/components/common/DynamicBox';
 import StepButton from '@/src/components/common/StepButton';
-import { Step } from '@/src/types/Step';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Header from '@/src/components/common/header';
@@ -32,10 +31,10 @@ export default function OrderOverview() {
     // Converte o objeto em um array de Steps
     const idToString = id.toString();
     const resp = await stepsByProductId(idToString);
-    console.log(resp.data.data);
-    const stepsArray: string[] = Object.entries(resp.data.data.production_steps).map(
+    const stepsArray: string[] = Object.entries(
+      resp.data.data.production_steps
+    ).map(
       ([_, value]) => (value as { description: string }).description // Extrai apenas a descrição
-
     );
     setSteps(stepsArray);
   };
@@ -45,7 +44,6 @@ export default function OrderOverview() {
       setProductId(order.final_product_id);
       setOrderName(order.description);
     }
-    console.log(order);
   }, [order]);
 
   useEffect(() => {
@@ -74,19 +72,19 @@ export default function OrderOverview() {
         >
           <p className="text-gray-400">Selecione a etapa</p>
           <div className="flex gap-4 h-96 max-sm:flex-col">
-          {steps.map((step) => (
-        <StepButton
-          key={step}
-          step={step} // Passa o Step como string
-          onClick={() =>
-            router.push(
-              `/order/overview/${id}/${encodeURIComponent(step)}?order=${encodeURIComponent(
-                JSON.stringify(order)
-              )}`
-            )
-          }
-          />
-          ))}
+            {steps.map(step => (
+              <StepButton
+                key={step}
+                step={step} // Passa o Step como string
+                onClick={() =>
+                  router.push(
+                    `/order/overview/${id}/${encodeURIComponent(step)}?order=${encodeURIComponent(
+                      JSON.stringify(order)
+                    )}`
+                  )
+                }
+              />
+            ))}
           </div>
         </DynamicBox>
       </div>

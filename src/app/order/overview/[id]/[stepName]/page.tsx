@@ -4,7 +4,6 @@ import Header from '@/src/components/common/header';
 import SelectedStep from '@/src/components/common/selectedStep';
 import { useSearchParams } from 'next/navigation';
 import { useParams, useRouter } from 'next/navigation';
-import { Step } from '@/src/types/Step';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
 import { useEffect, useState } from 'react';
 import DefaultModal from '@/src/components/common/modals/DefaultModal';
@@ -16,21 +15,21 @@ export default function OrderStep() {
   const searchParams = useSearchParams();
   const [isModalVisible, setModalVisible] = useState(false);
   const [steps, setSteps] = useState<string[]>([]);
-  const [order,setOrder] = useState<FullOrder>();
+  const [order, setOrder] = useState<FullOrder>();
   const router = useRouter();
 
   const getSteps = async (id: string) => {
     const resp = await stepsByProductId(id);
-    const stepsArray: string[] = Object.entries(resp.data.data.production_steps).map(
+    const stepsArray: string[] = Object.entries(
+      resp.data.data.production_steps
+    ).map(
       ([_, value]) => (value as { description: string }).description // Extrai apenas a descrição
-
     );
     setSteps(stepsArray);
-  }
-  
+  };
+
   useEffect(() => {
     const decodedOrder = JSON.parse(searchParams.get('order') || '{}');
-    console.log(decodedOrder);
     setOrder(decodedOrder);
     getSteps(decodedOrder.final_product_id);
   }, [searchParams]);
@@ -65,7 +64,7 @@ export default function OrderStep() {
               disable
             />
             <button
-              onClick={() => console.log(steps)}
+              onClick={() => setModalVisible(true)}
               className="h-auto w-full bg-red-600 p-2 border rounded-lg mt-2"
             >
               Reportar erro
@@ -82,13 +81,16 @@ export default function OrderStep() {
               <p className="text-black text-2xl text-left font-semibold">
                 Quantidade Esperada:
               </p>
-              <p className="text-black text-2xl text-right">{order?.production_quantity_estimated
-} KG</p>
+              <p className="text-black text-2xl text-right">
+                {order?.production_quantity_estimated} KG
+              </p>
 
               <p className="text-black text-2xl text-left font-semibold">
                 Data de entrada:
               </p>
-              <p className="text-black text-2xl text-right">{order?.created_at}</p>
+              <p className="text-black text-2xl text-right">
+                {order?.created_at}
+              </p>
 
               <p className="text-black text-2xl text-left font-semibold">
                 Erros:

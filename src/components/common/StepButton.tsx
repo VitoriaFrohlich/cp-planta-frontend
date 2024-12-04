@@ -1,5 +1,3 @@
-import { Step } from '@/src/types/Step';
-
 type Props = {
   step: string;
   onClick: () => void;
