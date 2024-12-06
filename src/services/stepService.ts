@@ -30,3 +30,7 @@ export const getStepById = async (id: number) => {
 export const deleteStep = async (id: string) => {
   return axiosInstance.delete(`/steps/${id}`);
 };
+
+export const stepsByProductId = async (id: string) => {
+  return axiosInstance.get(`compositions/steps-by-product/${id}`);
+};
