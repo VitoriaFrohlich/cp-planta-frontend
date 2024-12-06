@@ -4,28 +4,46 @@ import Header from '@/src/components/common/header';
 import SelectedStep from '@/src/components/common/selectedStep';
 import { useSearchParams } from 'next/navigation';
 import { useParams, useRouter } from 'next/navigation';
-import { Step } from '@/src/types/Step';
 import DefaultInput from '@/src/components/common/inputs/DefaultInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DefaultModal from '@/src/components/common/modals/DefaultModal';
+import { stepsByProductId } from '@/src/services/stepService';
+import { FullOrder } from '@/src/types/Order';
+
 export default function OrderStep() {
-  const { stepId } = useParams();
+  const { stepName } = useParams();
   const searchParams = useSearchParams();
   const [isModalVisible, setModalVisible] = useState(false);
-  const steps = JSON.parse(searchParams.get('steps') || '[]');
-
+  const [steps, setSteps] = useState<string[]>([]);
+  const [order, setOrder] = useState<FullOrder>();
   const router = useRouter();
+
+  const getSteps = async (id: string) => {
+    const resp = await stepsByProductId(id);
+    const stepsArray: string[] = Object.entries(
+      resp.data.data.production_steps
+    ).map(
+      ([_, value]) => (value as { description: string }).description // Extrai apenas a descrição
+    );
+    setSteps(stepsArray);
+  };
+
+  useEffect(() => {
+    const decodedOrder = JSON.parse(searchParams.get('order') || '{}');
+    setOrder(decodedOrder);
+    getSteps(decodedOrder.final_product_id);
+  }, [searchParams]);
 
   return (
     <main className="flex flex-col min-h-screen w-full">
       <Header />
 
       <DynamicBox extraStyle="flex justify-center gap-x-10 justify-items-center mx-12 mt-6">
-        {steps.map((step: Step) => (
+        {steps.map((step: string) => (
           <SelectedStep
-            key={step.id} // Adicionando a chave única
-            selected={step.id === stepId} // Marca o step selecionado
-            text={step.description}
+            key={step} // Adicionando a chave única
+            selected={step === stepName} // Marca o step selecionado
+            text={step}
           />
         ))}
       </DynamicBox>
@@ -63,12 +81,16 @@ export default function OrderStep() {
               <p className="text-black text-2xl text-left font-semibold">
                 Quantidade Esperada:
               </p>
-              <p className="text-black text-2xl text-right">X KG</p>
+              <p className="text-black text-2xl text-right">
+                {order?.production_quantity_estimated} KG
+              </p>
 
               <p className="text-black text-2xl text-left font-semibold">
                 Data de entrada:
               </p>
-              <p className="text-black text-2xl text-right">01/01/2024</p>
+              <p className="text-black text-2xl text-right">
+                {order?.created_at}
+              </p>
 
               <p className="text-black text-2xl text-left font-semibold">
                 Erros:
