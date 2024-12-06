@@ -1,7 +1,5 @@
-import { Step } from '@/src/types/Step';
-
 type Props = {
-  step: Step;
+  step: string;
   onClick: () => void;
 };
 
@@ -13,7 +11,7 @@ export default function StepButton({ step, onClick }: Props) {
       }
       onClick={onClick}
     >
-      <span>{step.description}</span>
+      <span>{step}</span>
     </button>
   );
 }
