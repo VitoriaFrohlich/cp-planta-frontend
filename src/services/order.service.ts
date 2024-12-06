@@ -1,10 +1,5 @@
 import axiosInstance from './axiosInstance';
-import {
-  Order,
-  CreateOrderRequest,
-  CreateOrderResponse,
-  FullOrder
-} from '../types/Order';
+import { Order, CreateOrderRequest, CreateOrderResponse } from '../types/Order';
 import { response } from '../types/Default';
 
 export const getAllOrders = async (): Promise<Order[]> => {
@@ -37,19 +32,4 @@ export const createOrder = async (
     data
   );
   return response.data;
-};
-
-export const getOrderById = async (id: string): Promise<FullOrder | null> => {
-  try {
-    const response = await axiosInstance.get<{
-      success: boolean;
-      message: string;
-      data: FullOrder;
-    }>(`orders/${id}`);
-
-    return response.data.data;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
 };

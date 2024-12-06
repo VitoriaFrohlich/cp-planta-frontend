@@ -179,7 +179,7 @@ export default function OrderCreate() {
                         key: 'rawMaterial',
                         type: 'text'
                       },
-                      { label: 'Quantidade', key: 'quantity', type: 'text' }
+                      { label: 'Quantidade', key: 'batch', type: 'text' }
                     ]}
                     scrollable
                     onRemove={handleRemoveItem}
